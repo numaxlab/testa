@@ -3,6 +3,7 @@
 namespace Trafikrak;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -17,9 +18,10 @@ class TrafikrakServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/storefront.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'trafikrak');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'trafikrak');
+
+        Route::middleware('web')->group(fn() => $this->loadRoutesFrom(__DIR__ . '/../routes/storefront.php'));
 
         Blade::componentNamespace('Trafikrak\\Storefront\\Views\\Components', 'trafikrak');
         Blade::anonymousComponentPath(__DIR__ . '/../resources/views/storefront/components', 'trafikrak');

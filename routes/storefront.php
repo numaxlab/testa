@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use NumaxLab\Lunar\Geslib\Storefront\Http\Controllers\Auth\VerifyEmailController;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Actions\Logout;
 use Trafikrak\Storefront\Livewire\Account\DashboardPage;
+use Trafikrak\Storefront\Livewire\Account\HandleAddressPage;
+use Trafikrak\Storefront\Livewire\Account\PasswordPage;
+use Trafikrak\Storefront\Livewire\Account\ProfilePage;
 use Trafikrak\Storefront\Livewire\Auth\ConfirmPasswordPage;
 use Trafikrak\Storefront\Livewire\Auth\ForgotPasswordPage;
 use Trafikrak\Storefront\Livewire\Auth\LoginPage;
@@ -79,24 +82,31 @@ Route::prefix('/actualidad')->group(function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('login', LoginPage::class)->name('login');
-    Route::get('registrate', RegisterPage::class)->name('register');
-    Route::get('recuperar-contrasenha', ForgotPasswordPage::class)->name('password.request');
-    Route::get('recuperar-ctonrasenha/{token}', ResetPasswordPage::class)->name('password.reset');
+    Route::get('/login', LoginPage::class)->name('login');
+    Route::get('/registrate', RegisterPage::class)->name('register');
+    Route::get('/recuperar-contrasenha', ForgotPasswordPage::class)->name('password.request');
+    Route::get('/recuperar-ctonrasenha/{token}', ResetPasswordPage::class)->name('password.reset');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verificar-email', VerifyEmailPage::class)->name('verification.notice');
+    Route::get('/verificar-email', VerifyEmailPage::class)->name('verification.notice');
 
-    Route::get('verificar-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('/verificar-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    Route::get('confirmar-contrasenha', ConfirmPasswordPage::class)->name('password.confirm');
+    Route::get('/confirmar-contrasenha', ConfirmPasswordPage::class)->name('password.confirm');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', DashboardPage::class)->name('dashboard');
+    Route::get('/dashboard', DashboardPage::class)->name('dashboard');
+
+    Route::redirect('/preferencias', '/preferencias/perfil');
+
+    Route::get('/preferencias/perfil', ProfilePage::class)->name('settings.profile');
+    Route::get('/preferencias/contrasenha', PasswordPage::class)->name('settings.password');
+    Route::get('/preferencias/direcciones', HandleAddressPage::class)->name('settings.add-address');
+    Route::get('/preferencias/direcciones/{id}/editar', HandleAddressPage::class)->name('settings.edit-address');
 });
 
 Route::post('logout', Logout::class)->name('logout');

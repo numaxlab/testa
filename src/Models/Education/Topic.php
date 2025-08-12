@@ -4,16 +4,21 @@ namespace Trafikrak\Models\Education;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Lunar\Base\Traits\HasMedia;
 use Lunar\Base\Traits\HasUrls;
+use Lunar\Base\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 
-class Topic extends Model
+class Topic extends Model implements SpatieHasMedia
 {
     use HasUrls;
+    use HasMedia;
     use HasTranslations;
+    use LogsActivity;
 
     public $translatable = [
-        'title',
+        'name',
         'subtitle',
         'description',
     ];

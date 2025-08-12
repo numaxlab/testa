@@ -10,6 +10,9 @@ return new class extends Migration {
         Schema::create('course_modules', function (Blueprint $table) {
             $table->id();
 
+            $table->json('name');
+            $table->json('subtitle')->nullable();
+            $table->json('description')->nullable();
             $table->dateTime('starts_at')->nullable();
             $table->boolean('is_published')->default(false);
 

@@ -6,7 +6,11 @@
     "require": {
         "php": "^8.2",
         "numaxlab/lunar-geslib": "*",
-        "spatie/laravel-translatable": "^6.0"
+        "spatie/laravel-translatable": "^6.0",
+        "filament/spatie-laravel-translatable-plugin": "^3.3",
+        "lunarphp/table-rate-shipping": "^1.0@beta",
+        "lunarphp/meilisearch": "^1.0@beta",
+        "meilisearch/meilisearch-php": "^1.15"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5"

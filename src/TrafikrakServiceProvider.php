@@ -2,6 +2,7 @@
 
 namespace Trafikrak;
 
+use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -13,8 +14,6 @@ use Trafikrak\Console\Commands\Install;
 
 class TrafikrakServiceProvider extends ServiceProvider
 {
-    public function register(): void {}
-
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
@@ -40,10 +39,17 @@ class TrafikrakServiceProvider extends ServiceProvider
             }
         }
 
+        FilamentIcon::register([
+            'trafikrak::course' => 'lucide-book-plus',
+            'trafikrak::course-module' => 'lucide-calendar-range',
+        ]);
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Install::class,
             ]);
         }
     }
+
+    public function register(): void {}
 }

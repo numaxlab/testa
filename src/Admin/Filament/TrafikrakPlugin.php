@@ -4,7 +4,8 @@ namespace Trafikrak\Admin\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Trafikrak\Admin\Filament\Resources\CourseResource;
+use Trafikrak\Admin\Filament\Resources\Education\CourseResource;
+use Trafikrak\Admin\Filament\Resources\Education\TopicResource;
 
 class TrafikrakPlugin implements Plugin
 {
@@ -27,6 +28,7 @@ class TrafikrakPlugin implements Plugin
     {
         $panel->resources([
             CourseResource::class,
+            TopicResource::class,
         ]);
     }
 

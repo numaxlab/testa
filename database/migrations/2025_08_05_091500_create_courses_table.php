@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
 
-            $table->json('title');
+            $table->json('name');
             $table->json('subtitle')->nullable();
             $table->json('description')->nullable();
             $table->date('starts_at')->nullable();
@@ -21,10 +21,20 @@ return new class extends Migration {
 
             $table->timestamps();
         });
+
+        Schema::create('course_' . config('lunar.database.table_prefix') . 'product', function (Blueprint $table) {
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table
+                ->foreignId('product_id')
+                ->constrained(config('lunar.database.table_prefix') . 'products')
+                ->cascadeOnDelete();
+            $table->integer('position');
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('course_' . config('lunar.database.table_prefix') . 'product');
         Schema::dropIfExists('courses');
     }
 };

@@ -2,30 +2,33 @@
 
 namespace Trafikrak\Storefront\Livewire\Components;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Models\Product;
+use Trafikrak\Models\Education\Course;
+use Trafikrak\Storefront\GlobalSearch\GlobalSearch;
 
 class Search extends Component
 {
     public ?string $query;
 
-    public array $contentTypes = [
-        'all' => 'Mejores resultados',
-        'book' => 'Libros',
-        'audio' => 'Audios',
-        'video' => 'Vídeos',
-        'course' => 'Cursos',
-    ];
+    public array $contentTypes = [];
 
     public ?string $contentTypeFilter = 'all';
 
     public Collection $results;
 
+    public int $estimatedTotalHits = 0;
+
     public function mount(): void
     {
+        $this->contentTypes = [
+            'all' => __('Todos los resultados'),
+            (new Product)->searchableAs() => __('Libros'),
+            (new Course)->searchableAs() => __('Cursos'),
+        ];
+
         $this->results = collect();
     }
 
@@ -49,20 +52,24 @@ class Search extends Component
             return;
         }
 
-        $this->results = Product::search($search)
-            ->query(fn(Builder $query) => $query->with([
-                'defaultUrl',
-                'urls',
-                'authors',
-            ]))->take(10)->get();
+        $globalSearch = app(GlobalSearch::class);
+
+        if ($this->contentTypeFilter !== 'all') {
+            $globalSearch->setContentType($this->contentTypeFilter);
+        } else {
+            $globalSearch->setContentType(null);
+        }
+
+        $this->results = $globalSearch->getResults($search);
+        $this->estimatedTotalHits = $globalSearch->estimatedTotalHits;
     }
 
     public function search(): void
     {
         match ($this->contentTypeFilter) {
-            'book' => $redirectRoute = 'trafikrak.storefront.bookshop.search',
+            'products' => $redirectRoute = 'trafikrak.storefront.bookshop.search',
             'audio', 'video' => $redirectRoute = 'trafikrak.storefront.media.search',
-            'course' => $redirectRoute = 'trafikrak.storefront.education.search',
+            'courses' => $redirectRoute = 'trafikrak.storefront.education.search',
             default => $redirectRoute = null,
         };
 

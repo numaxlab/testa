@@ -56,11 +56,11 @@
         </header>
 
         <ul class="grid gap-6 md:grid-cols-3">
-            @for ($i=0; $i<12; $i++)
+            @foreach ($courses as $course)
                 <li>
-                    <x-trafikrak::courses.summary/>
+                    <x-trafikrak::courses.summary :course="$course"/>
                 </li>
-            @endfor
+            @endforeach
         </ul>
     </div>
 </article>

@@ -1,13 +1,13 @@
 <?php
 
-namespace Trafikrak\Storefront\Livewire\Education;
+namespace Trafikrak\Storefront\Livewire\Components\Education;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use Illuminate\View\View;
-use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Livewire\Component;
 use Trafikrak\Models\Education\Topic;
 
-class TopicsListPage extends Page
+class FeaturedTopics extends Component
 {
     public Collection $topics;
 
@@ -23,6 +23,6 @@ class TopicsListPage extends Page
 
     public function render(): View
     {
-        return view('trafikrak::storefront.livewire.education.topics-list');
+        return view('trafikrak::storefront.livewire.components.education.featured-topics');
     }
 }

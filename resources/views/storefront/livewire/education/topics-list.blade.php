@@ -12,17 +12,10 @@
     </header>
 
     <ul class="grid gap-4 md:grid-cols-2 mt-10">
-        @for ($i=0; $i<8; $i++)
+        @foreach ($topics as $topic)
             <li>
-                <x-numaxlab-atomic::molecules.banner
-                        :href="route('trafikrak.storefront.education.topics.show', 'slug')">
-                    <h2 class="at-heading is-3 mb-4">Tema de formación</h2>
-
-                    <x-slot:content>
-                        Breve texto descriptivo del tema.
-                    </x-slot:content>
-                </x-numaxlab-atomic::molecules.banner>
+                <x-trafikrak::education-topics.summary :topic="$topic"/>
             </li>
-        @endfor
+        @endforeach
     </ul>
 </div>

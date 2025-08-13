@@ -15,16 +15,20 @@
                     </li>
                 </x-numaxlab-atomic::molecules.breadcrumb>
 
-                <h1 class="at-heading is-1">Título del tema</h1>
+                <h1 class="at-heading is-1">{{ $topic->name }}</h1>
 
-                <div class="mt-5">
-                    Descripción del tema.
-                </div>
+                @if ($topic->description)
+                    <div class="mt-5">
+                        {!! $topic->description !!}
+                    </div>
+                @endif
             </div>
 
-            <figure class="mt-5 md:w-1/2">
-                <img src="https://picsum.photos/800/600" alt="">
-            </figure>
+            @if ($topic->media->isNotEmpty())
+                <figure class="mt-5 md:w-1/2">
+                    <img src="{{ $topic->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
+                </figure>
+            @endif
         </header>
 
         <x-numaxlab-atomic::organisms.tier class="mt-9">
@@ -35,11 +39,11 @@
             </x-numaxlab-atomic::organisms.tier.header>
 
             <ul class="grid gap-6 md:grid-cols-3">
-                @for ($i=0; $i<6; $i++)
+                @foreach ($courses as $course)
                     <li>
-                        <x-trafikrak::courses.summary/>
+                        <x-trafikrak::courses.summary :course="$course"/>
                     </li>
-                @endfor
+                @endforeach
             </ul>
         </x-numaxlab-atomic::organisms.tier>
     </div>

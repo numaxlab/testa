@@ -37,28 +37,29 @@
                         </div>
                         <ul class="divide-y border-y mt-6">
                             @foreach ($results as $result)
-                                <li>
+                                <li wire:key="global-search-result-{{ $result->id }}">
                                     <a
-                                            href="{{ route('trafikrak.storefront.bookshop.products.show', $result->defaultUrl->slug) }}"
+                                            href="{{ $result->url }}"
                                             class="at-small text-white flex gap-2 items-center py-2"
                                     >
-                                        <i class="fa-solid fa-book-open text-3xl" aria-hidden="true"></i>
+                                        <i
+                                                class="fa-solid {{ $result->icon }} w-8 text-3xl text-center"
+                                                aria-hidden="true"
+                                        ></i>
 
                                         <div>
-                                            {{ $result->recordTitle }}
-                                            @if ($result->translateAttribute('subtitle'))
-                                                {{ $result->translateAttribute('subtitle') }}
-                                            @endif
-                                            @if ($result->authors->isNotEmpty())
-                                                <span class="border-s ml-1 pl-2">
-                                                {{ $result->authors->pluck('name')->implode(', ') }}
-                                            </span>
-                                            @endif
+                                            {{ $result->title }}
                                         </div>
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
+
+                        @if ($estimatedTotalHits > 0)
+                            <small class="block mt-5">
+                                {{ __('Mostrando los 10 mejores resultados de :estimatedTotalHits', ['estimatedTotalHits' => $estimatedTotalHits]) }}
+                            </small>
+                        @endif
 
                         @if ($contentTypeFilter !== 'all')
                             <button class="mt-8 text-3xl" wire:click="search">

@@ -13,8 +13,10 @@
             </li>
         </x-numaxlab-atomic::molecules.breadcrumb>
 
-        <h1 class="at-heading is-1">Título del curso</h1>
+        <h1 class="at-heading is-1">{{ $course->name }}</h1>
 
-        <h2 class="at-heading is-3 font-normal">Subtítulo</h2>
+        @if ($course->subtitle)
+            <h2 class="at-heading is-3 font-normal">{{ $course->subtitle }}</h2>
+        @endif
     </header>
 </article>

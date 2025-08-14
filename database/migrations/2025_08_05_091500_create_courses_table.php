@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->json('description')->nullable();
             $table->date('starts_at')->nullable();
             $table->date('ends_at')->nullable();
+            $table->string('delivery_method', 20);
+            $table->string('location')->nullable();
             $table->boolean('is_published')->default(false);
 
             $table->foreignId('topic_id')->constrained('education_topics');

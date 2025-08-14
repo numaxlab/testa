@@ -56,6 +56,17 @@ return [
         'ends_at' => [
             'label' => 'Fecha de fin',
         ],
+        'delivery_method' => [
+            'label' => 'Modalidad',
+            'options' => [
+                'in_person' => 'Presencial',
+                'online' => 'En línea',
+                'hybrid' => 'Híbrido',
+            ],
+        ],
+        'location' => [
+            'label' => 'Lugar',
+        ],
         'topic_id' => [
             'label' => 'Tema',
         ],

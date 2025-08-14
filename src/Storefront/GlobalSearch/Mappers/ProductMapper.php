@@ -19,7 +19,7 @@ class ProductMapper extends AbstractMapper
         }
 
         return new SearchResult(
-            'product',
+            $this->model->searchableAs(),
             $this->model->id,
             $title,
             route('trafikrak.storefront.bookshop.products.show', $this->model->defaultUrl->slug),

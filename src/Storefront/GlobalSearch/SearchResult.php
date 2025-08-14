@@ -15,9 +15,9 @@ readonly class SearchResult implements Wireable
         public string $url,
         public float $score = 0,
     ) {
-        $this->icon = match ($type) {
-            'product' => 'fa-book-open',
-            'course' => 'fa-calendar-days',
+        $this->icon = match ($this->type) {
+            'products' => 'fa-book-open',
+            'courses' => 'fa-calendar-days',
             default => 'fa-magnifying-glass',
         };
     }

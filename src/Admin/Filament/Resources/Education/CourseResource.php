@@ -12,6 +12,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Education\Course;
+use Trafikrak\Models\Education\CourseDeliveryMethod;
 
 class CourseResource extends BaseResource
 {
@@ -109,6 +110,23 @@ class CourseResource extends BaseResource
                                     ->label(__('trafikrak::course.form.ends_at.label'))
                                     ->required(),
                             ]),
+                        Forms\Components\Select::make('delivery_method')
+                            ->label(__('trafikrak::course.form.delivery_method.label'))
+                            ->required()
+                            ->options([
+                                CourseDeliveryMethod::IN_PERSON->value => __(
+                                    'trafikrak::course.form.delivery_method.options.in_person',
+                                ),
+                                CourseDeliveryMethod::ONLINE->value => __(
+                                    'trafikrak::course.form.delivery_method.options.online',
+                                ),
+                                CourseDeliveryMethod::HYBRID->value => __(
+                                    'trafikrak::course.form.delivery_method.options.hybrid',
+                                ),
+                            ]),
+                        Forms\Components\TextInput::make('location')
+                            ->label(__('trafikrak::course.form.location.label'))
+                            ->maxLength(255),
                         Forms\Components\Select::make('topic_id')
                             ->label(__('trafikrak::course.form.topic_id.label'))
                             ->required()

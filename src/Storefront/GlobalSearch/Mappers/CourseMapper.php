@@ -9,7 +9,7 @@ class CourseMapper extends AbstractMapper
     public function map(): SearchResult
     {
         return new SearchResult(
-            'course',
+            $this->model->searchableAs(),
             $this->model->id,
             $this->model->name,
             route('trafikrak.storefront.education.courses.show', $this->model->defaultUrl->slug),

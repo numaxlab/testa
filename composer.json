@@ -13,7 +13,10 @@
         "meilisearch/meilisearch-php": "^1.15"
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^11.5",
+        "pestphp/pest": "3.x-dev",
+        "pestphp/pest-plugin-laravel": "3.x-dev",
+        "orchestra/testbench": "10.x-dev"
     },
     "autoload": {
         "psr-4": {
@@ -38,5 +41,10 @@
             "email": "adrian@numax.org"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }

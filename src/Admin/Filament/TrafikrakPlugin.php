@@ -8,6 +8,9 @@ use Trafikrak\Admin\Filament\Resources\Education\CourseModuleResource;
 use Trafikrak\Admin\Filament\Resources\Education\CourseResource;
 use Trafikrak\Admin\Filament\Resources\Education\InstructorResource;
 use Trafikrak\Admin\Filament\Resources\Education\TopicResource;
+use Trafikrak\Admin\Filament\Resources\Media\AudioResource;
+use Trafikrak\Admin\Filament\Resources\Media\DocumentResource;
+use Trafikrak\Admin\Filament\Resources\Media\VideoResource;
 
 class TrafikrakPlugin implements Plugin
 {
@@ -33,6 +36,9 @@ class TrafikrakPlugin implements Plugin
             CourseModuleResource::class,
             TopicResource::class,
             InstructorResource::class,
+            AudioResource::class,
+            DocumentResource::class,
+            VideoResource::class,
         ]);
     }
 

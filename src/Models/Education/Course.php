@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Lunar\Base\Traits\HasMedia;
 use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
@@ -16,7 +15,6 @@ use Lunar\Models\Product;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Trafikrak\Database\Factories\Education\CourseFactory;
-use Trafikrak\Models\Attachment;
 
 class Course extends Model implements SpatieHasMedia
 {
@@ -53,11 +51,6 @@ class Course extends Model implements SpatieHasMedia
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);
-    }
-
-    public function attachments(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     public function products(): BelongsToMany

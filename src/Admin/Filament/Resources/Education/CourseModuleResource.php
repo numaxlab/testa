@@ -54,6 +54,7 @@ class CourseModuleResource extends BaseResource
             CourseModuleResource\Pages\EditCourseModule::class,
             CourseModuleResource\Pages\ManageCourseModuleUrls::class,
             CourseModuleResource\Pages\ManageCourseModuleInstructors::class,
+            CourseModuleResource\Pages\ManageCourseModuleAttachments::class,
         ];
     }
 
@@ -126,6 +127,7 @@ class CourseModuleResource extends BaseResource
             'edit' => CourseModuleResource\Pages\EditCourseModule::route('/{record}/edit'),
             'urls' => CourseModuleResource\Pages\ManageCourseModuleUrls::route('/{record}/urls'),
             'instructors' => CourseModuleResource\Pages\ManageCourseModuleInstructors::route('/{record}/instructors'),
+            'attachments' => CourseModuleResource\Pages\ManageCourseModuleAttachments::route('/{record}/attachments'),
         ];
     }
 }

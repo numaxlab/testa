@@ -30,7 +30,7 @@ class AddressForm extends Form
     public ?int $country_id;
 
     #[Validate('required')]
-    public ?int $state;
+    public ?string $state;
 
     #[Validate('required|string|max:20')]
     public string $postcode = '';
@@ -64,26 +64,31 @@ class AddressForm extends Form
         $this->last_name = $this->address->last_name;
         $this->company_name = $this->address->company_name;
         $this->country_id = $this->address->country_id;
-        $this->state = (int)$this->address->state;
+
+        if ($this->country_id !== null) {
+            $this->loadStates($this->country_id);
+        }
+
+        $this->state = $this->address->state;
         $this->postcode = $this->address->postcode;
         $this->city = $this->address->city;
         $this->line_one = $this->address->line_one;
         $this->line_two = $this->address->line_two;
         $this->shipping_default = $this->address->shipping_default;
         $this->billing_default = $this->address->billing_default;
-
-        if ($this->country_id !== null) {
-            $this->updateStates($this->country_id);
-        }
     }
 
-    public function updateStates(int $countryId = null): void
+    public function loadStates(?int $countryId = null): void
     {
-        $this->states = State::where('country_id', $countryId)
-            ->orderBy('name')
-            ->get();
-
         $this->state = null;
+
+        if ($countryId === null) {
+            $this->states = collect();
+        } else {
+            $this->states = State::where('country_id', $countryId)
+                ->orderBy('name')
+                ->get();
+        }
     }
 
     public function store(int $customerId): void

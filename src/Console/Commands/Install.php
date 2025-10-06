@@ -8,6 +8,7 @@ use Lunar\Models\Attribute;
 use Lunar\Models\AttributeGroup;
 use Lunar\Models\Brand;
 use Lunar\Models\CollectionGroup;
+use Lunar\Models\Tag;
 use Trafikrak\Handle;
 
 class Install extends Command
@@ -25,6 +26,10 @@ class Install extends Command
         $this->components->info('Setting up collection groups.');
 
         $this->setupCollectionGroups();
+
+        $this->components->info('Setting up tags.');
+
+        $this->setupTags();
     }
 
     private function setupBrandAttributes(): void
@@ -68,4 +73,24 @@ class Install extends Command
             'handle' => Handle::COLLECTION_GROUP_EDITORIAL_FEATURED,
         ]);
     }
+
+    private function setupTags(): void
+    {
+        Tag::create([
+            'value' => 'Pedido librería',
+        ]);
+
+        Tag::create([
+            'value' => 'Subscripción socias',
+        ]);
+
+        Tag::create([
+            'value' => 'Inscripción cursos',
+        ]);
+
+        Tag::create([
+            'value' => 'Donación',
+        ]);
+    }
+
 }

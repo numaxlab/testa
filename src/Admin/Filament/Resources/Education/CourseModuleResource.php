@@ -39,11 +39,6 @@ class CourseModuleResource extends BaseResource
         return FilamentIcon::resolve('trafikrak::course-module');
     }
 
-    public static function getNavigationParentItem(): ?string
-    {
-        return __('trafikrak::course.plural_label');
-    }
-
     public static function getNavigationGroup(): ?string
     {
         return __('trafikrak::global.sections.education');

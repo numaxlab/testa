@@ -16,19 +16,19 @@
 
     <div class="lg:flex lg:gap-6">
         <div class="lg:w-1/2">
-            @include('lunar-geslib::storefront.partials.checkout.address', [
+            @include('trafikrak::storefront.partials.checkout.address', [
                 'type' => 'shipping',
                 'step' => $steps['shipping_address'],
             ])
         </div>
         <div class="lg:w-1/2">
-            @include('lunar-geslib::storefront.partials.checkout.shipping-options', [
+            @include('trafikrak::storefront.partials.checkout.shipping-options', [
                 'step' => $steps['shipping_option'],
             ])
         </div>
     </div>
 
-    @include('lunar-geslib::storefront.partials.checkout.address', [
+    @include('trafikrak::storefront.partials.checkout.address', [
         'type' => 'billing',
         'step' => $steps['billing_address'],
     ])

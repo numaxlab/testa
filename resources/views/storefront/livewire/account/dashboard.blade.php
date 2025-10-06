@@ -48,14 +48,7 @@
             @endif
         </header>
 
-        <x-numaxlab-atomic::organisms.tier>
-            <x-numaxlab-atomic::organisms.tier.header>
-                <h2 class="at-heading is-2">{{ __('Mis aportaciones') }}</h2>
-                <a class="at-small">{{ __('Ver todas') }}</a>
-            </x-numaxlab-atomic::organisms.tier.header>
-
-            <p>Todavía no eres socia.</p>
-        </x-numaxlab-atomic::organisms.tier>
+        <livewire:trafikrak.storefront.livewire.components.account.subscription lazy/>
 
         <livewire:trafikrak.storefront.livewire.components.account.addresses lazy/>
 

@@ -44,7 +44,7 @@ class HandleAddressPage extends Page
     public function updated($field, $value): void
     {
         if ($field === 'form.country_id') {
-            $this->form->updateStates($value);
+            $this->form->loadStates($value);
         }
     }
 }

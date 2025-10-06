@@ -41,6 +41,8 @@ use Trafikrak\Storefront\Livewire\Media\DocumentsListPage;
 use Trafikrak\Storefront\Livewire\Media\HomePage as MediaHomePage;
 use Trafikrak\Storefront\Livewire\Media\VideoPage;
 use Trafikrak\Storefront\Livewire\Media\VideosListPage;
+use Trafikrak\Storefront\Livewire\Membership\HomePage as MembershipHomePage;
+use Trafikrak\Storefront\Livewire\Membership\SignupPage;
 
 Route::get('/', HomePage::class)
     ->name('trafikrak.storefront.homepage');
@@ -127,6 +129,14 @@ Route::prefix('/mediateca')->group(function () {
 
 Route::prefix('/actualidad')->group(function () {
     //
+});
+
+Route::prefix('/apoya-el-proyecto')->group(function () {
+    Route::get('/', MembershipHomePage::class)
+        ->name('trafikrak.storefront.membership.homepage');
+
+    Route::get('/hazte-socix', SignupPage::class)
+        ->name('trafikrak.storefront.membership.signup');
 });
 
 Route::middleware('guest')->group(function () {

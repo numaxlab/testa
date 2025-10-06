@@ -9,7 +9,7 @@
         </x-numaxlab-atomic::molecules.breadcrumb>
 
         <h1 class="at-heading is-1">
-            @if (request()->routeIs('settings.edit-address'))
+            @if ($form->address)
                 {{ __('Editar dirección') }}
             @else
                 {{ __('Añadir dirección') }}
@@ -77,7 +77,7 @@
                 >
                     <option value="">{{ __('Selecciona una provincia') }}</option>
                     @foreach($form->states as $state)
-                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                        <option value="{{ $state->name }}">{{ $state->name }}</option>
                     @endforeach
                 </x-numaxlab-atomic::atoms.select>
             </div>

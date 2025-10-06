@@ -4,12 +4,12 @@
             <div class="md:w-1/2 lg:pr-20">
                 <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">
                     <li>
-                        <a href="{{ route('trafikrak.storefront.bookshop.homepage') }}">
+                        <a href="{{ route('trafikrak.storefront.bookshop.homepage') }}" wire:navigate>
                             {{ __('Librería') }}
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('trafikrak.storefront.bookshop.itineraries.index') }}">
+                        <a href="{{ route('trafikrak.storefront.bookshop.itineraries.index') }}" wire:navigate>
                             {{ __('Itinerarios') }}
                         </a>
                     </li>

@@ -53,25 +53,6 @@
         </ul>
     </div>
 
-    <div class="mt-10 pt-4 border-t border-black">
-        <h2 class="at-heading is-2 mb-5">{{ __('Eres socia?') }}</h2>
-
-        @auth
-            <x-numaxlab-atomic::atoms.forms.checkbox
-                    value="1"
-                    name="use_credit"
-                    id="use_credit"
-            >
-                {{ __('Comprar a crédito') }}
-            </x-numaxlab-atomic::atoms.forms.checkbox>
-        @else
-            <p>
-                {{ __('Por ser socia, puedes comprar a crédito.') }}
-                <a href="{{ route('login') }}" wire:navigate>{{ __('Entra en tu cuenta') }}</a>
-            </p>
-        @endauth
-    </div>
-
     <a
             class="at-button is-primary mt-10"
             href="{{ route('trafikrak.storefront.checkout.shipping-and-payment') }}"

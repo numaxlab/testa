@@ -3,7 +3,6 @@
 namespace Trafikrak\Storefront\Livewire\Checkout;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Base\PaymentTypeInterface;
 use Lunar\DataTypes\ShippingOption;
@@ -13,7 +12,6 @@ use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
 use Lunar\Models\Country;
-use Lunar\Models\Customer;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Trafikrak\Storefront\Livewire\Checkout\Forms\AddressForm;
@@ -25,8 +23,6 @@ class ShippingAndPaymentPage extends Page
     public AddressForm $shipping;
 
     public AddressForm $billing;
-
-    public Collection $customerAddresses;
 
     public int $currentStep = 1;
 
@@ -81,18 +77,8 @@ class ShippingAndPaymentPage extends Page
             }
         }
 
-        $this->customerAddresses = collect();
-
-        $user = Auth::user();
-
-        if ($user) {
-            /** @var Customer $customer */
-            $customer = $user->latestCustomer();
-
-            if ($customer->addresses->isNotEmpty()) {
-                $this->customerAddresses = $customer->addresses;
-            }
-        }
+        $this->shipping->init();
+        $this->billing->init();
 
         if ($this->cart->shippingAddress) {
             $this->shipping->fill($this->cart->shippingAddress->toArray());
@@ -127,6 +113,22 @@ class ShippingAndPaymentPage extends Page
 
         if ($billingAddress) {
             $this->currentStep = $this->steps['billing_address'] + 1;
+        }
+    }
+
+    public function updated($field, $value): void
+    {
+        if ($field === 'shipping.customer_address_id') {
+            $this->shipping->loadAddress($value);
+        }
+        if ($field === 'billing.customer_address_id') {
+            $this->billing->loadAddress($value);
+        }
+        if ($field === 'shipping.country_id') {
+            $this->shipping->loadStates($value);
+        }
+        if ($field === 'billing.country_id') {
+            $this->billing->loadStates($value);
         }
     }
 

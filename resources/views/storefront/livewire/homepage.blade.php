@@ -5,6 +5,10 @@
         </div>
     </article>
 
+    @foreach ($tiers as $tier)
+        <p>{{ $tier->type }}</p>
+    @endforeach
+
     <div class="container mx-auto px-4">
         <x-numaxlab-atomic::organisms.tier class="mb-10">
             <x-numaxlab-atomic::organisms.tier.header>

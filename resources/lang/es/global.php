@@ -5,6 +5,7 @@ return [
         'education' => 'Formación',
         'media' => 'Mediateca',
         'membership' => 'Membresía',
+        'content' => 'Contenido',
     ],
     'payment_types' => [
         'card' => 'Tarjeta',

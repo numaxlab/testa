@@ -4,6 +4,8 @@ namespace Trafikrak\Admin\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Trafikrak\Admin\Filament\Resources\Content\BannerResource;
+use Trafikrak\Admin\Filament\Resources\Content\TierResource;
 use Trafikrak\Admin\Filament\Resources\Education\CourseModuleResource;
 use Trafikrak\Admin\Filament\Resources\Education\CourseResource;
 use Trafikrak\Admin\Filament\Resources\Education\TopicResource;
@@ -41,6 +43,8 @@ class TrafikrakPlugin implements Plugin
             VideoResource::class,
             MembershipTierResource::class,
             MembershipPlanResource::class,
+            TierResource::class,
+            BannerResource::class,
         ]);
     }
 

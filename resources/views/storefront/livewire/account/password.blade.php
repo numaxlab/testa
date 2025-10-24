@@ -50,8 +50,8 @@
             {{ __('Guardar') }}
         </x-numaxlab-atomic::atoms.button>
 
-        <x-lunar-geslib::action-message class="me-3" on="password-updated">
+        <x-trafikrak::action-message class="me-3" on="password-updated">
             {{ __('Contraseña modificada correctamente.') }}
-        </x-lunar-geslib::action-message>
+        </x-trafikrak::action-message>
     </form>
 </article>

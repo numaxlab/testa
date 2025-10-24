@@ -43,7 +43,7 @@
             @endif
 
             <div class="hidden lg:block mt-10">
-                @include('lunar-geslib::storefront.partials.product.body')
+                @include('trafikrak::storefront.partials.product.body')
             </div>
         </header>
 
@@ -117,7 +117,7 @@
                     <ul class="grid gap-6 grid-cols-2 mb-9 md:grid-cols-4">
                         @foreach ($product->associations as $association)
                             <li>
-                                <x-lunar-geslib::product.summary
+                                <x-trafikrak::products.summary
                                         :product="$association->target"
                                         :href="route('trafikrak.storefront.bookshop.products.show', $association->target->defaultUrl->slug)"
                                 />

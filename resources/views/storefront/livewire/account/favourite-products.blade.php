@@ -16,7 +16,7 @@
     <ul class="grid gap-6 grid-cols-2 mb-9 md:grid-cols-3">
         @foreach ($favouriteProducts as $product)
             <li>
-                <x-lunar-geslib::product.horizontal
+                <x-trafikrak::products.horizontal
                         :product="$product"
                         :href="route('trafikrak.storefront.bookshop.products.show', $product->defaultUrl->slug)"
                 >
@@ -25,7 +25,7 @@
                             Eliminar
                         </button>
                     </x-slot>
-                </x-lunar-geslib::product.horizontal>
+                </x-trafikrak::products.horizontal>
             </li>
         @endforeach
     </ul>

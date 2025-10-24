@@ -73,7 +73,7 @@
                     <ul class="grid gap-6 grid-cols-2 mb-9 md:grid-cols-4">
                         @foreach ($course->products as $product)
                             <li>
-                                <x-lunar-geslib::product.summary
+                                <x-trafikrak::products.summary
                                         :product="$product"
                                         :href="route('trafikrak.storefront.bookshop.products.show', $product->defaultUrl->slug)"
                                 />

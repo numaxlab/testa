@@ -90,9 +90,9 @@
             {{ __('Guardar') }}
         </x-numaxlab-atomic::atoms.button>
 
-        <x-lunar-geslib::action-message class="me-3" on="profile-updated">
+        <x-trafikrak::action-message class="me-3" on="profile-updated">
             {{ __('Guardado correctamente') }}
-        </x-lunar-geslib::action-message>
+        </x-trafikrak::action-message>
     </form>
 
     <form wire:submit="deleteUser" class="space-y-6 mt-10">

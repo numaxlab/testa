@@ -3,21 +3,18 @@
 namespace Trafikrak\Database\Factories\Education;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Trafikrak\Models\Education\Course;
+use Trafikrak\Models\Education\Topic;
 
-class CourseFactory extends Factory
+class TopicFactory extends Factory
 {
-    protected $model = Course::class;
+    protected $model = Topic::class;
 
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence(rand(3, 8)),
+            'name' => $this->faker->sentence,
             'subtitle' => $this->faker->sentence(rand(3, 8)),
             'description' => $this->faker->paragraph(rand(3, 8)),
-            'starts_at' => now(),
-            'ends_at' => now()->addDays(7),
-            'topic_id' => $this->faker->numberBetween(1, 10),
             'is_published' => true,
         ];
     }

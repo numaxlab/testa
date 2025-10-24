@@ -18,10 +18,6 @@
     @endif
 
     <x-slot name="content">
-        <div class="at-small mb-4">
-            <p>Un breve texto explicativo del contenido de este curso.</p>
-        </div>
-
         <ul class="text-sm border-y border-black divide-x divide-black flex gap-2 py-2">
             <li class="pr-2">
                 <i class="fa-solid fa-calendar text-2xl mr-2" aria-hidden="true"></i>

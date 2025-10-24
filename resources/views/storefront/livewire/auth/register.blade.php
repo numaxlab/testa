@@ -1,7 +1,7 @@
 <section class="flex flex-col gap-6 lg:w-4xl lg:mx-auto">
     <h1 class="at-heading is-1">{{ __('Regístrate') }}</h1>
 
-    <x-lunar-geslib::auth.session-status class="text-center" :status="session('status')"/>
+    <x-trafikrak::auth.session-status class="text-center" :status="session('status')"/>
 
     <form wire:submit="register" class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <x-numaxlab-atomic::atoms.input

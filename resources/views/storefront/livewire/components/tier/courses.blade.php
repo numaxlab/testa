@@ -20,9 +20,9 @@
                 {{ __('No hay cursos disponibles en este momento.') }}
             </p>
         @else
-            <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+            <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 @foreach($courses as $course)
-                    <li class="{{ $loop->index > 1 ? 'lg:col-span-2' : 'lg:col-span-3' }}">
+                    <li>
                         <x-trafikrak::courses.summary :course="$course"/>
                     </li>
                 @endforeach

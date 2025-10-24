@@ -24,7 +24,7 @@ class EducationUpcoming extends Component
                 'topic',
             ])
             ->orderBy('starts_at', 'asc')
-            ->limit(6)
+            ->limit(4)
             ->get();
     }
 

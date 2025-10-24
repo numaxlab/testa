@@ -20,10 +20,9 @@ class CoursesListPage extends Page
                 'topic',
             ])
             ->orderBy('ends_at', 'desc')
-            ->limit(6)
+            ->limit(12)
             ->get();
     }
-
 
     public function render(): View
     {

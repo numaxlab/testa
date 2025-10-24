@@ -31,7 +31,7 @@
                     <ul class="divide-y divide-black">
                         @foreach ($lines as $index => $line)
                             <li>
-                                <x-lunar-geslib::product.in-cart
+                                <x-trafikrak::products.in-cart
                                         :href="route('trafikrak.storefront.bookshop.products.show', $line['slug'])"
                                         :image="$line['thumbnail']"
                                         :price="$line['unit_price']"
@@ -56,7 +56,7 @@
                                             {{ __('Eliminar') }}
                                         </button>
                                     </x-slot:actions>
-                                </x-lunar-geslib::product.in-cart>
+                                </x-trafikrak::products.in-cart>
 
                                 @if ($errors->get('lines.' . $index . '.quantity'))
                                     <div

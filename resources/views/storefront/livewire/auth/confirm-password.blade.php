@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-6 px-100 sm:w-sm sm:mx-auto">
     <!-- Session Status -->
-    <x-lunar-geslib::auth.session-status class="text-center" :status="session('status')"/>
+    <x-trafikrak::auth.session-status class="text-center" :status="session('status')"/>
 
     <form wire:submit="confirmPassword" class="flex flex-col gap-6">
         <x-numaxlab-atomic::atoms.input

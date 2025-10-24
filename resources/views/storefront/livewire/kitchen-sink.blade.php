@@ -77,5 +77,56 @@
                 <div class="p-4 bg-danger">danger</div>
             </div>
         </x-numaxlab-atomic::organisms.tier>
+
+        <x-numaxlab-atomic::organisms.tier class="mb-10">
+            <x-numaxlab-atomic::organisms.tier.header>
+                <h2 class="at-heading is-2">Libros</h2>
+                <a href=""
+                   wire:navigate
+                   class="at-small"
+                >
+                    ver más
+                </a>
+            </x-numaxlab-atomic::organisms.tier.header>
+
+            <ul class="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+                @foreach ($products as $product)
+                    <li>
+                        <x-trafikrak::products.summary
+                                :product="$product"
+                                :href="route('trafikrak.storefront.bookshop.products.show', $product->defaultUrl->slug)"
+                        />
+                    </li>
+                @endforeach
+            </ul>
+        </x-numaxlab-atomic::organisms.tier>
+    </div>
+
+    <div class="mb-10">
+        <div class="container mx-auto px-4 mb-5">
+            <h2 class="at-heading is-2">
+                Banners
+            </h2>
+        </div>
+
+        <x-trafikrak::banners.contained :banner="$banner"/>
+
+        <x-trafikrak::banners.full-width :banner="$banner"/>
+    </div>
+
+    <div class="container mx-auto px-4">
+        <x-numaxlab-atomic::organisms.tier class="mb-10">
+            <x-numaxlab-atomic::organisms.tier.header>
+                <h2 class="at-heading is-2">Cursos</h2>
+            </x-numaxlab-atomic::organisms.tier.header>
+
+            <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                @foreach($courses as $course)
+                    <li>
+                        <x-trafikrak::courses.summary :course="$course"/>
+                    </li>
+                @endforeach
+            </ul>
+        </x-numaxlab-atomic::organisms.tier>
     </div>
 </article>

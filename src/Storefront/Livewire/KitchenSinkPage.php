@@ -66,13 +66,15 @@ class KitchenSinkPage extends Page
 
     private function getBanner(): void
     {
-        $this->banner = Banner::query()
+        $banner = Banner::query()
             ->inRandomOrder()
             ->first();
 
-        if (!$this->banner) {
-            $this->banner = Banner::factory()->create();
+        if (!$banner) {
+            $banner = Banner::factory()->create();
         }
+
+        $this->banner = $banner;
     }
 
     private function getCourses(): void

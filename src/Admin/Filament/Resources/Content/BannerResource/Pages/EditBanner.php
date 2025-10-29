@@ -15,12 +15,12 @@ class EditBanner extends BaseEditRecord
 
     public static function getNavigationLabel(): string
     {
-        return __('trafikrak::membership-plan.pages.edit.title');
+        return __('trafikrak::banner.pages.edit.title');
     }
 
     public function getTitle(): string
     {
-        return __('trafikrak::membership-plan.pages.edit.title');
+        return __('trafikrak::banner.pages.edit.title');
     }
 
     protected function getDefaultHeaderActions(): array

@@ -30,8 +30,8 @@ class TrafikrakServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'trafikrak');
 
         $this->publishes([
-            __DIR__.'/../config/trafikrak.php' => config_path('lunar/trafikrak.php'),
-            __DIR__.'/../resources/views' => resource_path('views/vendor/lunar/trafikrak'),
+            __DIR__.'/../config/trafikrak.php' => config_path('trafikrak.php'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/trafikrak'),
         ], ['trafikrak']);
 
         Route::middleware('web')

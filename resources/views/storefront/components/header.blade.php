@@ -35,24 +35,18 @@
                                             {{ __('Librería') }}
                                         </a>
                                     </li>
-                                    <li>
-                                        <a>
-                                            {{ __('Dónde estamos') }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                                href="{{ route('trafikrak.storefront.bookshop.itineraries.index') }}"
-                                                wire:navigate
-                                        >
-                                            {{ __('Itinerarios') }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            {{ __('El proyecto') }}
-                                        </a>
-                                    </li>
+                                    @if ($pages->has(\Trafikrak\Models\Content\Section::BOOKSHOP->value))
+                                        @foreach ($pages->get(\Trafikrak\Models\Content\Section::BOOKSHOP->value) as $page)
+                                            <li>
+                                                <a
+                                                        href="{{ route('trafikrak.storefront.bookshop.page', $page->defaultUrl->slug) }}"
+                                                        wire:navigate
+                                                >
+                                                    {{ $page->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                 </ul>
 
                                 @if ($sections->isNotEmpty())
@@ -105,11 +99,18 @@
                                             {{ __('Especial (NLR)') }}
                                         </a>
                                     </li>
-                                    <li>
-                                        <a>
-                                            {{ __('El proyecto') }}
-                                        </a>
-                                    </li>
+                                    @if ($pages->has(\Trafikrak\Models\Content\Section::EDITORIAL->value))
+                                        @foreach ($pages->get(\Trafikrak\Models\Content\Section::EDITORIAL->value) as $page)
+                                            <li>
+                                                <a
+                                                        href="{{ route('trafikrak.storefront.editorial.page', $page->defaultUrl->slug) }}"
+                                                        wire:navigate
+                                                >
+                                                    {{ $page->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                 </ul>
 
                                 @if ($editorialCollections->isNotEmpty())
@@ -155,6 +156,18 @@
                                         {{ __('Cursos') }}
                                     </a>
                                 </li>
+                                @if ($pages->has(\Trafikrak\Models\Content\Section::EDUCATION->value))
+                                    @foreach ($pages->get(\Trafikrak\Models\Content\Section::EDUCATION->value) as $page)
+                                        <li>
+                                            <a
+                                                    href="{{ route('trafikrak.storefront.education.page', $page->defaultUrl->slug) }}"
+                                                    wire:navigate
+                                            >
+                                                {{ $page->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                @endif
                                 <li>
                                     <a>
                                         {{ __('Subscríbete') }}

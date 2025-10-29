@@ -60,7 +60,7 @@
                 </div>
             @endif
 
-            <livewire:numax-lab.lunar.geslib.storefront.livewire.components.add-to-cart
+            <livewire:trafikrak.storefront.livewire.components.bookshop.add-to-cart
                     :key="'add-to-cart-' . $product->id"
                     :purchasable="$product->variant"/>
 

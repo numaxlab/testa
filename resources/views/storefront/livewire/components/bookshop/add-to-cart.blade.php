@@ -9,7 +9,9 @@
                 @mouseout="hover = false"
         >
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            <span x-show="!hover">{{ $pricing->priceIncTax()->formatted() }}</span>
+            @if($pricing)
+                <span x-show="!hover">{{ $pricing->priceIncTax()->formatted() }}</span>
+            @endif
             <span x-show="hover">{{ __('Comprar') }}</span>
         </button>
     @else

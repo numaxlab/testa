@@ -81,10 +81,7 @@
         <x-numaxlab-atomic::organisms.tier class="mb-10">
             <x-numaxlab-atomic::organisms.tier.header>
                 <h2 class="at-heading is-2">Libros</h2>
-                <a href=""
-                   wire:navigate
-                   class="at-small"
-                >
+                <a href="" class="at-small">
                     ver más
                 </a>
             </x-numaxlab-atomic::organisms.tier.header>

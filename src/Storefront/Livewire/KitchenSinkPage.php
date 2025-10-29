@@ -15,7 +15,7 @@ use Trafikrak\Models\Content\Banner;
 use Trafikrak\Models\Education\Course;
 use Trafikrak\Models\Education\Topic;
 
-class KitchenSink extends Page
+class KitchenSinkPage extends Page
 {
     public Collection $products;
     public Banner $banner;
@@ -100,5 +100,4 @@ class KitchenSink extends Page
     {
         return view('trafikrak::storefront.livewire.kitchen-sink');
     }
-
 }

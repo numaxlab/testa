@@ -8,4 +8,5 @@ enum Section: string
     case BOOKSHOP = 'bookshop';
     case EDITORIAL = 'editorial';
     case EDUCATION = 'education';
+    case GENERIC = 'generic';
 }

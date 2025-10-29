@@ -35,7 +35,7 @@ use Trafikrak\Storefront\Livewire\Education\ModulePage;
 use Trafikrak\Storefront\Livewire\Education\TopicPage;
 use Trafikrak\Storefront\Livewire\Education\TopicsListPage;
 use Trafikrak\Storefront\Livewire\HomePage;
-use Trafikrak\Storefront\Livewire\KitchenSink;
+use Trafikrak\Storefront\Livewire\KitchenSinkPage;
 use Trafikrak\Storefront\Livewire\Media\AudioPage;
 use Trafikrak\Storefront\Livewire\Media\AudiosListPage;
 use Trafikrak\Storefront\Livewire\Media\DocumentPage;
@@ -45,6 +45,7 @@ use Trafikrak\Storefront\Livewire\Media\VideoPage;
 use Trafikrak\Storefront\Livewire\Media\VideosListPage;
 use Trafikrak\Storefront\Livewire\Membership\HomePage as MembershipHomePage;
 use Trafikrak\Storefront\Livewire\Membership\SignupPage;
+use Trafikrak\Storefront\Livewire\PagePage;
 
 Route::get('/', HomePage::class)
     ->name('trafikrak.storefront.homepage');
@@ -70,6 +71,9 @@ Route::prefix('/libreria')->group(function () {
 
     Route::get('/buscar', SearchPage::class)
         ->name('trafikrak.storefront.bookshop.search');
+
+    Route::get('/{slug}', PagePage::class)
+        ->name('trafikrak.storefront.bookshop.page');
 });
 
 Route::prefix('/editorial')->group(function () {
@@ -84,6 +88,9 @@ Route::prefix('/editorial')->group(function () {
 
     Route::get('/colecciones/{slug}', CollectionPage::class)
         ->name('trafikrak.storefront.editorial.collections.show');
+
+    Route::get('/{slug}', PagePage::class)
+        ->name('trafikrak.storefront.editorial.page');
 });
 
 Route::prefix('/formacion')->group(function () {
@@ -104,6 +111,9 @@ Route::prefix('/formacion')->group(function () {
 
     Route::get('/cursos/{courseSlug}/sesiones/{moduleSlug}', ModulePage::class)
         ->name('trafikrak.storefront.education.courses.modules.show');
+
+    Route::get('/{slug}', PagePage::class)
+        ->name('trafikrak.storefront.education.page');
 });
 
 Route::prefix('/mediateca')->group(function () {
@@ -190,6 +200,6 @@ Route::prefix('/checkout')->group(function () {
 });
 
 if (app()->environment('local')) {
-    Route::get('/kitchen-sink', KitchenSink::class)
+    Route::get('/kitchen-sink', KitchenSinkPage::class)
         ->name('trafikrak.storefront.kitchen-sink');
 }

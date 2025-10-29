@@ -8,6 +8,8 @@ use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Collection;
 use NumaxLab\Lunar\Geslib\Handle;
 use NumaxLab\Lunar\Geslib\InterCommands\CollectionCommand;
+use Trafikrak\Models\Content\Page;
+use Trafikrak\Models\Content\Section;
 
 class Header extends Component
 {
@@ -15,6 +17,14 @@ class Header extends Component
 
     public function render(): View
     {
+        $pages = Page::whereIn('section', [
+            Section::BOOKSHOP->value,
+            Section::EDITORIAL->value,
+            Section::EDUCATION->value,
+        ])->where('is_published', true)
+            ->get()
+            ->groupBy('section');
+
         $sections = Collection::whereHas('group', function ($query) {
             $query->where('handle', Handle::COLLECTION_GROUP_TAXONOMIES);
         })->whereNull('parent_id')
@@ -34,7 +44,6 @@ class Header extends Component
             ->orderBy('_lft', 'ASC')
             ->get();
 
-        return view('trafikrak::storefront.components.header', compact('sections', 'editorialCollections'))
-            ->title(__('Trafikrak'));
+        return view('trafikrak::storefront.components.header', compact('pages', 'sections', 'editorialCollections'));
     }
 }

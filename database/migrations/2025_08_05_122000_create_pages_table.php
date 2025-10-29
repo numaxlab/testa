@@ -7,14 +7,14 @@ use Lunar\Base\Migration;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->id();
 
+            $table->string('section');
             $table->json('name');
-            $table->string('type');
+            $table->json('intro')->nullable();
             $table->json('description')->nullable();
-            $table->json('link')->nullable();
-            $table->json('button_text')->nullable();
+            $table->json('content')->nullable();
 
             $table->boolean('is_published')->default(false);
 
@@ -24,6 +24,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('pages');
     }
 };

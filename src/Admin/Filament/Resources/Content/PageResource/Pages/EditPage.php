@@ -1,26 +1,26 @@
 <?php
 
-namespace Trafikrak\Admin\Filament\Resources\Content\TierResource\Pages;
+namespace Trafikrak\Admin\Filament\Resources\Content\PageResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord\Concerns\Translatable;
 use Lunar\Admin\Support\Pages\BaseEditRecord;
-use Trafikrak\Admin\Filament\Resources\Content\TierResource;
+use Trafikrak\Admin\Filament\Resources\Content\PageResource;
 
-class EditTier extends BaseEditRecord
+class EditPage extends BaseEditRecord
 {
     use Translatable;
 
-    protected static string $resource = TierResource::class;
+    protected static string $resource = PageResource::class;
 
     public static function getNavigationLabel(): string
     {
-        return __('trafikrak::tier.pages.edit.title');
+        return __('trafikrak::page.pages.edit.title');
     }
 
     public function getTitle(): string
     {
-        return __('trafikrak::tier.pages.edit.title');
+        return __('trafikrak::page.pages.edit.title');
     }
 
     protected function getDefaultHeaderActions(): array

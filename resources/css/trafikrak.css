@@ -1,0 +1,9 @@
+@theme {
+    --text-sm: 0.825rem; /* Baixado o tamaño sm con respecto a Tailwind */
+    --text-base: 1.125rem; /* subido o tamaño base con respecto a Tailwind */
+    --text-5xl: 2.625rem; /* h1 */
+    --text-4xl: 2rem; /* h2 */
+    --text-3xl: 1.625rem; /* h3 */
+    --text-2xl: 1.125rem; /* h4 */
+    --text-xl: 1.125rem; /* baixado para manter a coherencia de tamaño descendente, con este tamaño queda igual ca o text-lg */
+}

@@ -94,11 +94,18 @@
                                             {{ __('Autoras') }}
                                         </a>
                                     </li>
-                                    <li>
-                                        <a>
-                                            {{ __('Especial (NLR)') }}
-                                        </a>
-                                    </li>
+                                    @if ($editorialSpecialCollections->isNotEmpty())
+                                        @foreach($editorialSpecialCollections as $collection)
+                                            <li>
+                                                <a
+                                                        href=""
+                                                        wire:navigate
+                                                >
+                                                    {{ $collection->translateAttribute('name') }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                     @if ($pages->has(\Trafikrak\Models\Content\Section::EDITORIAL->value))
                                         @foreach ($pages->get(\Trafikrak\Models\Content\Section::EDITORIAL->value) as $page)
                                             <li>

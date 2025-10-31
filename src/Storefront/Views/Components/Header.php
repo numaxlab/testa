@@ -44,6 +44,20 @@ class Header extends Component
             ->orderBy('_lft', 'ASC')
             ->get();
 
-        return view('trafikrak::storefront.components.header', compact('pages', 'sections', 'editorialCollections'));
+        $editorialSpecialCollections = Collection::whereHas('group', function ($query) {
+            $query->where('handle', CollectionCommand::HANDLE);
+        })->whereNull('parent_id')
+            ->where('attribute_data->is-special->value', true)
+            ->channel(StorefrontSession::getChannel())
+            ->customerGroup(StorefrontSession::getCustomerGroups())
+            ->orderBy('_lft', 'ASC')
+            ->get();
+
+        return view('trafikrak::storefront.components.header', compact(
+            'pages',
+            'sections',
+            'editorialCollections',
+            'editorialSpecialCollections',
+        ));
     }
 }

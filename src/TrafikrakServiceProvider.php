@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -52,6 +53,8 @@ class TrafikrakServiceProvider extends ServiceProvider
                 Livewire::component($alias, $component);
             }
         }
+
+        View::prependNamespace('numaxlab-atomic', __DIR__.'/../resources/views/vendor/numaxlab-atomic');
 
         FilamentIcon::register([
             'trafikrak::course' => 'lucide-book-plus',

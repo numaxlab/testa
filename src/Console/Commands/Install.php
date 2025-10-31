@@ -7,6 +7,7 @@ use Lunar\FieldTypes\Toggle;
 use Lunar\Models\Attribute;
 use Lunar\Models\AttributeGroup;
 use Lunar\Models\Brand;
+use Lunar\Models\Collection;
 use Lunar\Models\CollectionGroup;
 use Lunar\Models\Tag;
 use Trafikrak\Handle;
@@ -22,6 +23,10 @@ class Install extends Command
         $this->components->info('Setting up attributes.');
 
         $this->setupBrandAttributes();
+
+        $this->components->info('Setting up collection attributes.');
+
+        $this->setupCollectionAttributes();
 
         $this->components->info('Setting up collection groups.');
 
@@ -50,6 +55,33 @@ class Install extends Command
             'handle' => 'in-house',
             'name' => [
                 'es' => 'Mostrar en editorial',
+            ],
+            'description' => [
+                'es' => '',
+            ],
+            'section' => 'main',
+            'type' => Toggle::class,
+            'required' => false,
+            'default_value' => null,
+            'configuration' => [
+                'richtext' => false,
+            ],
+            'system' => false,
+            'searchable' => false,
+        ]);
+    }
+
+    private function setupCollectionAttributes(): void
+    {
+        $group = AttributeGroup::where('handle', 'collection-main')->firstOrFail();
+
+        Attribute::create([
+            'attribute_type' => Collection::morphName(),
+            'attribute_group_id' => $group->id,
+            'position' => 5,
+            'handle' => 'is-special',
+            'name' => [
+                'es' => 'Colección especial (editorial)',
             ],
             'description' => [
                 'es' => '',

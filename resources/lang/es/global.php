@@ -8,6 +8,9 @@ return [
         'content' => 'Contenido',
         'news' => 'Actualidad',
     ],
+    'relation_managers' => [
+        'reviews' => 'Reseñas',
+    ],
     'payment_types' => [
         'card' => 'Tarjeta',
         'bizum' => 'Bizum',

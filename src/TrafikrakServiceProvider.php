@@ -13,11 +13,13 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Livewire;
 use Lunar\Admin\Filament\Resources\CustomerResource;
+use Lunar\Admin\Filament\Resources\ProductResource;
 use Lunar\Admin\Support\Facades\LunarPanel;
 use Lunar\Facades\ModelManifest;
 use Lunar\Models\Order;
 use Spatie\StructureDiscoverer\Discover;
 use Symfony\Component\Finder\Finder;
+use Trafikrak\Admin\Filament\Extension\ProductResourceExtension;
 use Trafikrak\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Trafikrak\Console\Commands\Install;
 use Trafikrak\Observers\OrderObserver;
@@ -89,12 +91,18 @@ class TrafikrakServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/trafikrak.php', 'trafikrak');
 
         ModelManifest::replace(
+            \Lunar\Models\Contracts\Product::class,
+            \Trafikrak\Models\Product::class,
+        );
+
+        ModelManifest::replace(
             \Lunar\Models\Contracts\Customer::class,
             \Trafikrak\Models\Customer::class,
         );
 
         LunarPanel::extensions([
             CustomerResource::class => CustomerResourceExtension::class,
+            ProductResource::class => ProductResourceExtension::class,
         ]);
     }
 }

@@ -1,7 +1,11 @@
 <div>
-    @foreach ($slides as $slide)
-        <x-trafikrak::slides.divided :slide="$slide"/>
-    @endforeach
+    @if ($slides->isNotEmpty())
+        <div class="-mt-10">
+            @foreach ($slides as $slide)
+                <x-trafikrak::slides.divided :slide="$slide"/>
+            @endforeach
+        </div>
+    @endif
 
     @foreach ($tiers as $tier)
         <livewire:dynamic-component

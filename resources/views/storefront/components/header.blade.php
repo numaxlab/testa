@@ -16,25 +16,43 @@
                     id="site-header-nav"
                     class="site-header-nav lg:flex lg:flex-col-reverse lg:grow"
                     :class="{ 'block': menuExpanded }"
+                    x-data="{ bookshopExpanded: false, editorialExpanded: false, educationExpanded: false, mediaExpanded: false }"
             >
-                <div class="lg:flex lg:w-full lg:justify-between">
+                <div
+                        class="lg:flex lg:w-full lg:justify-between relative"
+                        :class="bookshopExpanded || editorialExpanded || educationExpanded || mediaExpanded ? 'after:bg-white after:absolute after:top-7 after:right-0 after:z-9 after:h-40 after:lg:w-1/2 after:xl:w-2/3 after:border-b after:border-primary' : ''"
+                >
                     <ul class="site-header-main-menu">
-                        <li x-data="{ expanded: false }" class="relative">
-                            <button @click="expanded = !expanded" class="text-primary">
+                        <li
+                                @mouseenter="bookshopExpanded = true"
+                                @mouseleave="bookshopExpanded = false"
+                                class="relative"
+                        >
+                            <a
+                                    href="{{ route('trafikrak.storefront.bookshop.homepage') }}"
+                                    wire:navigate
+                            >
                                 {{ __('Librería') }}
-                            </button>
+                            </a>
 
-                            <div x-cloak x-show="expanded"
-                                 class="absolute top-13 z-10 flex gap-5 bg-white border-1 border-primary p-5 -ml-5">
-                                <ul class="w-50">
-                                    <li>
-                                        <a
-                                                href="{{ route('trafikrak.storefront.bookshop.homepage') }}"
-                                                wire:navigate
-                                        >
-                                            {{ __('Librería') }}
-                                        </a>
-                                    </li>
+                            <div x-cloak x-show="bookshopExpanded"
+                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 shadow-l flex gap-5">
+                                @if ($sections->isNotEmpty())
+                                    <ul class="grid grid-cols-3 place-content-start gap-x-5">
+                                        @foreach($sections as $collection)
+                                            <li>
+                                                <a
+                                                        href="{{ route('trafikrak.storefront.bookshop.sections.show', $collection->defaultUrl->slug) }}"
+                                                        wire:navigate
+                                                >
+                                                    {{ $collection->translateAttribute('name') }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                                <ul>
                                     @if ($pages->has(\Trafikrak\Models\Content\Section::BOOKSHOP->value))
                                         @foreach ($pages->get(\Trafikrak\Models\Content\Section::BOOKSHOP->value) as $page)
                                             <li>
@@ -48,44 +66,39 @@
                                         @endforeach
                                     @endif
                                 </ul>
-
-                                @if ($sections->isNotEmpty())
-                                    <div class="w-122">
-                                        <h3>{{ __('Secciones') }}</h3>
-
-                                        <ul class="grid grid-cols-2">
-                                            @foreach($sections as $collection)
-                                                <li>
-                                                    <a
-                                                            href="{{ route('trafikrak.storefront.bookshop.sections.show', $collection->defaultUrl->slug) }}"
-                                                            wire:navigate
-                                                    >
-                                                        {{ $collection->translateAttribute('name') }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
                             </div>
                         </li>
 
-                        <li x-data="{ expanded: false }" class="relative">
-                            <button @click="expanded = !expanded" class="text-primary">
+                        <li
+                                @mouseenter="editorialExpanded = true"
+                                @mouseleave="editorialExpanded = false"
+                                class="relative"
+                        >
+                            <a
+                                    href="{{ route('trafikrak.storefront.editorial.homepage') }}"
+                                    wire:navigate
+                            >
                                 {{ __('Editorial') }}
-                            </button>
+                            </a>
 
-                            <div x-cloak x-show="expanded"
-                                 class="absolute top-13 z-10 flex gap-5 bg-white border-1 border-primary p-5 -ml-5">
-                                <ul class="w-50">
-                                    <li>
-                                        <a
-                                                href="{{ route('trafikrak.storefront.editorial.homepage') }}"
-                                                wire:navigate
-                                        >
-                                            {{ __('Editorial') }}
-                                        </a>
-                                    </li>
+                            <div x-cloak x-show="editorialExpanded"
+                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 shadow-l flex gap-5">
+                                @if ($editorialCollections->isNotEmpty())
+                                    <ul class="grid grid-cols-2 place-content-start gap-x-5">
+                                        @foreach($editorialCollections as $collection)
+                                            <li>
+                                                <a
+                                                        href="{{ route('trafikrak.storefront.editorial.collections.show', $collection->defaultUrl->slug) }}"
+                                                        wire:navigate
+                                                >
+                                                    {{ $collection->translateAttribute('name') }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                                <ul>
                                     <li>
                                         <a
                                                 href="{{ route('trafikrak.storefront.editorial.authors.index') }}"
@@ -119,40 +132,20 @@
                                         @endforeach
                                     @endif
                                 </ul>
-
-                                @if ($editorialCollections->isNotEmpty())
-                                    <div class="w-122">
-                                        <h3>{{ __('Colecciones') }}</h3>
-
-                                        <ul class="grid grid-cols-2">
-                                            @foreach($editorialCollections as $collection)
-                                                <li>
-                                                    <a
-                                                            href="{{ route('trafikrak.storefront.editorial.collections.show', $collection->defaultUrl->slug) }}"
-                                                            wire:navigate
-                                                    >
-                                                        {{ $collection->translateAttribute('name') }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
                             </div>
                         </li>
 
-                        <li x-data="{ expanded: false }" class="relative">
-                            <button @click="expanded = !expanded" class="text-primary">
+                        <li
+                                @mouseenter="educationExpanded = true"
+                                @mouseleave="educationExpanded = false"
+                                class="relative"
+                        >
+                            <a href="{{ route('trafikrak.storefront.education.homepage') }}" wire:navigate>
                                 {{ __('Formación') }}
-                            </button>
+                            </a>
 
-                            <ul x-cloak x-show="expanded"
-                                class="absolute top-13 z-10 bg-white border-1 border-primary p-5 -ml-5">
-                                <li>
-                                    <a href="{{ route('trafikrak.storefront.education.homepage') }}" wire:navigate>
-                                        {{ __('Formación') }}
-                                    </a>
-                                </li>
+                            <ul x-cloak x-show="educationExpanded"
+                                class="absolute bg-white top-full -left-3 z-10 pl-3 pt-3 pb-8 pr-40 border-l border-b border-primary min-w-max h-40 shadow-l">
                                 <li>
                                     <a href="{{ route('trafikrak.storefront.education.topics.index') }}" wire:navigate>
                                         {{ __('Temas') }}
@@ -188,18 +181,20 @@
                             </ul>
                         </li>
 
-                        <li x-data="{ expanded: false }" class="relative">
-                            <button @click="expanded = !expanded" class="text-primary">
+                        <li
+                                @mouseenter="mediaExpanded = true"
+                                @mouseleave="mediaExpanded = false"
+                                class="relative"
+                        >
+                            <a href="{{ route('trafikrak.storefront.media.homepage') }}" wire:navigate>
                                 {{ __('Mediateca') }}
-                            </button>
+                            </a>
 
-                            <ul x-cloak x-show="expanded"
-                                class="absolute top-13 z-10 bg-white border-1 border-primary p-5 -ml-5">
-                                <li>
-                                    <a href="{{ route('trafikrak.storefront.media.homepage') }}" wire:navigate>
-                                        {{ __('Mediateca') }}
-                                    </a>
-                                </li>
+                            <ul
+                                    x-cloak
+                                    x-show="mediaExpanded"
+                                    class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 shadow-l"
+                            >
                                 <li>
                                     <a href="{{ route('trafikrak.storefront.media.videos.index') }}">
                                         {{ __('Vídeos') }}

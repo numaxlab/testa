@@ -41,7 +41,7 @@
         </x-numaxlab-atomic::organisms.tier>
     @endif
 
-    <div class="grid gap-6 md:grid-cols-3 mt-10">
+    {{--<div class="grid gap-6 md:grid-cols-3 mt-10">
         <x-numaxlab-atomic::organisms.tier>
             <x-numaxlab-atomic::organisms.tier.header>
                 <h2 class="at-heading is-2">
@@ -89,5 +89,5 @@
                 Actividades...
             </x-numaxlab-atomic::organisms.tier>
         </div>
-    </div>
+    </div>--}}
 </article>

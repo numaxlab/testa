@@ -3,12 +3,14 @@
 namespace Trafikrak\Console\Commands;
 
 use Illuminate\Console\Command;
+use Lunar\FieldTypes\File;
 use Lunar\FieldTypes\Toggle;
 use Lunar\Models\Attribute;
 use Lunar\Models\AttributeGroup;
 use Lunar\Models\Brand;
 use Lunar\Models\Collection;
 use Lunar\Models\CollectionGroup;
+use Lunar\Models\Product;
 use Lunar\Models\Tag;
 use Trafikrak\Handle;
 
@@ -27,6 +29,10 @@ class Install extends Command
         $this->components->info('Setting up collection attributes.');
 
         $this->setupCollectionAttributes();
+
+        $this->components->info('Setting up product attributes.');
+
+        $this->setupProductAttributes();
 
         $this->components->info('Setting up collection groups.');
 
@@ -95,6 +101,68 @@ class Install extends Command
             ],
             'system' => false,
             'searchable' => false,
+        ]);
+    }
+
+    private function setupProductAttributes(): void
+    {
+        $attachmentsGroup = AttributeGroup::create([
+            'attributable_type' => Product::morphName(),
+            'name' => collect([
+                'es' => 'Anexos',
+            ]),
+            'handle' => 'book-attachments',
+            'position' => 4,
+        ]);
+
+        Attribute::create([
+            'attribute_type' => Product::morphName(),
+            'attribute_group_id' => $attachmentsGroup->id,
+            'position' => 1,
+            'handle' => 'card',
+            'name' => [
+                'es' => 'Ficha',
+            ],
+            'description' => [
+                'es' => '',
+            ],
+            'section' => 'main',
+            'type' => File::class,
+            'required' => true,
+            'default_value' => null,
+            'configuration' => [
+                'multiple' => false,
+                'max_files' => null,
+                'min_files' => null,
+                'file_types' => [],
+            ],
+            'system' => false,
+            'searchable' => true,
+        ]);
+
+        Attribute::create([
+            'attribute_type' => Product::morphName(),
+            'attribute_group_id' => $attachmentsGroup->id,
+            'position' => 2,
+            'handle' => 'digital-book',
+            'name' => [
+                'es' => 'Libro digital',
+            ],
+            'description' => [
+                'es' => '',
+            ],
+            'section' => 'main',
+            'type' => File::class,
+            'required' => true,
+            'default_value' => null,
+            'configuration' => [
+                'multiple' => false,
+                'max_files' => null,
+                'min_files' => null,
+                'file_types' => [],
+            ],
+            'system' => false,
+            'searchable' => true,
         ]);
     }
 

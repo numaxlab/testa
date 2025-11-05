@@ -95,20 +95,20 @@
                 :key="'add-to-cart-' . $product->id"
                 :purchasable="$product->variant"/>
 
-        <a class="at-button border-primary text-primary">
-            Descarga este libro
-        </a>
+        @if ($product->translateAttribute('digital-book'))
+            <a class="at-button border-primary text-primary">
+                Descarga este libro
+            </a>
+        @endif
 
         <a class="at-button border-primary text-primary">
             Haz una donación
         </a>
 
-        <a class="at-button border-primary text-primary">
-            Descargar ficha
-        </a>
-
-        <a class="at-button border-primary text-primary">
-            Descargar portada
-        </a>
+        @if ($product->translateAttribute('card'))
+            <a class="at-button border-primary text-primary">
+                Descargar ficha
+            </a>
+        @endif
     </div>
 </div>

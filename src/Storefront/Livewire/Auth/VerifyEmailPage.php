@@ -12,7 +12,7 @@ class VerifyEmailPage extends Component
 {
     public function render(): View
     {
-        return view('lunar-geslib::storefront.livewire.auth.verify-email');
+        return view('trafikrak::storefront.livewire.auth.verify-email');
     }
 
     public function sendVerification(): void

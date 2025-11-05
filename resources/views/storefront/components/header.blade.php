@@ -53,6 +53,14 @@
                                 @endif
 
                                 <ul>
+                                    <li>
+                                        <a
+                                                href="{{ route('trafikrak.storefront.bookshop.itineraries.index') }}"
+                                                wire:navigate
+                                        >
+                                            {{ __('Itinerarios') }}
+                                        </a>
+                                    </li>
                                     @if ($pages->has(\Trafikrak\Models\Content\Section::BOOKSHOP->value))
                                         @foreach ($pages->get(\Trafikrak\Models\Content\Section::BOOKSHOP->value) as $page)
                                             <li>

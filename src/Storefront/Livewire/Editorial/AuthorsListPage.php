@@ -13,7 +13,12 @@ class AuthorsListPage extends Page
 
     public function render(): View
     {
-        $authors = Author::orderBy('name', 'ASC')
+        $authors = Author::whereHas('products', function ($query) {
+            $query->whereHas('brand', function ($query) {
+                $query->where('attribute_data->in-house->value', true);
+            });
+        })
+            ->orderBy('name', 'ASC')
             ->with([
                 'defaultUrl',
                 'media',

@@ -3,11 +3,19 @@
         @if ($product->taxonomies->isNotEmpty())
             <ul class="flex flex-wrap gap-2">
                 @foreach ($product->taxonomies as $taxonomy)
-                    <li>
-                        <a href="{{ $taxonomy->url }}" class="at-small at-tag is-primary">
-                            {{ $taxonomy->translateAttribute('name') }}
-                        </a>
-                    </li>
+                    @if ($taxonomy->isInSectionTree() && ! $taxonomy->isRoot())
+                        <li>
+                            <a
+                                    @if ($taxonomy->getAncestorSection() && $taxonomy->getAncestorSection()->defaultUrl)
+                                        href="{{ route('trafikrak.storefront.bookshop.sections.show', ['slug' => $taxonomy->getAncestorSection()->defaultUrl->slug, 't' => $taxonomy->id]) }}"
+                                    @endif
+                                    wire:navigate
+                                    class="at-small at-tag is-primary"
+                            >
+                                {{ $taxonomy->translateAttribute('name') }}
+                            </a>
+                        </li>
+                    @endif
                 @endforeach
             </ul>
         @endif
@@ -15,7 +23,7 @@
         <ul class="at-small flex flex-wrap gap-2 -ml-2 my-3">
             @if ($product->brand)
                 <li>
-                    {{ $product->brand->translateAttribute('name') }}
+                    {{ $product->brand->name }}
                 </li>
             @endif
             @foreach ($product->editorialCollections as $collection)
@@ -101,9 +109,11 @@
             </a>
         @endif
 
-        <a class="at-button border-primary text-primary">
-            Haz una donación
-        </a>
+        @if ($product->brand->translateAttribute('in-house') === true)
+            <a class="at-button border-primary text-primary">
+                Haz una donación
+            </a>
+        @endif
 
         @if ($product->translateAttribute('card'))
             <a class="at-button border-primary text-primary">

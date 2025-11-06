@@ -2,15 +2,37 @@
     <div class="lg:flex lg:flex-wrap lg:gap-10">
         <header class="lg:w-8/12">
             <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">
-                <li>
-                    <a href="{{ route('trafikrak.storefront.bookshop.homepage') }}" wire:navigate>
-                        {{ __('Librería') }}
-                    </a>
-                </li>
+                @if ($product->brand->translateAttribute('in-house') === true)
+                    <li>
+                        <a href="{{ route('trafikrak.storefront.editorial.homepage') }}" wire:navigate>
+                            {{ __('Editorial') }}
+                        </a>
+                    </li>
+                @else
+                    <li>
+                        <a href="{{ route('trafikrak.storefront.bookshop.homepage') }}" wire:navigate>
+                            {{ __('Librería') }}
+                        </a>
+                    </li>
+
+                    @if ($section)
+                        <li>
+                            <a
+                                    @if ($section->defaultUrl)
+                                        href="{{ route('trafikrak.storefront.bookshop.sections.show', ['slug' => $section->defaultUrl->slug]) }}"
+                                    @endif
+                                    wire:navigate
+                            >
+                                {{ $section->translateAttribute('name') }}
+                            </a>
+                        </li>
+                    @endif
+                @endif
             </x-numaxlab-atomic::molecules.breadcrumb>
 
             <h1 class="at-heading is-1">
                 {{ $product->recordTitle }}
+                {{ $product->id }}
 
                 <button
                         class="text-primary"

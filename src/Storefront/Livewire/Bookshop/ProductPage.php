@@ -12,6 +12,7 @@ use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 
 class ProductPage extends Page
 {
+    public \Lunar\Models\Contracts\Collection $section;
     public Product $product;
     public ?Price $pricing;
     public Collection $itineraries;
@@ -37,11 +38,16 @@ class ProductPage extends Page
                 'variant.prices.currency',
                 'media',
                 'taxonomies',
+                'taxonomies.ancestors',
                 'editorialCollections',
                 'languages',
                 'statuses',
             ])
             ->firstOrFail();
+
+        if ($this->product->getSectionTaxonomy()) {
+            $this->section = $this->product->getSectionTaxonomy();
+        }
 
         $this->pricing = $this->product->variant
             ->pricing()

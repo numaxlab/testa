@@ -20,7 +20,7 @@
             </ul>
         @endif
 
-        <ul class="at-small flex flex-wrap gap-2 -ml-2 my-3">
+        <ul class="at-small flex flex-wrap gap-2 my-3">
             @if ($product->brand)
                 <li>
                     {{ $product->brand->name }}
@@ -50,13 +50,19 @@
             @endforeach
         </ul>
 
-        @if ($product->translateAttribute('bookshop-reference'))
-            <div>
-                {!! $product->translateAttribute('bookshop-reference') !!}
-            </div>
-        @elseif ($product->translateAttribute('editorial-reference'))
-            <div>
-                {!! $product->translateAttribute('editorial-reference') !!}
+        @if ($product->translateAttribute('bookshop-reference') || $product->translateAttribute('editorial-reference'))
+            <div x-data="lineClamp">
+                <div x-ref="description" :class="{ 'line-clamp-8': !showMore }">
+                    @if ($product->translateAttribute('bookshop-reference'))
+                        {!! $product->translateAttribute('bookshop-reference') !!}
+                    @elseif ($product->translateAttribute('editorial-reference'))
+                        {!! $product->translateAttribute('editorial-reference') !!}
+                    @endif
+                </div>
+
+                <button x-show="!showMore" @click.prevent="showMore = true" class="text-primary">
+                    {{ __('Leer más') }}
+                </button>
             </div>
         @endif
 

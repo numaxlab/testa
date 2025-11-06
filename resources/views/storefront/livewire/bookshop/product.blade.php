@@ -32,7 +32,6 @@
 
             <h1 class="at-heading is-1">
                 {{ $product->recordTitle }}
-                {{ $product->id }}
 
                 <button
                         class="text-primary"

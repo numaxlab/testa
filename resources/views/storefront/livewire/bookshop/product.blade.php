@@ -56,7 +56,7 @@
             @endif
 
             @if ($product->authors->isNotEmpty())
-                <p class="at-heading is-4 font-normal normal-case mt-3">
+                <p class="at-heading is-4 font-normal normal-case mt-3 text-primary">
                     @foreach ($product->authors as $author)
                         <a href="{{ route('trafikrak.storefront.authors.show', $author->defaultUrl->slug) }}">{{ $author->name }}</a>{{ $loop->last ? '' : '; ' }}
                     @endforeach

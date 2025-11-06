@@ -1,4 +1,4 @@
-<div>
+<div class="mt-3">
     @if ($displayPrice && $pricing)
         <button
                 class="at-button w-full"

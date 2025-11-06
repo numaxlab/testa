@@ -12,9 +12,7 @@
             <h1 class="at-heading is-1">{{ __('Itinerarios') }}</h1>
 
             <p class="mt-4 md:max-w-[70%] lg:max-w-[50%]">
-                Proin pharetra fringilla urna nec porttitor. Suspendisse tempor ut massa fringilla aliquet. Nulla
-                pharetra lectus vel turpis hendrerit, ac pharetra mauris venenatis. Cras dictum lobortis dignissim. Orci
-                varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                Los itinerarios de formación y lectura es un proyecto donde tratamos de recoger los saberes acumulados a lo largo de los años por activistas y teóricos. Con estos caminos tratamos de recoger los mapas de nuestro quehacer político, y recuperar la memoria de esos caminos, que inevitablemente nos encontramos muchas veces de nuevo.
             </p>
         </header>
 

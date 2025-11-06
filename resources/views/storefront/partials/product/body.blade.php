@@ -42,7 +42,7 @@
 
         @if ($product->translateAttribute('bookshop-reference') || $product->translateAttribute('editorial-reference'))
             <div x-data="lineClamp">
-                <div x-ref="description" :class="{ 'line-clamp-10 ': !showMore }">
+                <div x-ref="description" :class="{ 'line-clamp-9 ': !showMore }">
                     @if ($product->translateAttribute('bookshop-reference'))
                         {!! $product->translateAttribute('bookshop-reference') !!}
                     @elseif ($product->translateAttribute('editorial-reference'))
@@ -78,7 +78,7 @@
                 <li>
                     {{ $product->variant->width->to('weight.g')->format() }}
                 </li>
-            @endif
+            @endif 
             @if ($product->variant->gtin)
                 <li>
                     ISBN: {{ $product->variant->gtin }}

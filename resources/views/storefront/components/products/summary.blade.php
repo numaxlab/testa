@@ -11,11 +11,11 @@
     </a>
 
     @if ($product->authors->isNotEmpty())
-        <div class="mb-3">
+        <div class="mb-2">
             <ul>
                 @foreach ($product->authors as $author)
                     <li>
-                        <p class="text-sm leading-5">{{ $author->name }}</p>
+                        <p class="at-small leading-4 mb-1">{{ $author->name }}</p>
                     </li>
                 @endforeach
             </ul>

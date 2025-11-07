@@ -10,7 +10,7 @@
     </button>
 
     <div
-            class="fixed top-0 end-0 z-50 w-3/4 px-5 py-9 bg-white border border-primary lg:absolute lg:w-100"
+            class="fixed top-0 end-0 z-50 w-3/4 px-5 py-5 bg-white border border-primary lg:absolute lg:w-100"
             x-show="linesVisible"
             x-on:click.away="linesVisible = false"
             x-transition
@@ -93,7 +93,7 @@
         </div>
 
         @if ($this->cart)
-            <a class="at-button is-primary" href="{{ route('trafikrak.storefront.checkout.summary') }}"
+            <a class="at-button is-primary mt-4" href="{{ route('trafikrak.storefront.checkout.summary') }}"
                wire:navigate>
                 {{ __('Tramitar pedido') }}
             </a>

@@ -44,7 +44,7 @@
         border-bottom-width: 0!important;
         margin-bottom: calc(var(--spacing) * 3)!important;
     }
-    input:focus {
+    input:focus, select:focus {
         border-color: var(--color-primary);
         box-shadow: var(--color-primary);   
     }

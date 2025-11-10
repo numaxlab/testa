@@ -3,7 +3,7 @@
         x-data="{ menuExpanded: false, searchExpanded: false }"
 >
     <div class="container mx-auto px-4">
-        <header class="org-site-header lg:gap-10">
+        <header class="org-site-header border-b-0 lg:gap-10">
             <a class="text-xl font-bold" href="{{ route('trafikrak.storefront.homepage') }}" wire:navigate>
                 {{ config('app.name') }}
             </a>

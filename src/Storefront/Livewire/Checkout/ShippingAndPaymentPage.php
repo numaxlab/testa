@@ -4,17 +4,13 @@ namespace Trafikrak\Storefront\Livewire\Checkout;
 
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Lunar\Base\PaymentTypeInterface;
 use Lunar\DataTypes\ShippingOption;
 use Lunar\Facades\CartSession;
-use Lunar\Facades\Payments;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
 use Lunar\Models\Country;
-use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use NumaxLab\Lunar\Redsys\RedsysPayment;
 use Trafikrak\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class ShippingAndPaymentPage extends Page
@@ -54,7 +50,7 @@ class ShippingAndPaymentPage extends Page
     {
         $this->cart = CartSession::current();
 
-        if (!$this->cart) {
+        if (! $this->cart || $this->cart->lines->isEmpty()) {
             $this->redirect('/');
 
             return;
@@ -70,6 +66,13 @@ class ShippingAndPaymentPage extends Page
         }
         if ($this->cart->billingAddress) {
             $this->billing->fill($this->cart->billingAddress->toArray());
+        }
+
+        if (! $this->shipping->contact_email) {
+            $this->shipping->contact_email = $this->cart->user->email;
+        }
+        if (! $this->billing->contact_email) {
+            $this->billing->contact_email = $this->cart->user->email;
         }
 
         $this->determineCheckoutStep();
@@ -135,7 +138,7 @@ class ShippingAndPaymentPage extends Page
     public function saveAddress(string $type): void
     {
         $rules = collect($this->shipping->getRules())
-            ->mapWithKeys(fn($value, $key) => ["$type.$key" => $value])
+            ->mapWithKeys(fn ($value, $key) => ["$type.$key" => $value])
             ->toArray();
 
         $this->validate($rules);
@@ -169,6 +172,13 @@ class ShippingAndPaymentPage extends Page
             }
         }
 
+        if ($type == 'shipping' && $this->shipping->saveToUser) {
+            $this->shipping->store();
+        }
+        if ($type == 'billing' && $this->billing->saveToUser) {
+            $this->billing->store();
+        }
+
         $this->determineCheckoutStep();
     }
 
@@ -181,7 +191,7 @@ class ShippingAndPaymentPage extends Page
     {
         $shippingAddress = $this->cart->shippingAddress;
 
-        if (!$shippingAddress) {
+        if (! $shippingAddress) {
             return null;
         }
 
@@ -198,7 +208,7 @@ class ShippingAndPaymentPage extends Page
 
     public function saveShippingOption(): void
     {
-        $option = $this->shippingOptions->first(fn($option) => $option->getIdentifier() == $this->chosenShipping);
+        $option = $this->shippingOptions->first(fn ($option) => $option->getIdentifier() == $this->chosenShipping);
 
         CartSession::setShippingOption($option);
 

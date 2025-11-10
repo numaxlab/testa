@@ -1,15 +1,15 @@
 <x-numaxlab-atomic::organisms.tier class="mt-7">
     <x-numaxlab-atomic::organisms.tier.header>
         <h2 class="at-heading is-2">
-            Tipo de envío
+            {{ __('Tipo de envío') }}
         </h2>
 
         @if ($currentStep > $step)
             <x-numaxlab-atomic::atoms.button
                     type="button"
-                    class="at-small"
+                    class="is-secondary at-small"
                     wire:click.prevent="$set('currentStep', {{ $step }})">
-                Modificar
+                {{ __('Modificar') }}
             </x-numaxlab-atomic::atoms.button>
         @endif
     </x-numaxlab-atomic::organisms.tier.header>
@@ -35,13 +35,13 @@
                         wire:target="saveShippingOption">
                         <span wire:loading.remove
                               wire:target="saveShippingOption">
-                            Continuar
+                            {{ __('Continuar') }}
                         </span>
 
                     <span wire:loading
                           wire:target="saveShippingOption">
                             <span class="inline-flex items-center">
-                                Gardando...
+                                {{ __('Guardando...') }}
                             </span>
                         </span>
                 </x-numaxlab-atomic::atoms.button>
@@ -57,7 +57,7 @@
                 </dl>
             @endif
         @else
-            <p>Primero necesitamos tus datos de envío.</p>
+            <p>{{ __('Primero necesitamos tus datos de envío.') }}</p>
         @endif
     </form>
 </x-numaxlab-atomic::organisms.tier>

@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
+use Lunar\Models\Address;
 use Lunar\Models\Country;
 use Lunar\Models\Customer;
 use Lunar\Models\State;
@@ -17,6 +18,8 @@ class AddressForm extends Form
     public Collection $states;
 
     public Collection $customerAddresses;
+
+    public bool $saveToUser = false;
 
     public ?int $customer_address_id = null;
 
@@ -108,5 +111,14 @@ class AddressForm extends Form
                 ->orderBy('name')
                 ->get();
         }
+    }
+
+    public function store(): void
+    {
+        $validated = $this->validate();
+
+        $validated['customer_id'] = Auth::user()->latestCustomer()?->id;
+
+        Address::create($validated);
     }
 }

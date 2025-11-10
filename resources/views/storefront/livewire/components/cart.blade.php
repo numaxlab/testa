@@ -26,55 +26,49 @@
         </button>
 
         <div class="mt-9">
-            @if ($this->cart)
-                @if ($lines)
-                    <ul class="divide-y divide-black">
-                        @foreach ($lines as $index => $line)
-                            <li>
-                                <x-trafikrak::products.in-cart
-                                        :href="route('trafikrak.storefront.bookshop.products.show', $line['slug'])"
-                                        :image="$line['thumbnail']"
-                                        :price="$line['unit_price']"
-                                        wire:key="line_{{ $line['id'] }}"
-                                >
-                                    {{ $line['description'] }}
+            @if ($this->cart && count($lines) > 0)
+                <ul class="divide-y divide-black">
+                    @foreach ($lines as $index => $line)
+                        <li>
+                            <x-trafikrak::products.in-cart
+                                    :href="route('trafikrak.storefront.bookshop.products.show', $line['slug'])"
+                                    :image="$line['thumbnail']"
+                                    :price="$line['unit_price']"
+                                    wire:key="line_{{ $line['id'] }}"
+                            >
+                                {{ $line['description'] }}
 
-                                    <x-slot:quantity>
-                                        <x-numaxlab-atomic::atoms.forms.input
-                                                wire:model.live="lines.{{ $index }}.quantity"
-                                                wire:change="updateLines"
-                                                type="number"
-                                                class="text-xs"
-                                        />
-                                    </x-slot:quantity>
+                                <x-slot:quantity>
+                                    <x-numaxlab-atomic::atoms.forms.input
+                                            wire:model.live="lines.{{ $index }}.quantity"
+                                            wire:change="updateLines"
+                                            type="number"
+                                            class="text-xs"
+                                    />
+                                </x-slot:quantity>
 
-                                    <x-slot:actions>
-                                        <button
-                                                class="at-small text-primary"
-                                                type="button"
-                                                wire:click="removeLine('{{ $line['id'] }}')">
-                                            {{ __('Eliminar') }}
-                                        </button>
-                                    </x-slot:actions>
-                                </x-trafikrak::products.in-cart>
+                                <x-slot:actions>
+                                    <button
+                                            class="at-small text-primary"
+                                            type="button"
+                                            wire:click="removeLine('{{ $line['id'] }}')">
+                                        {{ __('Eliminar') }}
+                                    </button>
+                                </x-slot:actions>
+                            </x-trafikrak::products.in-cart>
 
-                                @if ($errors->get('lines.' . $index . '.quantity'))
-                                    <div
-                                            class="p-2 mb-4 text-xs font-medium text-center text-red-700 rounded bg-red-50"
-                                            role="alert">
-                                        @foreach ($errors->get('lines.' . $index . '.quantity') as $error)
-                                            {{ $error }}
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="py-4 text-sm">
-                        {{ __('Tu cesta está vacía') }}
-                    </p>
-                @endif
+                            @if ($errors->get('lines.' . $index . '.quantity'))
+                                <div
+                                        class="p-2 mb-4 text-xs font-medium text-center text-red-700 rounded bg-red-50"
+                                        role="alert">
+                                    @foreach ($errors->get('lines.' . $index . '.quantity') as $error)
+                                        {{ $error }}
+                                    @endforeach
+                                </div>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
 
                 <div class="border-t border-black">
                     <h3 class="at-heading is-4 py-2">Resumen</h3>
@@ -92,7 +86,7 @@
             @endif
         </div>
 
-        @if ($this->cart)
+        @if ($this->cart && count($lines) > 0)
             <a class="at-button is-primary mt-4" href="{{ route('trafikrak.storefront.checkout.summary') }}"
                wire:navigate>
                 {{ __('Tramitar pedido') }}

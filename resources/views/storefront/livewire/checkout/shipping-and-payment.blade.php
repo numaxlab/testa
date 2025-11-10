@@ -15,7 +15,6 @@
         </h1>
     </header>
 
-
     <div class="lg:flex lg:gap-6">
         <div class="lg:w-1/2">
             @include('trafikrak::storefront.partials.checkout.address', [
@@ -30,23 +29,31 @@
         </div>
     </div>
 
-    @include('trafikrak::storefront.partials.checkout.address', [
-        'type' => 'billing',
-        'step' => $steps['billing_address'],
-    ])
-
     <form method="post" action="{{ route('trafikrak.storefront.checkout.process-payment') }}">
         @csrf
 
-        @include('trafikrak::storefront.partials.checkout.payment', [
-            'step' => $steps['payment'],
-        ])
+        <div class="lg:flex lg:gap-6">
+            <div class="lg:w-1/2">
+                @include('trafikrak::storefront.partials.checkout.address', [
+                   'type' => 'billing',
+                   'step' => $steps['billing_address'],
+               ])
+            </div>
+            <div class="lg:w-1/2">
+                @include('trafikrak::storefront.partials.checkout.payment', [
+                'step' => $steps['payment'],
+            ])
+            </div>
+        </div>
 
         <div class="flow-root my-7">
-            <dl class="-my-4 text-sm divide-y divide-gray-100">
-                <div class="flex flex-wrap py-4">
+            <h2 class="at-heading is-4">
+                {{ __('Resumen del pedido') }}
+            </h2>
+            <dl class="mt-4 text-sm divide-y divide-black">
+                <div class="flex flex-wrap py-2">
                     <dt class="w-1/2 font-medium">
-                        Subtotal
+                        {{ __('Subtotal') }}
                     </dt>
 
                     <dd class="w-1/2 text-right">
@@ -55,9 +62,9 @@
                 </div>
 
                 @if ($this->shippingOption)
-                    <div class="flex flex-wrap py-4">
+                    <div class="flex flex-wrap py-2">
                         <dt class="w-1/2 font-medium">
-                            Gastos de envío
+                            {{ __('Gastos de envío') }}
                         </dt>
 
                         <dd class="w-1/2 text-right">
@@ -67,7 +74,7 @@
                 @endif
 
                 @foreach ($cart->taxBreakdown->amounts as $tax)
-                    <div class="flex flex-wrap py-4" wire:key="{{ 'cart-tax-'.$tax->identifier }}">
+                    <div class="flex flex-wrap py-2" wire:key="{{ 'cart-tax-'.$tax->identifier }}">
                         <dt class="w-1/2 font-medium">
                             {{ $tax->description }}
                         </dt>
@@ -78,9 +85,9 @@
                     </div>
                 @endforeach
 
-                <div class="flex flex-wrap py-4">
+                <div class="flex flex-wrap py-2">
                     <dt class="w-1/2 font-medium">
-                        Total
+                        {{ __('Total') }}
                     </dt>
 
                     <dd class="w-1/2 text-right">

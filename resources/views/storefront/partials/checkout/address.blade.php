@@ -1,21 +1,21 @@
 <x-numaxlab-atomic::organisms.tier class="mt-7">
     <x-numaxlab-atomic::organisms.tier.header>
         <h2 class="at-heading is-2">
-            {{ $type == 'shipping' ? 'Datos de envío' : 'Datos de facturación' }}
+            {{ $type == 'shipping' ? __('Datos de envío') : __('Datos de facturación') }}
         </h2>
 
         @if ($currentStep > $step)
             <x-numaxlab-atomic::atoms.button
                     type="button"
-                    class="at-small"
+                    class="is-secondary at-small"
                     wire:click.prevent="$set('currentStep', {{ $step }})">
-                Modificar
+                {{ __('Modificar') }}
             </x-numaxlab-atomic::atoms.button>
         @endif
     </x-numaxlab-atomic::organisms.tier.header>
     <form wire:submit="saveAddress('{{ $type }}')">
         @if ($type == 'shipping' && $step == $currentStep)
-            <x-numaxlab-atomic::atoms.forms.checkbox wire:model.live="shippingIsBilling">
+            <x-numaxlab-atomic::atoms.forms.checkbox wire:model.live="shippingIsBilling" id="shippingIsBilling">
                 {{ __('Usar los mismos datos para facturación') }}
             </x-numaxlab-atomic::atoms.forms.checkbox>
         @endif
@@ -30,7 +30,7 @@
                                 id="{{ $type }}.customer_address_id"
                                 label="{{ __('Tus direcciones') }}"
                         >
-                            <option value="">Selecciona una de tus direcciones</option>
+                            <option value="">{{ __('Selecciona una de tus direcciones') }}</option>
                             @foreach ($$type->customerAddresses as $address)
                                 <option value="{{ $address->id }}"
                                         wire:key="{{ $type . '-customer-address-' . $address->id }}">
@@ -164,6 +164,15 @@
                         {{ __('Línea de dirección 2') }}
                     </x-numaxlab-atomic::atoms.input>
 
+                    @if (!$$type->customer_address_id)
+                        <x-numaxlab-atomic::atoms.forms.checkbox
+                                wire:model.live="{{ $type }}.saveToUser"
+                                id="{{ $type }}.saveToUser"
+                        >
+                            {{ __('Guardar para futuros pedidos') }}
+                        </x-numaxlab-atomic::atoms.forms.checkbox>
+                    @endif
+
                     <x-numaxlab-atomic::atoms.button
                             class="is-primary"
                             type="submit"
@@ -172,12 +181,12 @@
                             wire:key="{{ $type }}-submit-button">
                         <span wire:loading.remove
                               wire:target="saveAddress">
-                            Continuar
+                            {{ __('Continuar') }}
                         </span>
 
                         <span wire:loading
                               wire:target="saveAddress">
-                            Guardando...
+                            {{ __('Guardando...') }}
                         </span>
                     </x-numaxlab-atomic::atoms.button>
                 </div>
@@ -186,22 +195,20 @@
                     <div>
                         <div class="space-y-4">
                             <div>
-                                <dt class="font-medium">
-                                    Nombre
+                                <dt class="font-bold">
+                                    {{ __('Nombre') }}
                                 </dt>
-
-                                <dd class="mt-0.5">
+                                <dd>
                                     {{ $this->{$type}->first_name }} {{ $this->{$type}->last_name }}
                                 </dd>
                             </div>
 
                             @if ($this->{$type}->company_name)
                                 <div>
-                                    <dt class="font-medium">
-                                        Empresa
+                                    <dt class="font-bold">
+                                        {{ __('Empresa') }}
                                     </dt>
-
-                                    <dd class="mt-0.5">
+                                    <dd>
                                         {{ $this->{$type}->company_name }}
                                     </dd>
                                 </div>
@@ -209,22 +216,20 @@
 
                             @if ($this->{$type}->contact_phone)
                                 <div>
-                                    <dt class="font-medium">
-                                        Teléfono
+                                    <dt class="font-bold">
+                                        {{ __('Teléfono') }}
                                     </dt>
-
-                                    <dd class="mt-0.5">
+                                    <dd>
                                         {{ $this->{$type}->contact_phone }}
                                     </dd>
                                 </div>
                             @endif
 
                             <div>
-                                <dt class="font-medium">
-                                    Email
+                                <dt class="font-bold">
+                                    {{ __('Email') }}
                                 </dt>
-
-                                <dd class="mt-0.5">
+                                <dd>
                                     {{ $this->{$type}->contact_email }}
                                 </dd>
                             </div>
@@ -232,11 +237,10 @@
                     </div>
 
                     <div>
-                        <dt class="font-medium">
-                            Dirección
+                        <dt class="font-bold">
+                            {{ __('Dirección') }}
                         </dt>
-
-                        <dd class="mt-0.5">
+                        <dd>
                             {{ $this->{$type}->line_one }}<br>
                             @if ($this->{$type}->line_two)
                                 {{ $this->{$type}->line_two }}<br>

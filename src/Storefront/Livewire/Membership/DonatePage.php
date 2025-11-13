@@ -28,7 +28,7 @@ class DonatePage extends Page
 
     public AddressForm $billing;
 
-    public ?string $paymentType;
+    public ?string $paymentType = 'card';
 
     public ?string $privacy_policy;
 

@@ -20,6 +20,7 @@ return [
         ],
         'donation' => [
             'card',
+            'bizum',
         ],
     ],
 ];

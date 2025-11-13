@@ -3,7 +3,7 @@
         @foreach ($paymentTypes as $type)
             <li>
                 <x-numaxlab-atomic::atoms.forms.radio
-                        wire:model="paymentType"
+                        wire:model.live="paymentType"
                         id="paymentType-{{ $type }}"
                         key="paymentType{{ $type }}"
                         name="payment_type"
@@ -18,37 +18,39 @@
                 </p>
 
                 @if ($type === 'direct-debit')
-                    <div class="space-y-6 mt-6">
-                        <x-numaxlab-atomic::atoms.input
-                                wire:model="directDebitOwnerName"
-                                type="text"
-                                name="directDebitOwnerName"
-                                id="directDebitOwnerName"
-                                placeholder="{{ __('Nombre completo') }}"
-                        >
-                            {{ __('Titular de la cuenta') }}
-                        </x-numaxlab-atomic::atoms.input>
+                    @if ($this->paymentType === 'direct-debit')
+                        <div class="space-y-6 mt-6">
+                            <x-numaxlab-atomic::atoms.input
+                                    wire:model="directDebitOwnerName"
+                                    type="text"
+                                    name="directDebitOwnerName"
+                                    id="directDebitOwnerName"
+                                    placeholder="{{ __('Nombre completo') }}"
+                            >
+                                {{ __('Titular de la cuenta') }}
+                            </x-numaxlab-atomic::atoms.input>
 
-                        <x-numaxlab-atomic::atoms.input
-                                wire:model="directDebitBankName"
-                                type="text"
-                                name="directDebitBankName"
-                                id="directDebitBankName"
-                                placeholder="{{ __('Entidad bancaria') }}"
-                        >
-                            {{ __('Entidad bancaria') }}
-                        </x-numaxlab-atomic::atoms.input>
+                            <x-numaxlab-atomic::atoms.input
+                                    wire:model="directDebitBankName"
+                                    type="text"
+                                    name="directDebitBankName"
+                                    id="directDebitBankName"
+                                    placeholder="{{ __('Entidad bancaria') }}"
+                            >
+                                {{ __('Entidad bancaria') }}
+                            </x-numaxlab-atomic::atoms.input>
 
-                        <x-numaxlab-atomic::atoms.input
-                                wire:model="directDebitIban"
-                                type="text"
-                                name="directDebitIban"
-                                id="directDebitIban"
-                                placeholder="{{ __('ES00 0000 0000 00 0000000000') }}"
-                        >
-                            {{ __('IBAN') }}
-                        </x-numaxlab-atomic::atoms.input>
-                    </div>
+                            <x-numaxlab-atomic::atoms.input
+                                    wire:model="directDebitIban"
+                                    type="text"
+                                    name="directDebitIban"
+                                    id="directDebitIban"
+                                    placeholder="{{ __('ES00 0000 0000 00 0000000000') }}"
+                            >
+                                {{ __('IBAN') }}
+                            </x-numaxlab-atomic::atoms.input>
+                        </div>
+                    @endif
                 @endif
             </li>
         @endforeach

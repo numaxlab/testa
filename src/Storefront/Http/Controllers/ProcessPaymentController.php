@@ -13,7 +13,6 @@ use Lunar\Exceptions\FingerprintMismatchException;
 use Lunar\Facades\Payments;
 use Lunar\Models\Cart;
 use Lunar\Models\Order;
-use Lunar\Models\ProductVariant;
 use NumaxLab\Lunar\Redsys\RedsysPayment;
 use NumaxLab\Lunar\Redsys\Responses\RedirectToPaymentGateway;
 use Trafikrak\Models\Membership\MembershipPlan;
@@ -103,7 +102,7 @@ class ProcessPaymentController
     private function guessPaymentSuccessRouteNameFromOrder(Order $order): string
     {
         foreach ($order->lines as $line) {
-            if ($line->purchasable_type === Relation::getMorphAlias(ProductVariant::class)) {
+            if ($line->purchasable_type === 'product_variant') {
                 if (Str::contains($line->purchasable->sku, DonatePage::DONATION_PRODUCT_SKU)) {
                     return 'trafikrak.storefront.membership.donate.success';
                 }

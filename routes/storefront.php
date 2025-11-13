@@ -46,6 +46,8 @@ use Trafikrak\Storefront\Livewire\Media\DocumentsListPage;
 use Trafikrak\Storefront\Livewire\Media\HomePage as MediaHomePage;
 use Trafikrak\Storefront\Livewire\Media\VideoPage;
 use Trafikrak\Storefront\Livewire\Media\VideosListPage;
+use Trafikrak\Storefront\Livewire\Membership\DonatePage;
+use Trafikrak\Storefront\Livewire\Membership\DonateSuccessPage;
 use Trafikrak\Storefront\Livewire\Membership\SignupPage;
 use Trafikrak\Storefront\Livewire\Membership\SignupSuccessPage;
 use Trafikrak\Storefront\Livewire\PagePage;
@@ -206,8 +208,14 @@ Route::prefix('/apoya-el-proyecto')->group(function () {
     Route::get('/hazte-socix', SignupPage::class)
         ->name('trafikrak.storefront.membership.signup');
 
-    Route::get('/hazte-socix/gracias/{fingerprint}', SignupSuccessPage::class)
+    Route::get('/hazte-socix/finalizado/{fingerprint}', SignupSuccessPage::class)
         ->name('trafikrak.storefront.membership.signup.success');
+
+    Route::get('/dona', DonatePage::class)
+        ->name('trafikrak.storefront.membership.donate');
+
+    Route::get('/dona/gracias/{fingerprint}', DonateSuccessPage::class)
+        ->name('trafikrak.storefront.membership.donate.success');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

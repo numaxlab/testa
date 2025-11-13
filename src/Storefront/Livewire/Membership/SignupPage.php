@@ -125,12 +125,10 @@ class SignupPage extends Page
 
         $cart->calculate();
 
-        $fingerprint = $cart->fingerprint();
-
         return redirect()
             ->route(
                 'trafikrak.storefront.checkout.process-payment',
-                ['id' => $cart->id, 'fingerprint' => $fingerprint, 'payment' => $this->paymentType],
+                ['id' => $cart->id, 'fingerprint' => $cart->fingerprint(), 'payment' => $this->paymentType],
             );
     }
 
@@ -143,6 +141,7 @@ class SignupPage extends Page
 
     public function render(): View
     {
-        return view('trafikrak::storefront.livewire.membership.signup');
+        return view('trafikrak::storefront.livewire.membership.signup')
+            ->title(__('Asóciate'));
     }
 }

@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Lunar\Base\PaymentTypeInterface;
 use Lunar\Exceptions\FingerprintMismatchException;
-use Lunar\Facades\CartSession;
 use Lunar\Facades\Payments;
 use Lunar\Models\Cart;
 use Lunar\Models\Order;
@@ -17,6 +17,7 @@ use Lunar\Models\ProductVariant;
 use NumaxLab\Lunar\Redsys\RedsysPayment;
 use NumaxLab\Lunar\Redsys\Responses\RedirectToPaymentGateway;
 use Trafikrak\Models\Membership\MembershipPlan;
+use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 
 class ProcessPaymentController
 {
@@ -28,15 +29,13 @@ class ProcessPaymentController
         try {
             $cart->checkFingerprint($request->input('fingerprint'));
         } catch (FingerprintMismatchException $e) {
-            CartSession::use($cart);
-            CartSession::forget();
+            $this->clearCart($cart);
 
             return abort(403);
         }
 
         if (Auth::user()->id != $cart->user_id) {
-            CartSession::use($cart);
-            CartSession::forget();
+            $this->clearCart($cart);
 
             return abort(403);
         }
@@ -72,17 +71,22 @@ class ProcessPaymentController
             return abort(401);
         }
 
-        CartSession::use($cart);
-        CartSession::forget();
-
         if (is_a($response, RedirectToPaymentGateway::class)) {
             return $paymentDriver->redirect();
         }
 
         $order = Order::findOrFail($response->orderId);
 
+        $this->clearCart($cart);
+
         return redirect()
             ->route($this->guessPaymentSuccessRouteNameFromOrder($order), $order->fingerprint);
+    }
+
+    private function clearCart(Cart $cart): void
+    {
+        $cart->clear();
+        $cart->delete();
     }
 
     private function preparedRedsysData(string $paymentType, Order $order): array
@@ -92,7 +96,7 @@ class ProcessPaymentController
             'url_ok' => route($this->guessPaymentSuccessRouteNameFromOrder($order), $order->fingerprint),
             'url_ko' => url()->previous(),
             'method' => $paymentType === 'bizum' ? 'z' : 'C',
-            'product_description' => 'Pago a '.config('app.name'),
+            'product_description' => 'Compra online en '.config('app.name'),
         ];
     }
 
@@ -100,6 +104,10 @@ class ProcessPaymentController
     {
         foreach ($order->lines as $line) {
             if ($line->purchasable_type === Relation::getMorphAlias(ProductVariant::class)) {
+                if (Str::contains($line->purchasable->sku, DonatePage::DONATION_PRODUCT_SKU)) {
+                    return 'trafikrak.storefront.membership.donate.success';
+                }
+
                 return 'trafikrak.storefront.checkout.success';
             }
 

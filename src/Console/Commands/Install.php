@@ -4,15 +4,22 @@ namespace Trafikrak\Console\Commands;
 
 use Illuminate\Console\Command;
 use Lunar\FieldTypes\File;
+use Lunar\FieldTypes\Text;
 use Lunar\FieldTypes\Toggle;
 use Lunar\Models\Attribute;
 use Lunar\Models\AttributeGroup;
 use Lunar\Models\Brand;
 use Lunar\Models\Collection;
 use Lunar\Models\CollectionGroup;
+use Lunar\Models\Currency;
 use Lunar\Models\Product;
+use Lunar\Models\ProductOption;
+use Lunar\Models\ProductType;
+use Lunar\Models\ProductVariant;
 use Lunar\Models\Tag;
+use Lunar\Models\TaxClass;
 use Trafikrak\Handle;
+use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 
 class Install extends Command
 {
@@ -41,6 +48,10 @@ class Install extends Command
         $this->components->info('Setting up tags.');
 
         $this->setupTags();
+
+        $this->components->info('Setting up donation product.');
+
+        $this->setupDonationProduct();
     }
 
     private function setupBrandAttributes(): void
@@ -193,4 +204,79 @@ class Install extends Command
         ]);
     }
 
+    private function setupDonationProduct(): void
+    {
+        $type = ProductType::create([
+            'name' => 'Donación',
+        ]);
+
+        $quantityOption = ProductOption::create([
+            'handle' => 'donation-quantity',
+            'name' => [
+                'es' => 'Cantidades predefinidas',
+            ],
+            'label' => [
+                'es' => 'Cantidades predefinidas',
+            ],
+            'shared' => false,
+        ]);
+
+        $quantityValues = $quantityOption->values()->createMany([
+            [
+                'name' => [
+                    'es' => '5',
+                ],
+                'position' => 1,
+            ],
+            [
+                'name' => [
+                    'es' => '10',
+                ],
+                'position' => 2,
+            ],
+            [
+                'name' => [
+                    'es' => '25',
+                ],
+                'position' => 3,
+            ],
+        ]);
+
+        $product = Product::create([
+            'product_type_id' => $type->id,
+            'status' => 'published',
+            'attribute_data' => [
+                'name' => new Text('Donación'),
+            ],
+        ]);
+
+        $product->productOptions()->attach($quantityOption->id, ['position' => 1]);
+
+        $taxClass = TaxClass::where('default', true)->firstOrFail();
+        $currency = Currency::where('default', true)->firstOrFail();
+
+        foreach ($quantityValues as $key => $value) {
+            $sku = DonatePage::DONATION_PRODUCT_SKU;
+            if ($key > 0) {
+                $sku .= '-'.$key;
+            }
+
+            $variant = ProductVariant::create([
+                'product_id' => $product->id,
+                'tax_class_id' => $taxClass->id,
+                'sku' => $sku,
+                'shippable' => false,
+                'unit_quantity' => 1,
+                'min_quantity' => 1,
+                'quantity_increment' => 1,
+                'backorder' => 0,
+                'purchasable' => 'always',
+            ]);
+
+            $variant->prices()->create([
+                'price' => $value->name->get('es') * 100,
+                'currency_id' => $currency->id,
+            ]);
+        }
+    }
 }

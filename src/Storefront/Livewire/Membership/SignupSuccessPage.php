@@ -12,7 +12,9 @@ class SignupSuccessPage extends Page
 
     public function mount($fingerprint): void
     {
-        $this->order = Order::where('fingerprint', $fingerprint)->firstOrFail();
+        $this->order = Order::where('fingerprint', $fingerprint)
+            ->whereNotNull('placed_at')
+            ->firstOrFail();
     }
 
     public function render(): View

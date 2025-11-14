@@ -4,9 +4,11 @@ namespace Trafikrak\Pipelines\Order\Creation;
 
 use Closure;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Str;
 use Lunar\Models\Contracts\Order as OrderContract;
 use Lunar\Models\Tag;
 use Trafikrak\Models\Membership\MembershipPlan;
+use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 
 class TagOrder
 {
@@ -21,9 +23,17 @@ class TagOrder
                 ]);
                 break;
             }
+
+            if ($line->purchasable_type === 'product_variant') {
+                if (Str::contains($line->purchasable->sku, DonatePage::DONATION_PRODUCT_SKU)) {
+                    $tag = Tag::firstOrCreate([
+                        'value' => 'Donación',
+                    ]);
+                }
+            }
         }
 
-        if (!$tag) {
+        if (! $tag) {
             $tag = Tag::firstOrCreate([
                 'value' => 'Pedido librería',
             ]);

@@ -78,6 +78,11 @@ class MembershipPlan extends Model implements Purchasable
         });
     }
 
+    public function values()
+    {
+        return collect();
+    }
+
     public function getTaxReference(): string
     {
         return '';

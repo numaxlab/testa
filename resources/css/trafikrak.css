@@ -45,6 +45,10 @@
 
     .at-button {
         font-family: var(--font-sans);
+
+        &.is-secondary {
+            border-color: var(--color-primary);
+        }    
     }
 
     .tier-header {
@@ -52,8 +56,16 @@
         margin-bottom: calc(var(--spacing) * 3) !important;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, radio:focus {
         border-color: var(--color-primary);
         box-shadow: var(--color-primary);
+    }
+
+    .ml-breadcrumb {
+        & ol > li:not(:last-child)::after {
+        content: "";
+        margin-left: calc(var(--spacing) * 2);
+        display: inline-block;
+        }
     }
 }

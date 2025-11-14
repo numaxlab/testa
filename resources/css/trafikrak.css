@@ -26,6 +26,11 @@
         text-decoration: none;
         opacity: 0.8;
     }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        color: var(--color-primary);
+    }
 }
 
 @layer components {
@@ -56,16 +61,8 @@
         margin-bottom: calc(var(--spacing) * 3) !important;
     }
 
-    input:focus, select:focus, radio:focus {
+    input:focus, select:focus {
         border-color: var(--color-primary);
         box-shadow: var(--color-primary);
-    }
-
-    .ml-breadcrumb {
-        & ol > li:not(:last-child)::after {
-        content: "";
-        margin-left: calc(var(--spacing) * 2);
-        display: inline-block;
-        }
     }
 }

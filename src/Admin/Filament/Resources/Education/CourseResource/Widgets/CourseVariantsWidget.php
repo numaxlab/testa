@@ -14,7 +14,7 @@ use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
 use Lunar\Models\TaxClass;
-use NumaxLab\Lunar\Geslib\Admin\Actions\MapVariantsToProductOptionsWithTaxClass;
+use Trafikrak\Admin\Actions\MapVariantsToProductOptionsWithTaxClass;
 use Trafikrak\Observers\CourseObserver;
 
 class CourseVariantsWidget extends ProductOptionsWidget
@@ -123,6 +123,7 @@ class CourseVariantsWidget extends ProductOptionsWidget
     public function saveVariantsAction()
     {
         return Action::make('saveVariants')
+            ->label(__('trafikrak::course.widgets.course-variants.save-variants'))
             ->action(function () {
                 DB::beginTransaction();
 

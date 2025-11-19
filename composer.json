@@ -5,6 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-bcmath": "*",
         "intervention/validation": "^4.6",
         "numaxlab/lunar-geslib": "*",
         "spatie/laravel-translatable": "^6.0",

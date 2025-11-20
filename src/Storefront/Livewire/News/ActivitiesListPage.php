@@ -2,6 +2,8 @@
 
 namespace Trafikrak\Storefront\Livewire\News;
 
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Livewire\Attributes\Url;
@@ -36,8 +38,7 @@ class ActivitiesListPage extends Page
             ->when($this->q, function ($query) {
                 $videosByQuery = Event::search($this->q)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
-            })
-            ->with(['eventType', 'defaultUrl']);
+            });
 
         $courseModulesQuery = CourseModule::query()
             ->select([...$this->columns, DB::raw("'course-module' as type")])
@@ -45,8 +46,7 @@ class ActivitiesListPage extends Page
             ->when($this->q, function ($query) {
                 $videosByQuery = CourseModule::search($this->q)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
-            })
-            ->with(['course', 'course.purchasable', 'defaultUrl']);
+            });
 
         if ($this->t === 'c') {
             $activities = $courseModulesQuery
@@ -67,7 +67,7 @@ class ActivitiesListPage extends Page
             }
         }
 
-        $activities = $this->eagerLoadResults($activities);
+        $activities = self::eagerLoadResults($activities);
 
         return view('trafikrak::storefront.livewire.news.activities-list', compact('eventTypes', 'activities'))
             ->title(__('Actividades'));
@@ -78,9 +78,13 @@ class ActivitiesListPage extends Page
         $this->resetPage();
     }
 
-    private function eagerLoadResults($results)
+    public static function eagerLoadResults(Paginator|Collection $results): Paginator|Collection
     {
-        $combinedCollection = $results->getCollection();
+        if ($results instanceof Collection) {
+            $combinedCollection = $results;
+        } else {
+            $combinedCollection = $results->getCollection();
+        }
 
         $eventIds = $combinedCollection->where('type', 'event')->pluck('id');
         $moduleIds = $combinedCollection->where('type', 'course-module')->pluck('id');
@@ -104,6 +108,10 @@ class ActivitiesListPage extends Page
 
             return $item;
         });
+
+        if ($results instanceof Collection) {
+            return $finalCollection;
+        }
 
         $results->setCollection($finalCollection);
 

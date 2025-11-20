@@ -1,13 +1,5 @@
 <x-numaxlab-atomic::molecules.summary
         href="{{ route('trafikrak.storefront.events.show', $event->defaultUrl->slug) }}">
-    <x-slot name="thumbnail">
-        <img src="{{ Storage::url($event->image) }}" alt="">
-
-        @if ($event->eventType)
-            <span class="at-tag at-small absolute top-0 left-0 bg-primary border-primary text-white">{{ $event->eventType->name }}</span>
-        @endif
-    </x-slot>
-
     <h2 class="at-heading is-3">
         {{ $event->name }}
     </h2>
@@ -25,11 +17,6 @@
                     {{ $event->starts_at->format('d/m/Y H:i') }}
                 </time>
             </li>
-            @if ($event->location)
-                <li>
-                    {{ $event->location }}
-                </li>
-            @endif
         </ul>
     </x-slot>
 </x-numaxlab-atomic::molecules.summary>

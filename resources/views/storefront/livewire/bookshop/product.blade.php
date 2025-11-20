@@ -94,10 +94,10 @@
                     lazy="true"
             />
 
-            {{--<livewire:trafikrak.storefront.livewire.components.bookshop.product-media
+            <livewire:trafikrak.storefront.livewire.components.bookshop.product-media
                     :product="$product"
                     lazy="true"
-            />--}}
+            />
 
             <livewire:trafikrak.storefront.livewire.components.bookshop.product-itineraries
                     :key="$product->id . '-itineraries'"
@@ -105,10 +105,10 @@
                     lazy="true"
             />
 
-            {{--<livewire:trafikrak.storefront.livewire.components.bookshop.product-events
+            <livewire:trafikrak.storefront.livewire.components.bookshop.product-activities
                     :product="$product"
                     lazy="true"
-            />--}}
+            />
         </div>
     </div>
 </article>

@@ -1,11 +1,23 @@
 <div>
-    <x-numaxlab-atomic::organisms.tier class="mb-10">
-        <x-numaxlab-atomic::organisms.tier.header>
-            <h2 class="at-heading is-2">
-                {{ __('Audiovisual') }}
-            </h2>
-        </x-numaxlab-atomic::organisms.tier.header>
+    @if ($attachments->isNotEmpty())
+        <x-numaxlab-atomic::organisms.tier class="mb-10">
+            <x-numaxlab-atomic::organisms.tier.header>
+                <h2 class="at-heading is-2">
+                    {{ __('Audiovisual') }}
+                </h2>
+            </x-numaxlab-atomic::organisms.tier.header>
 
-        Audiovisuales relacionados con el libro, si los hubiera.
-    </x-numaxlab-atomic::organisms.tier>
+            <div class="overflow-x-auto">
+                <ul class="grid grid-flow-col auto-cols-[55%] gap-6">
+                    @foreach ($attachments as $attachment)
+                        <li>
+                            <x-dynamic-component
+                                    :component="'trafikrak::'.$attachment->component_namespace.'.summary'"
+                                    :media="$attachment->media"/>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </x-numaxlab-atomic::organisms.tier>
+    @endif
 </div>

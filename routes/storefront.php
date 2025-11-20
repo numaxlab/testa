@@ -145,8 +145,8 @@ Route::prefix('/actualidad')->group(function () {
     Route::get('/actividades', ActivitiesListPage::class)
         ->name('trafikrak.storefront.activities.index');
 
-    Route::get('/actividades/{slug}', EventPage::class)
-        ->name('trafikrak.storefront.activities.show');
+    Route::get('/actividades/eventos/{slug}', EventPage::class)
+        ->name('trafikrak.storefront.events.show');
 
     Route::get('/noticias')
         ->name('trafikrak.storefront.articles.index');

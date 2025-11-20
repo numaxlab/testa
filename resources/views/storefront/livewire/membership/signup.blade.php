@@ -12,7 +12,7 @@
         <form wire:submit="signup" class="mt-10">
             <fieldset class="mb-8">
                 <legend class="at-heading is-2 float-left w-full">
-                    {{ __('¿En qué modalidad te quieres apoyar?') }}
+                    {{ __('¿En qué modalidad quieres apoyar?') }}
                 </legend>
 
                 <ul class="grid gap-4 md:grid-cols-2 mt-15 mb-5 clear-both">

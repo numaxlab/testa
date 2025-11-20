@@ -28,7 +28,7 @@ class Article extends Model
     {
         return $this->belongsToMany(
             Product::modelClass(),
-            'course_'.config('lunar.database.table_prefix').'product',
+            'article_'.config('lunar.database.table_prefix').'product',
         )->withPivot(['position'])->orderByPivot('position');
     }
 

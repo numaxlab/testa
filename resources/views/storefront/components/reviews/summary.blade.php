@@ -1,5 +1,5 @@
 <figure class="at-blockquote has-icon">
-    <i class="blockquote-icon fa-solid fa-quote-left fa-2x text-primary" aria-hidden="false"></i>
+    <i class="icon icon-hyphens fa-2x text-primary" aria-hidden="false"></i>
     <blockquote>
         {{ $review->quote }}
     </blockquote>

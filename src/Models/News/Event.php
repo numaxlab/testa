@@ -11,6 +11,7 @@ use Lunar\Base\Traits\HasMedia;
 use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
 use Lunar\Models\Product;
+use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Trafikrak\Models\Attachment;
@@ -36,11 +37,19 @@ class Event extends Model implements SpatieHasMedia
         return $this->belongsTo(EventType::class);
     }
 
+    public function speakers(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Author::class, 'event_'.config('lunar.database.table_prefix').'geslib_author')
+            ->withPivot(['position'])
+            ->orderByPivot('position');
+    }
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(
             Product::modelClass(),
-            'course_'.config('lunar.database.table_prefix').'product',
+            'event_'.config('lunar.database.table_prefix').'product',
         )->withPivot(['position'])->orderByPivot('position');
     }
 

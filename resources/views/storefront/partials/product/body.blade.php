@@ -5,7 +5,7 @@
                 {{ $pricing->priceIncTax()->formatted() }}
             </div>
             <div class="font-serif font-small text-primary mb-3">
-                Disponible <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                Disponible <i class="icon icon-info" aria-hidden="true"></i>
             </div>
         @endif
 

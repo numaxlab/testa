@@ -50,12 +50,12 @@
                 <div class="lg:w-4/12">
                     <ul class="text-sm border-y border-black divide-x divide-black flex gap-2 py-2">
                         <li class="pr-2">
-                            <i class="fa-solid fa-calendar text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
-                            <time datetime="{{ $module->starts_at->format('Y-m-d') }}">{{ $module->starts_at->format('d/m/Y H:i') }}</time>
+                            <i class="icon icon-calendar text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
+                            <time datetime="{{ $module->starts_at->format('Y-m-d H:i:s') }}">{{ $module->starts_at->format('d/m/Y H:i') }}</time>
                         </li>
                     </ul>
                     <div class="flex gap-2 border-b border-black py-2">
-                        <i class="fa-solid fa-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
+                        <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
                         <p class="at-small">
                             {{ __('trafikrak::coursemodule.form.delivery_method.options.'.$module->delivery_method->value) }}
                             @if ($module->location)
@@ -65,9 +65,14 @@
                         </p>
                     </div>
 
-                    <a href="" wire:navigate class="at-button is-primary mt-4">
-                        {{ __('Inscríbete') }}
-                    </a>
+                    @if ($module->course->purchasable)
+                        <a
+                                href="{{ route('trafikrak.storefront.education.courses.register', $module->course->defaultUrl->slug) }}"
+                                wire:navigate class="at-button is-primary mt-4"
+                        >
+                            {{ __('Inscríbete') }}
+                        </a>
+                    @endif
                 </div>
                 @if ($module->description)
                     <div x-data="lineClamp" class="my-10 lg:w-8/12 lg:mt-0">

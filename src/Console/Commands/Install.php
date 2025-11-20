@@ -19,6 +19,7 @@ use Lunar\Models\ProductVariant;
 use Lunar\Models\Tag;
 use Lunar\Models\TaxClass;
 use Trafikrak\Handle;
+use Trafikrak\Observers\CourseObserver;
 use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 
 class Install extends Command
@@ -52,6 +53,10 @@ class Install extends Command
         $this->components->info('Setting up donation product.');
 
         $this->setupDonationProduct();
+
+        $this->components->info('Setting up education product.');
+
+        $this->setupEducationProductOption();
     }
 
     private function setupBrandAttributes(): void
@@ -210,6 +215,13 @@ class Install extends Command
             'name' => 'Donación',
         ]);
 
+        $type->mappedAttributes()->attach(
+            Attribute::whereAttributeType(Product::morphName())
+                ->where('handle', 'name')
+                ->get()
+                ->pluck('id'),
+        );
+
         $quantityOption = ProductOption::create([
             'handle' => 'donation-quantity',
             'name' => [
@@ -280,5 +292,30 @@ class Install extends Command
                 'currency_id' => $currency->id,
             ]);
         }
+    }
+
+    private function setupEducationProductOption(): void
+    {
+        $type = ProductType::create([
+            'name' => 'Curso',
+        ]);
+
+        $type->mappedAttributes()->attach(
+            Attribute::whereAttributeType(Product::morphName())
+                ->whereIn('handle', ['name', 'subtitle'])
+                ->get()
+                ->pluck('id'),
+        );
+
+        ProductOption::create([
+            'handle' => CourseObserver::RATE_PRODUCT_OPTION_HANDLE,
+            'name' => [
+                'es' => 'Tarifas de cursos',
+            ],
+            'label' => [
+                'es' => 'Tarifas de cursos',
+            ],
+            'shared' => true,
+        ]);
     }
 }

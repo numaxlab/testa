@@ -62,6 +62,16 @@ class Course extends Model implements SpatieHasMedia
         )->withPivot(['position'])->orderByPivot('position');
     }
 
+    public function purchasable(): BelongsTo
+    {
+        return $this->belongsTo(Product::modelClass());
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->purchasable ? $this->purchasable->variants() : (new Product())->variants();
+    }
+
     protected function casts(): array
     {
         return [

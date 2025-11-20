@@ -50,7 +50,7 @@
         <div class="mt-10">
             <ul class="divide-y divide-black border-y border-black">
                 <li class="at-small py-2">
-                    <i class="fa-solid fa-shopping-bag" aria-hidden="true"></i>
+                    <i class="icon icon-shopping-bag" aria-hidden="true"></i>
                     {{ __('Total pedido') }}: {{ $this->cart->subTotal->formatted() }}
                 </li>
             </ul>

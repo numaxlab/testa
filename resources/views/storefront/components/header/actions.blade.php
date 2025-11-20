@@ -2,12 +2,12 @@
     <li>
         @auth
             <a href="{{ route('dashboard') }}" wire:navigate>
-                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                <i class="icon icon-user" aria-hidden="true"></i>
                 <span class="sr-only">{{ __('Entrar en perfil') }}</span>
             </a>
         @else
             <a href="{{ route('login') }}" wire:navigate>
-                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                <i class="icon icon-user" aria-hidden="true"></i>
                 <span class="sr-only">{{ __('Acceder') }}</span>
             </a>
         @endauth
@@ -17,7 +17,7 @@
     </li>
     <li>
         <button class="text-primary" @click="searchExpanded = !searchExpanded">
-            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <i class="icon icon-magnifying-glass" aria-hidden="true"></i>
             <span class="sr-only">{{ __('Buscar') }}</span>
         </button>
     </li>
@@ -29,8 +29,8 @@
                 :aria-expanded="menuExpanded"
                 @click="menuExpanded = !menuExpanded"
         >
-            <i class="fa-solid fa-bars"
-               :class="{ 'fa-bars': !menuExpanded, 'fa-xmark': menuExpanded }"
+            <i class="icon icon-bars"
+               :class="{ 'icon-bars': !menuExpanded, 'icon-close': menuExpanded }"
                aria-hidden="true"></i>
         </button>
     </li>

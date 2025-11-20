@@ -65,12 +65,11 @@ class Search extends Component
 
     public function search(): void
     {
-        match ($this->contentTypeFilter) {
-            'products' => $redirectRoute = 'trafikrak.storefront.bookshop.search',
-            'audio' => $redirectRoute = 'trafikrak.storefront.media.audios.index',
-            'video' => $redirectRoute = 'trafikrak.storefront.media.videos.index',
-            'courses' => $redirectRoute = 'trafikrak.storefront.education.courses.index',
-            default => $redirectRoute = null,
+        $redirectRoute = match ($this->contentTypeFilter) {
+            'products' => 'trafikrak.storefront.bookshop.search',
+            'courses' => 'trafikrak.storefront.education.courses.index',
+            'audios', 'videos' => 'trafikrak.storefront.media.search',
+            default => null,
         };
 
         if ($redirectRoute !== null) {

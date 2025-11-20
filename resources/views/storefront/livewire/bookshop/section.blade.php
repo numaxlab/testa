@@ -27,8 +27,9 @@
                             aria-label="{{ __('Buscar en esta sección') }}"
                             autocomplete="off"
                     />
-                    <button type="submit" aria-label="Buscar" class="text-primary absolute inset-y-0 right-3">
-                        <i class="fa-solid fa-search" aria-hidden="true"></i>
+                    <button type="submit" aria-label="{{ __('Buscar') }}"
+                            class="text-primary absolute inset-y-0 right-3">
+                        <i class="icon icon-magnifying-glass" aria-hidden="true"></i>
                     </button>
                 </div>
 
@@ -41,7 +42,7 @@
                                 id="sectionTaxon"
                                 aria-label="{{ __('Filtrar por taxonomía') }}"
                         >
-                            <option value="">Todas las taxonomías</option>
+                            <option value="">{{ __('Todas las taxonomías') }}</option>
                             @foreach($section->children as $child)
                                 <option value="{{ $child->id }}" wire:key="taxon-{{ $child->id }}">
                                     {{ $child->translateAttribute('name') }}
@@ -67,7 +68,7 @@
 
             {{ $products->links() }}
         @else
-            <p>Esta sección no tiene artículos.</p>
+            <p>{{ __('No hay resultados.') }}</p>
         @endif
     </div>
 </article>

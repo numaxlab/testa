@@ -8,7 +8,7 @@
                 @mouseover="hover = true"
                 @mouseout="hover = false"
         >
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            <i class="icon icon-shopping-bag" aria-hidden="true"></i>
             @if($pricing)
                 <span x-show="!hover">{{ $pricing->priceIncTax()->formatted() }}</span>
             @endif

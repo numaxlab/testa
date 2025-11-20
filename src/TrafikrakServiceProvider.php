@@ -22,6 +22,8 @@ use Symfony\Component\Finder\Finder;
 use Trafikrak\Admin\Filament\Extension\ProductResourceExtension;
 use Trafikrak\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Trafikrak\Console\Commands\Install;
+use Trafikrak\Models\Education\Course;
+use Trafikrak\Observers\CourseObserver;
 use Trafikrak\Observers\OrderObserver;
 
 class TrafikrakServiceProvider extends ServiceProvider
@@ -38,7 +40,7 @@ class TrafikrakServiceProvider extends ServiceProvider
         ], ['trafikrak']);
 
         Route::middleware('web')
-            ->group(fn() => $this->loadRoutesFrom(__DIR__.'/../routes/storefront.php'));
+            ->group(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/storefront.php'));
 
         Blade::componentNamespace('Trafikrak\\Storefront\\Views\\Components', 'trafikrak');
         Blade::anonymousComponentPath(__DIR__.'/../resources/views/storefront/components', 'trafikrak');
@@ -69,7 +71,7 @@ class TrafikrakServiceProvider extends ServiceProvider
                 ->extending(Model::class)
                 ->get(),
         )->mapWithKeys(
-            fn($class)
+            fn ($class)
                 => [
                 Str::snake(str_replace('\\', '_', Str::after($class, 'Trafikrak\\Models\\'))) => $class,
             ],
@@ -78,6 +80,7 @@ class TrafikrakServiceProvider extends ServiceProvider
         Relation::morphMap($modelClasses->toArray());
 
         Order::observe(OrderObserver::class);
+        Course::observe(CourseObserver::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([

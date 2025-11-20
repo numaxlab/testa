@@ -15,7 +15,15 @@ class Media extends Component
 
     public function mount(): void
     {
-        //
+        $this->attachments = $this->tier
+            ->attachments()
+            ->whereHas('media', function ($query) {
+                $query->where('is_published', true);
+            })
+            ->with([
+                'media',
+            ])
+            ->get();
     }
 
     public function render(): View

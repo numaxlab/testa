@@ -47,10 +47,18 @@ class CourseResource extends BaseResource
     {
         return [
             CourseResource\Pages\EditCourse::class,
+            CourseResource\Pages\ManageCourseVariants::class,
             CourseResource\Pages\ManageCourseMedia::class,
             CourseResource\Pages\ManageCourseUrls::class,
             CourseResource\Pages\ManageCourseProducts::class,
             CourseResource\Pages\ManageCourseAttachments::class,
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            CourseResource\Widgets\CourseVariantsWidget::class,
         ];
     }
 
@@ -126,6 +134,7 @@ class CourseResource extends BaseResource
             'index' => CourseResource\Pages\ListCourses::route('/'),
             'create' => CourseResource\Pages\CreateCourse::route('/create'),
             'edit' => CourseResource\Pages\EditCourse::route('/{record}/edit'),
+            'variants' => CourseResource\Pages\ManageCourseVariants::route('/{record}/variants'),
             'media' => CourseResource\Pages\ManageCourseMedia::route('/{record}/media'),
             'urls' => CourseResource\Pages\ManageCourseUrls::route('/{record}/urls'),
             'products' => CourseResource\Pages\ManageCourseProducts::route('/{record}/products'),

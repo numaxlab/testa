@@ -3,6 +3,11 @@
 return [
     'label' => 'Curso',
     'plural_label' => 'Cursos',
+    'widgets' => [
+        'course-variants' => [
+            'save-variants' => 'Guardar variantes',
+        ],
+    ],
     'pages' => [
         'edit' => [
             'title' => 'Información básica',

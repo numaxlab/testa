@@ -5,13 +5,13 @@ namespace Trafikrak\Admin\Filament\Resources\News\ArticleResource\Pages;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord\Concerns\Translatable;
 use Lunar\Admin\Support\Pages\BaseEditRecord;
-use Trafikrak\Admin\Filament\Resources\Content\PageResource;
+use Trafikrak\Admin\Filament\Resources\News\ArticleResource;
 
 class EditArticle extends BaseEditRecord
 {
     use Translatable;
 
-    protected static string $resource = PageResource::class;
+    protected static string $resource = ArticleResource::class;
 
     public static function getNavigationLabel(): string
     {

@@ -11,7 +11,6 @@ return [
         ],
         'education' => [
             'card',
-            'direct-debit',
             'transfer',
         ],
         'membership' => [

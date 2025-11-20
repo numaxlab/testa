@@ -1,6 +1,6 @@
 <div x-data="{linesVisible: @entangle('linesVisible').live}">
     <button x-on:click="linesVisible = !linesVisible" class="text-primary relative">
-        <i class="fa-solid fa-shopping-bag" aria-hidden="true"></i>
+        <i class="icon icon-shopping-bag" aria-hidden="true"></i>
         @if ($lines && count($lines) > 0)
             <span class="absolute bottom-0 end-0 inline-flex items-center justify-center w-4 h-4 text-xs font-medium text-white bg-primary rounded-full">
                 {{ count($lines) }}
@@ -22,7 +22,7 @@
                 type="button"
                 aria-label="{{ __('Cerrar cesta de compra') }}"
                 x-on:click="linesVisible = false">
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            <i class="icon icon-close" aria-hidden="true"></i>
         </button>
 
         <div class="mt-9">
@@ -88,7 +88,7 @@
 
                 <ul class="flex flex-col divide-y divide-black border-t border-b border-black">
                     <li class="at-small py-2">
-                        <i class="fa-solid fa-shopping-bag" aria-hidden="true"></i>
+                        <i class="icon icon-shopping-bag" aria-hidden="true"></i>
                         {{ __('Subtotal pedido') }}: {{ $this->cart->subTotal->formatted() }}
                     </li>
                 </ul>

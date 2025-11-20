@@ -23,20 +23,19 @@
     <div class="grid gap-15 md:grid-cols-2">
         <div class="border-t border-primary">
             <a wire:navigate class="block border-b border-primary py-2">
-                <i class="fa-solid fa-file-invoice mr-2" aria-hidden="true"></i>
+                <i class="icon icon-doc mr-2" aria-hidden="true"></i>
                 {{ __('Descargar factura') }}
             </a>
             <div class="border-b border-black py-2">
-                <i class="fa-solid fa-calendar mr-2" aria-hidden="true"></i>
+                <i class="icon icon-calendar mr-2" aria-hidden="true"></i>
                 {{ $order->created_at->format('d/m/Y') }}
             </div>
             <div class="border-b border-black py-2">
-                <i class="fa-solid fa-truck-fast mr-2" aria-hidden="true"></i>
                 {{ $order->shipping_breakdown->items->pluck('name')->implode(', ') }}
                 {{ $order->shipping_total->formatted() }}
             </div>
             <div class="border-b border-black py-2">
-                <i class="fa-solid fa-shopping-bag mr-2" aria-hidden="true"></i>
+                <i class="icon icon-shopping-bag mr-2" aria-hidden="true"></i>
                 {{ __('Total') }} {{ $order->total->formatted() }}
             </div>
 

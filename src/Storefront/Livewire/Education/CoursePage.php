@@ -21,7 +21,7 @@ class CoursePage extends Page
             eagerLoad: [
                 'element.topic',
                 'element.media',
-                'element.products.defaultUrl',
+                'element.purchasable',
             ],
         );
 
@@ -33,6 +33,10 @@ class CoursePage extends Page
         $banner = Banner::whereJsonContains('locations', Location::COURSE->value)
             ->where('is_published', true)
             ->first();
+
+        $banner->link = $this->course->purchasable ?
+            route('trafikrak.storefront.education.courses.register', $this->course->defaultUrl->slug)
+            : null;
 
         return view('trafikrak::storefront.livewire.education.course', compact('banner'));
     }

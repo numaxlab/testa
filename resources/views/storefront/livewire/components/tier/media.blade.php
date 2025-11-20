@@ -7,7 +7,6 @@
 
             @if ($tier->has_link)
                 <a href="{{ $tier->link }}"
-                   wire:navigate
                    class="at-small"
                 >
                     {{ $tier->link_name }}
@@ -15,10 +14,14 @@
             @endif
         </x-numaxlab-atomic::organisms.tier.header>
 
-        <ul class="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-            <li>
-                Audios y/o vídeos
-            </li>
+        <ul class="grid grid-flow-col auto-cols-[60%] lg:auto-cols-[35%] gap-6">
+            @foreach ($attachments as $attachment)
+                <li>
+                    <x-dynamic-component
+                            :component="'trafikrak::'.$attachment->component_namespace.'.summary'"
+                            :media="$attachment->media"/>
+                </li>
+            @endforeach
         </ul>
     </x-numaxlab-atomic::organisms.tier>
 </div>

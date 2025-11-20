@@ -46,6 +46,7 @@ class ArticleResource extends BaseResource
         return [
             ArticleResource\Pages\EditArticle::class,
             ArticleResource\Pages\ManageArticleUrls::class,
+            ArticleResource\Pages\ManageArticleProducts::class,
         ];
     }
 
@@ -76,10 +77,17 @@ class ArticleResource extends BaseResource
                             ->required()
                             ->maxLength(255)
                             ->autofocus(),
+                        Forms\Components\Textarea::make('summary')
+                            ->label(__('trafikrak::article.form.summary.label')),
+                        Forms\Components\RichEditor::make('content')
+                            ->label(__('trafikrak::article.form.content.label')),
                         Forms\Components\FileUpload::make('image')
                             ->label(__('trafikrak::article.form.image.label'))
                             ->image()
                             ->imageEditor(),
+                        Forms\Components\DateTimePicker::make('published_at')
+                            ->label(__('trafikrak::article.form.published_at.label'))
+                            ->required(),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::article.form.is_published.label')),
                     ]),
@@ -94,6 +102,7 @@ class ArticleResource extends BaseResource
             'create' => ArticleResource\Pages\CreateArticle::route('/create'),
             'edit' => ArticleResource\Pages\EditArticle::route('/{record}/edit'),
             'urls' => ArticleResource\Pages\ManageArticleUrls::route('/{record}/urls'),
+            'products' => ArticleResource\Pages\ManageArticleProducts::route('/{record}/products'),
         ];
     }
 }

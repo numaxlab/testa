@@ -20,17 +20,17 @@ return [
         'name' => [
             'label' => 'Nombre',
         ],
-        'description' => [
-            'label' => 'Descripción',
+        'summary' => [
+            'label' => 'Resumen',
         ],
-        'link' => [
-            'label' => 'Enlace',
-        ],
-        'button_text' => [
-            'label' => 'Texto del botón',
+        'content' => [
+            'label' => 'Contenido',
         ],
         'image' => [
             'label' => 'Imagen',
+        ],
+        'published_at' => [
+            'label' => 'Fecha de publicación',
         ],
         'is_published' => [
             'label' => 'Pública',

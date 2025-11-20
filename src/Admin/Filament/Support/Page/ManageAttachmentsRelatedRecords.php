@@ -45,9 +45,9 @@ class ManageAttachmentsRelatedRecords extends BaseManageRelatedRecords
                 Tables\Columns\TextColumn::make('media_type')
                     ->label(__('trafikrak::attachment.table.type.label'))
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        Audio::class => __('trafikrak::attachment.table.type.options.audio'),
-                        Video::class => __('trafikrak::attachment.table.type.options.video'),
-                        Document::class => __('trafikrak::attachment.table.type.options.document'),
+                        (new Audio)->getMorphClass() => __('trafikrak::attachment.table.type.options.audio'),
+                        (new Video)->getMorphClass() => __('trafikrak::attachment.table.type.options.video'),
+                        (new Document)->getMorphClass() => __('trafikrak::attachment.table.type.options.document'),
                         default => __('trafikrak::attachment.table.type.options.unknown'),
                     })
                     ->badge(),

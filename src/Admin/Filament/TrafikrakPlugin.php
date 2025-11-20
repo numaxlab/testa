@@ -18,6 +18,8 @@ use Trafikrak\Admin\Filament\Resources\Membership\BenefitResource;
 use Trafikrak\Admin\Filament\Resources\Membership\MembershipPlanResource;
 use Trafikrak\Admin\Filament\Resources\Membership\MembershipTierResource;
 use Trafikrak\Admin\Filament\Resources\News\ArticleResource;
+use Trafikrak\Admin\Filament\Resources\News\EventResource;
+use Trafikrak\Admin\Filament\Resources\News\EventTypeResource;
 
 class TrafikrakPlugin implements Plugin
 {
@@ -53,6 +55,8 @@ class TrafikrakPlugin implements Plugin
             BannerResource::class,
             PageResource::class,
             ArticleResource::class,
+            EventTypeResource::class,
+            EventResource::class,
         ]);
     }
 

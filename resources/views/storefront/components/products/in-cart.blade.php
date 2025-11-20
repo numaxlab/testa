@@ -1,5 +1,5 @@
 <article class="flex gap-3 items-center py-2" {{ $attributes->except(['image', 'href', 'price']) }}>
-    <i class="fa-solid fa-book-open text-3xl text-primary" aria-hidden="true"></i>
+    <i class="icon icon-book text-3xl text-primary" aria-hidden="true"></i>
 
     <h3 class="at-small">
         <a href="{{ $attributes->get('href') }}" wire:navigate>

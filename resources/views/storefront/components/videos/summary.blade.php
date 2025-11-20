@@ -4,7 +4,9 @@
     </div>
 
     <h2 class="at-heading is-3">
-        {{ $media->name }}
+        <a href="{{ route('trafikrak.storefront.media.videos.show', $media->defaultUrl->slug) }}" wire:navigate>
+            {{ $media->name }}
+        </a>
     </h2>
 
     @if ($media->description)

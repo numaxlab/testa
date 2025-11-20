@@ -16,7 +16,7 @@
                             class="text-black absolute inset-y-0 right-3"
                             @click="searchExpanded = false"
                     >
-                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        <i class="icon icon-close" aria-hidden="true"></i>
                         <span class="sr-only">{{ __('Cerrar buscador') }}</span>
                     </button>
                 </div>

@@ -41,9 +41,9 @@
                         wire:loading.attr="disabled"
                 >
                     @if ($isUserFavourite)
-                        <i class="fa-solid fa-heart fa-2xs" aria-hidden="true" wire:loading.remove></i>
+                        <i class="icon icon-heart bg-primary" aria-hidden="true" wire:loading.remove></i>
                     @else
-                        <i class="fa-regular fa-heart fa-2xs" aria-hidden="true" wire:loading.remove></i>
+                        <i class="icon icon-heart" aria-hidden="true" wire:loading.remove></i>
                     @endif
 
                     <div wire:loading>
@@ -94,10 +94,10 @@
                     lazy="true"
             />
 
-            {{--<livewire:trafikrak.storefront.livewire.components.bookshop.product-media
+            <livewire:trafikrak.storefront.livewire.components.bookshop.product-media
                     :product="$product"
                     lazy="true"
-            />--}}
+            />
 
             <livewire:trafikrak.storefront.livewire.components.bookshop.product-itineraries
                     :key="$product->id . '-itineraries'"
@@ -105,10 +105,10 @@
                     lazy="true"
             />
 
-            {{--<livewire:trafikrak.storefront.livewire.components.bookshop.product-events
+            <livewire:trafikrak.storefront.livewire.components.bookshop.product-activities
                     :product="$product"
                     lazy="true"
-            />--}}
+            />
         </div>
     </div>
 </article>

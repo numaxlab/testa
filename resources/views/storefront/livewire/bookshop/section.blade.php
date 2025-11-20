@@ -42,7 +42,7 @@
                                 id="sectionTaxon"
                                 aria-label="{{ __('Filtrar por taxonomía') }}"
                         >
-                            <option value="">Todas las taxonomías</option>
+                            <option value="">{{ __('Todas las taxonomías') }}</option>
                             @foreach($section->children as $child)
                                 <option value="{{ $child->id }}" wire:key="taxon-{{ $child->id }}">
                                     {{ $child->translateAttribute('name') }}
@@ -68,7 +68,7 @@
 
             {{ $products->links() }}
         @else
-            <p>Esta sección no tiene artículos.</p>
+            <p>{{ __('No hay resultados.') }}</p>
         @endif
     </div>
 </article>

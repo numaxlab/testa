@@ -22,6 +22,11 @@ class Attachment extends Model
         return $this->morphTo();
     }
 
+    public function getNameAttribute(): string
+    {
+        return $this->media->name;
+    }
+
     public function getComponentNamespaceAttribute(): string
     {
         return match ($this->media_type) {

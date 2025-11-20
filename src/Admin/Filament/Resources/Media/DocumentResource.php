@@ -85,7 +85,7 @@ class DocumentResource extends BaseResource
                             ->label(__('trafikrak::document.form.description.label')),
                         Forms\Components\FileUpload::make('path')
                             ->label(__('trafikrak::document.form.path.label'))
-                            ->directory('audios')
+                            ->directory('docs')
                             ->required(),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::document.form.is_published.label')),

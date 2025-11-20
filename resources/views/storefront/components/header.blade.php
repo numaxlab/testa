@@ -184,36 +184,10 @@
                             </ul>
                         </li>
 
-                        <li
-                                @mouseenter="mediaExpanded = true"
-                                @mouseleave="mediaExpanded = false"
-                                class="relative"
-                        >
+                        <li>
                             <a href="{{ route('trafikrak.storefront.media.homepage') }}" wire:navigate>
                                 {{ __('Mediateca') }}
                             </a>
-
-                            <ul
-                                    x-cloak
-                                    x-show="mediaExpanded"
-                                    class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 shadow-[-10px_10px_15px_-3px_rgba(0,0,0,0.1)]"
-                            >
-                                <li>
-                                    <a href="{{ route('trafikrak.storefront.media.videos.index') }}">
-                                        {{ __('Vídeos') }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('trafikrak.storefront.media.audios.index') }}">
-                                        {{ __('Audios') }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('trafikrak.storefront.media.documents.index') }}">
-                                        {{ __('Documentos') }}
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
 
                         <li>

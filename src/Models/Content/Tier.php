@@ -4,9 +4,11 @@ namespace Trafikrak\Models\Content;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Lunar\Base\Traits\LogsActivity;
 use Lunar\Models\Collection;
 use Spatie\Translatable\HasTranslations;
+use Trafikrak\Models\Attachment;
 use Trafikrak\Models\Education\Course;
 use Trafikrak\Models\Education\Topic;
 
@@ -42,6 +44,11 @@ class Tier extends Model
     public function educationTopics(): BelongsToMany
     {
         return $this->belongsToMany(Topic::class, 'education_topic_tier');
+    }
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     public function getHasLinkAttribute(): bool

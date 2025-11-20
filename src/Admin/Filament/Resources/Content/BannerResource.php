@@ -110,6 +110,7 @@ class BannerResource extends BaseResource
                             ->options([
                                 Location::USER_DASHBOARD_SUBSCRIPTIONS->value => __('trafikrak::banner.form.locations.options.user_dashboard_subscriptions'),
                                 Location::COURSE->value => __('trafikrak::banner.form.locations.options.course'),
+                                Location::COURSE_REGISTER->value => __('trafikrak::banner.form.locations.options.course_register'),
                             ])
                             ->multiple(),
                         Forms\Components\Toggle::make('is_published')

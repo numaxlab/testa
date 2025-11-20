@@ -55,6 +55,12 @@
         </ul>
     </article>
 
+    @if ($banner)
+        <div class="mb-10">
+            <x-trafikrak::banners.mini :banner="$banner"/>
+        </div>
+    @endif
+
     <form>
         <fieldset class="mb-8">
             <legend class="at-heading is-2 float-left w-full">

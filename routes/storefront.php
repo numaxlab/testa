@@ -21,7 +21,7 @@ use Trafikrak\Storefront\Livewire\Bookshop\HomePage as BookshopHomePage;
 use Trafikrak\Storefront\Livewire\Bookshop\ItinerariesListPage;
 use Trafikrak\Storefront\Livewire\Bookshop\ItineraryPage;
 use Trafikrak\Storefront\Livewire\Bookshop\ProductPage;
-use Trafikrak\Storefront\Livewire\Bookshop\SearchPage;
+use Trafikrak\Storefront\Livewire\Bookshop\SearchPage as BookshopSearchPage;
 use Trafikrak\Storefront\Livewire\Bookshop\SectionPage;
 use Trafikrak\Storefront\Livewire\Checkout\ShippingAndPaymentPage;
 use Trafikrak\Storefront\Livewire\Checkout\SuccessPage;
@@ -40,12 +40,9 @@ use Trafikrak\Storefront\Livewire\Education\TopicPage;
 use Trafikrak\Storefront\Livewire\Education\TopicsListPage;
 use Trafikrak\Storefront\Livewire\HomePage;
 use Trafikrak\Storefront\Livewire\KitchenSinkPage;
-use Trafikrak\Storefront\Livewire\Media\AudioPage;
-use Trafikrak\Storefront\Livewire\Media\AudiosListPage;
-use Trafikrak\Storefront\Livewire\Media\DocumentPage;
 use Trafikrak\Storefront\Livewire\Media\DocumentsListPage;
 use Trafikrak\Storefront\Livewire\Media\HomePage as MediaHomePage;
-use Trafikrak\Storefront\Livewire\Media\VideoPage;
+use Trafikrak\Storefront\Livewire\Media\SearchPage as MediaSearchPage;
 use Trafikrak\Storefront\Livewire\Media\VideosListPage;
 use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 use Trafikrak\Storefront\Livewire\Membership\DonateSuccessPage;
@@ -75,7 +72,7 @@ Route::prefix('/libreria')->group(function () {
     Route::get('/productos/{slug}', ProductPage::class)
         ->name('trafikrak.storefront.bookshop.products.show');
 
-    Route::get('/buscar', SearchPage::class)
+    Route::get('/buscar', BookshopSearchPage::class)
         ->name('trafikrak.storefront.bookshop.search');
 
     Route::get('/{slug}', PagePage::class)
@@ -132,23 +129,11 @@ Route::prefix('/mediateca')->group(function () {
     Route::get('/', MediaHomePage::class)
         ->name('trafikrak.storefront.media.homepage');
 
-    Route::get('/audios', AudiosListPage::class)
-        ->name('trafikrak.storefront.media.audios.index');
-
-    Route::get('/audios/{slug}', AudioPage::class)
-        ->name('trafikrak.storefront.media.audios.show');
-
-    Route::get('/videos', VideosListPage::class)
-        ->name('trafikrak.storefront.media.videos.index');
-
-    Route::get('/videos/{slug}', VideoPage::class)
-        ->name('trafikrak.storefront.media.videos.show');
+    Route::get('/audiovisual/buscar', MediaSearchPage::class)
+        ->name('trafikrak.storefront.media.search');
 
     Route::get('/documentos', DocumentsListPage::class)
         ->name('trafikrak.storefront.media.documents.index');
-
-    Route::get('/documentos/{slug}', DocumentPage::class)
-        ->name('trafikrak.storefront.media.documents.show');
 });
 
 Route::prefix('/actualidad')->group(function () {

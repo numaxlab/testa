@@ -15,6 +15,8 @@ use NumaxLab\Lunar\Geslib\Handle;
 use Trafikrak\Models\Content\Section;
 use Trafikrak\Models\Content\Tier;
 use Trafikrak\Models\Content\TierType;
+use Trafikrak\Models\Media\Audio;
+use Trafikrak\Models\Media\Video;
 
 class TierResource extends BaseResource
 {
@@ -152,9 +154,48 @@ class TierResource extends BaseResource
                             ->label(__('trafikrak::tier.form.education_topics.label'))
                             ->multiple()
                             ->preload()
-                            ->visible(fn (Get $get,
-                            )
+                            ->visible(fn (Get $get)
                                 => $get('type') === TierType::RELATED_CONTENT_EDUCATION_TOPIC->value),
+                        Forms\Components\Repeater::make('attachments')
+                            ->relationship()
+                            ->label(__('trafikrak::tier.form.attachments.label'))
+                            ->schema([
+                                Forms\Components\Grid::make()
+                                    ->columns([
+                                        'sm' => 1,
+                                        'md' => 2,
+                                    ])
+                                    ->schema([
+                                        Forms\Components\Select::make('media_type')
+                                            ->label(__('trafikrak::tier.form.attachments.media_type'))
+                                            ->options([
+                                                (new Video)->getMorphClass() => 'Vídeo',
+                                                (new Audio)->getMorphClass() => 'Audio',
+                                            ])
+                                            ->reactive()
+                                            ->required(),
+                                        Forms\Components\Select::make('media_id')
+                                            ->label(__('trafikrak::tier.form.attachments.media_id'))
+                                            ->options(function (callable $get) {
+                                                $type = $get('media_type');
+                                                if (! $type) {
+                                                    return [];
+                                                }
+
+                                                return match ($type) {
+                                                    (new Video)->getMorphClass() => Video::all()->pluck('name', 'id'),
+                                                    (new Audio)->getMorphClass() => Audio::all()->pluck('name', 'id'),
+                                                    default => [],
+                                                };
+                                            })
+                                            ->searchable()
+                                            ->preload()
+                                            ->required(),
+                                    ]),
+                            ])
+                            ->defaultItems(0)
+                            ->minItems(0)
+                            ->visible(fn (Get $get) => $get('type') === TierType::RELATED_CONTENT_MEDIA->value),
                         Forms\Components\Grid::make()
                             ->columns([
                                 'sm' => 1,

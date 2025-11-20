@@ -35,6 +35,7 @@ return [
             'options' => [
                 'user_dashboard_subscriptions' => 'Panel de usuario - Subscripciones',
                 'course' => 'Página de curso',
+                'course_register' => 'Página de inscripción en un curso',
             ],
         ],
         'description' => [

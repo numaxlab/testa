@@ -71,6 +71,11 @@ return [
         'collections' => [
             'label' => 'Categorías',
         ],
+        'attachments' => [
+            'label' => 'Mediateca',
+            'media_type' => 'Tipo',
+            'media_id' => 'Elemento multimedia',
+        ],
         'is_published' => [
             'label' => 'Público',
         ],

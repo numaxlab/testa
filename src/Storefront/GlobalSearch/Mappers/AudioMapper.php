@@ -12,7 +12,7 @@ class AudioMapper extends AbstractMapper
             $this->model->searchableAs(),
             $this->model->id,
             $this->model->name,
-            route('trafikrak.storefront.media.audios.show', $this->model->defaultUrl->slug),
+            route('trafikrak.storefront.media.search', ['q' => $this->model->name]),
             $this->score,
         );
     }

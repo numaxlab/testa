@@ -4,6 +4,8 @@ namespace Trafikrak\Storefront\Livewire\Education;
 
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Trafikrak\Models\Content\Banner;
+use Trafikrak\Models\Content\Location;
 use Trafikrak\Models\Education\Course;
 
 class CourseRegisterPage extends Page
@@ -37,6 +39,10 @@ class CourseRegisterPage extends Page
 
     public function render(): View
     {
-        return view('trafikrak::storefront.livewire.education.course-register');
+        $banner = Banner::whereJsonContains('locations', Location::COURSE_REGISTER->value)
+            ->where('is_published', true)
+            ->first();
+
+        return view('trafikrak::storefront.livewire.education.course-register', compact('banner'));
     }
 }

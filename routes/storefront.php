@@ -48,6 +48,8 @@ use Trafikrak\Storefront\Livewire\Membership\DonatePage;
 use Trafikrak\Storefront\Livewire\Membership\DonateSuccessPage;
 use Trafikrak\Storefront\Livewire\Membership\SignupPage;
 use Trafikrak\Storefront\Livewire\Membership\SignupSuccessPage;
+use Trafikrak\Storefront\Livewire\News\ActivitiesListPage;
+use Trafikrak\Storefront\Livewire\News\EventPage;
 use Trafikrak\Storefront\Livewire\PagePage;
 
 Route::get('/', HomePage::class)
@@ -137,7 +139,20 @@ Route::prefix('/mediateca')->group(function () {
 });
 
 Route::prefix('/actualidad')->group(function () {
-    //
+    Route::get('/')
+        ->name('trafikrak.storefront.news.homepage');
+
+    Route::get('/actividades', ActivitiesListPage::class)
+        ->name('trafikrak.storefront.activities.index');
+
+    Route::get('/actividades/{slug}', EventPage::class)
+        ->name('trafikrak.storefront.activities.show');
+
+    Route::get('/noticias')
+        ->name('trafikrak.storefront.articles.index');
+
+    Route::get('/noticias/{slug}')
+        ->name('trafikrak.storefront.articles.show');
 });
 
 Route::prefix('/info')->group(function () {

@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->string('image');
-            $table->string('register_url')->nullable();
+            $table->string('image')->after('location');
+            $table->string('register_url')->after('image')->nullable();
         });
 
         Schema::create(

@@ -15,13 +15,19 @@
         @include('trafikrak::storefront.partials.media.search-form')
     </header>
 
-    <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        @foreach ($media as $item)
-            <li>
-                <x-dynamic-component
-                        :component="'trafikrak::'.$item->type.'.summary'"
-                        :media="$item"/>
-            </li>
-        @endforeach
-    </ul>
+    @if ($media->isNotEmpty())
+        <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach ($media as $item)
+                <li>
+                    <x-dynamic-component
+                            :component="'trafikrak::'.$item->type.'.summary'"
+                            :media="$item"/>
+                </li>
+            @endforeach
+        </ul>
+
+        {{ $media->links() }}
+    @else
+        <p>{{ __('No hay resultados.') }}</p>
+    @endif
 </article>

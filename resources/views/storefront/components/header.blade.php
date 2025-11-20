@@ -191,7 +191,7 @@
                         </li>
 
                         <li>
-                            <a>
+                            <a href="{{ route('trafikrak.storefront.activities.index') }}" wire:navigate>
                                 {{ __('Actividades') }}
                             </a>
                         </li>

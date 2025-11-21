@@ -43,9 +43,12 @@
         {
             "name": "Adrián Pardellas Blunier",
             "email": "adrian@numax.org"
+        },
+        {
+            "name": "X. Carlos Hidalgo",
+            "email": "carlos@numax.org"
         }
     ],
-    "minimum-stability": "stable",
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true,

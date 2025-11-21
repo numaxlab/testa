@@ -17,16 +17,18 @@ class HomePage extends Page
     {
         $eventsQuery = Event::query()
             ->select([...$this->columns, DB::raw("'event' as type")])
-            ->where('is_published', true);
+            ->where('is_published', true)
+            ->where('starts_at', '>=', now());
 
         $courseModulesQuery = CourseModule::query()
             ->select([...$this->columns, DB::raw("'course-module' as type")])
-            ->where('is_published', true);
+            ->where('is_published', true)
+            ->where('starts_at', '>=', now());
 
         $activities = ActivitiesListPage::eagerLoadResults(
             $eventsQuery
                 ->union($courseModulesQuery)
-                ->orderBy('starts_at', 'desc')
+                ->orderBy('starts_at', 'asc')
                 ->take(4)
                 ->get(),
         );

@@ -25,11 +25,32 @@
                     {{ $event->starts_at->format('d/m/Y H:i') }}
                 </time>
             </li>
-            @if ($event->location)
+            @if ($event->venue)
                 <li>
-                    {{ $event->location }}
+                    {{ $event->venue->name }}
                 </li>
             @endif
         </ul>
+
+        @if ($event->alert)
+            <p class="border-b py-2 text-sm">
+                <i class="icon icon-info text-2xl mr-2" aria-hidden="true"></i>
+                {{ $event->alert }}
+            </p>
+        @endif
+
+        <a
+                href="{{ route('trafikrak.storefront.events.show', $event->defaultUrl->slug) }}"
+                wire:navigate
+                class="at-button text-primary font-bold border-primary w-full mt-4"
+        >
+            {{ __('Más info') }}
+        </a>
+
+        @if ($event->register_url)
+            <a href="{{ $event->register_url }}" target="_blank" class="at-button is-primary mt-2 w-full">
+                {{ __('Inscríbete') }}
+            </a>
+        @endif
     </x-slot>
 </x-numaxlab-atomic::molecules.summary>

@@ -46,13 +46,12 @@
                             <time datetime="{{ $course->ends_at->format('Y-m-d') }}">{{ $course->ends_at->format('d/m/Y') }}</time>
                         </li>
                     </ul>
-                    <div class="flex gap-2 border-b border-black py-2">
-                        <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
-                        <p class="at-small">
-                            Aut adis providi caborepudam, eat ex ea sim in pos dolor aut doluptatem
-                            quiditatis magnur, est et ullupta tiaspientia nonsequis aute velias.
-                        </p>
-                    </div>
+                    @if ($course->alert)
+                        <div class="flex gap-2 border-b border-black py-2">
+                            <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
+                            <p class="at-small">{{ $course->alert }}</p>
+                        </div>
+                    @endif
                     @if ($course->purchasable)
                         <a
                                 href="{{ route('trafikrak.storefront.education.courses.register', $course->defaultUrl->slug) }}"

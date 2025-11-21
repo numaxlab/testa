@@ -31,6 +31,7 @@ class Course extends Model implements SpatieHasMedia
         'name',
         'subtitle',
         'description',
+        'alert',
     ];
     protected $guarded = [];
 

@@ -123,9 +123,12 @@ class CourseModuleResource extends BaseResource
                                     'trafikrak::coursemodule.form.delivery_method.options.hybrid',
                                 ),
                             ]),
-                        Forms\Components\TextInput::make('location')
-                            ->label(__('trafikrak::coursemodule.form.location.label'))
-                            ->maxLength(255),
+                        Forms\Components\Select::make('venue_id')
+                            ->relationship('venue', 'name')
+                            ->searchable(['name'])
+                            ->label(__('trafikrak::coursemodule.form.venue_id.label')),
+                        Forms\Components\Textarea::make('alert')
+                            ->label(__('trafikrak::event.form.alert.label')),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::coursemodule.form.is_published.label')),
                     ]),

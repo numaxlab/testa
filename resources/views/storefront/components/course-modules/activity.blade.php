@@ -24,11 +24,29 @@
                     {{ $module->starts_at->format('d/m/Y H:i') }}
                 </time>
             </li>
-            @if ($module->location)
+            @if ($module->venue)
                 <li>
-                    {{ $module->location }}
+                    {{ $module->venue->name }}
                 </li>
             @endif
         </ul>
+
+        <a
+                href="{{ route('trafikrak.storefront.education.courses.modules.show', [$module->course->defaultUrl->slug, $module->defaultUrl->slug]) }}"
+                wire:navigate
+                class="at-button text-primary font-bold border-primary w-full mt-4"
+        >
+            {{ __('Más info') }}
+        </a>
+
+        @if ($module->course->purchasable)
+            <a
+                    href="{{ route('trafikrak.storefront.education.courses.register', $module->course->defaultUrl->slug) }}"
+                    wire:navigate
+                    class="at-button is-primary mt-2 w-full"
+            >
+                {{ __('Inscríbete') }}
+            </a>
+        @endif
     </x-slot>
 </x-numaxlab-atomic::molecules.summary>

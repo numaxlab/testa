@@ -26,11 +26,6 @@
                 -
                 <time datetime="{{ $course->ends_at->format('Y-m-d') }}">{{ $course->ends_at->format('d/m/Y') }}</time>
             </li>
-            @if ($course->location)
-                <li>
-                    {{ $course->location }}
-                </li>
-            @endif
         </ul>
     </x-slot>
 </x-numaxlab-atomic::molecules.summary>

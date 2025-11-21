@@ -58,9 +58,13 @@
                         <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
                         <p class="at-small">
                             {{ __('trafikrak::coursemodule.form.delivery_method.options.'.$module->delivery_method->value) }}
-                            @if ($module->location)
+                            @if ($module->venue)
                                 <br>
-                                {{ $module->location }}
+                                {{ $module->venue->name }}
+                            @endif
+
+                            @if ($module->alert)
+                                <span class="block mt-2">{{ $module->alert }}</span>
                             @endif
                         </p>
                     </div>

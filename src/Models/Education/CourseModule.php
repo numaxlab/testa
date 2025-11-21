@@ -13,6 +13,7 @@ use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\Translatable\HasTranslations;
 use Trafikrak\Models\Attachment;
 use Trafikrak\Models\EventDeliveryMethod;
+use Trafikrak\Models\Venue;
 
 class CourseModule extends Model
 {
@@ -24,12 +25,18 @@ class CourseModule extends Model
         'name',
         'subtitle',
         'description',
+        'alert',
     ];
     protected $guarded = [];
 
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
     }
 
     public function instructors(): BelongsToMany

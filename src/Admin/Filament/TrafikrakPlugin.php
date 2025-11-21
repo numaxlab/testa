@@ -11,6 +11,7 @@ use Trafikrak\Admin\Filament\Resources\Content\TierResource;
 use Trafikrak\Admin\Filament\Resources\Education\CourseModuleResource;
 use Trafikrak\Admin\Filament\Resources\Education\CourseResource;
 use Trafikrak\Admin\Filament\Resources\Education\TopicResource;
+use Trafikrak\Admin\Filament\Resources\Education\VenueResource;
 use Trafikrak\Admin\Filament\Resources\Media\AudioResource;
 use Trafikrak\Admin\Filament\Resources\Media\DocumentResource;
 use Trafikrak\Admin\Filament\Resources\Media\VideoResource;
@@ -44,6 +45,7 @@ class TrafikrakPlugin implements Plugin
             CourseResource::class,
             CourseModuleResource::class,
             TopicResource::class,
+            VenueResource::class,
             AudioResource::class,
             DocumentResource::class,
             VideoResource::class,

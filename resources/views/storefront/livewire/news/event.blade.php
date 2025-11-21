@@ -50,9 +50,13 @@
                         <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
                         <p class="at-small">
                             {{ __('trafikrak::coursemodule.form.delivery_method.options.'.$event->delivery_method->value) }}
-                            @if ($event->location)
+                            @if ($event->venue)
                                 <br>
-                                {{ $event->location }}
+                                {{ $event->venue->name }}
+                            @endif
+
+                            @if ($event->alert)
+                                <span class="block mt-2">{{ $event->alert }}</span>
                             @endif
                         </p>
                     </div>

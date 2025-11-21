@@ -35,6 +35,7 @@ class ActivitiesListPage extends Page
         $eventsQuery = Event::query()
             ->select([...$this->columns, DB::raw("'event' as type")])
             ->where('is_published', true)
+            ->where('starts_at', '>=', now())
             ->when($this->q, function ($query) {
                 $videosByQuery = Event::search($this->q)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
@@ -43,6 +44,7 @@ class ActivitiesListPage extends Page
         $courseModulesQuery = CourseModule::query()
             ->select([...$this->columns, DB::raw("'course-module' as type")])
             ->where('is_published', true)
+            ->where('starts_at', '>=', now())
             ->when($this->q, function ($query) {
                 $videosByQuery = CourseModule::search($this->q)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
@@ -50,19 +52,19 @@ class ActivitiesListPage extends Page
 
         if ($this->t === 'c') {
             $activities = $courseModulesQuery
-                ->orderBy('starts_at', 'desc')
+                ->orderBy('starts_at', 'asc')
                 ->paginate(12);
             $courseModulesQuery->where('location_id', $this->t);
         } else {
             if (! empty($this->t)) {
                 $activities = $eventsQuery
                     ->where('event_type_id', $this->t)
-                    ->orderBy('starts_at', 'desc')
+                    ->orderBy('starts_at', 'asc')
                     ->paginate(12);
             } else {
                 $activities = $eventsQuery
                     ->union($courseModulesQuery)
-                    ->orderBy('starts_at', 'desc')
+                    ->orderBy('starts_at', 'asc')
                     ->paginate(12);
             }
         }
@@ -93,7 +95,7 @@ class ActivitiesListPage extends Page
             ->whereIn('id', $eventIds)
             ->get()
             ->keyBy('id');
-        $loadedModules = CourseModule::with(['course', 'course.purchasable', 'defaultUrl'])
+        $loadedModules = CourseModule::with(['defaultUrl', 'course', 'course.purchasable', 'course.defaultUrl'])
             ->whereIn('id', $moduleIds)
             ->get()
             ->keyBy('id');

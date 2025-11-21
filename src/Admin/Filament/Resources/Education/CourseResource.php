@@ -121,6 +121,8 @@ class CourseResource extends BaseResource
                             ->label(__('trafikrak::course.form.topic_id.label'))
                             ->required()
                             ->relationship('topic', 'name'),
+                        Forms\Components\Textarea::make('alert')
+                            ->label(__('trafikrak::event.form.alert.label')),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::course.form.is_published.label')),
                     ]),

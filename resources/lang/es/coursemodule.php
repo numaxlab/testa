@@ -67,7 +67,7 @@ return [
                 'hybrid' => 'Híbrido',
             ],
         ],
-        'location' => [
+        'venue_id' => [
             'label' => 'Lugar',
         ],
         'is_published' => [

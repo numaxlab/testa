@@ -38,11 +38,14 @@ return [
         'delivery_method' => [
             'label' => 'Modalidad',
         ],
-        'location' => [
+        'venue_id' => [
             'label' => 'Lugar',
         ],
         'register_url' => [
             'label' => 'Enlace inscripción',
+        ],
+        'alert' => [
+            'label' => 'Info',
         ],
         'image' => [
             'label' => 'Imagen',

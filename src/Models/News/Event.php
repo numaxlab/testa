@@ -16,6 +16,7 @@ use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Trafikrak\Models\Attachment;
 use Trafikrak\Models\EventDeliveryMethod;
+use Trafikrak\Models\Venue;
 
 class Event extends Model implements SpatieHasMedia
 {
@@ -29,12 +30,18 @@ class Event extends Model implements SpatieHasMedia
         'name',
         'subtitle',
         'description',
+        'alert',
     ];
     protected $guarded = [];
 
     public function eventType(): BelongsTo
     {
         return $this->belongsTo(EventType::class);
+    }
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
     }
 
     public function speakers(): BelongsToMany

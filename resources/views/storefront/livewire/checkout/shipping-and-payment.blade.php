@@ -46,7 +46,7 @@
     </div>
 
     <form wire:submit="finish">
-        @include('trafikrak::storefront.partials.checkout.payment', [
+        @include('trafikrak::storefront.partials.checkout.cart-payment', [
             'step' => $steps['payment'],
         ])
 

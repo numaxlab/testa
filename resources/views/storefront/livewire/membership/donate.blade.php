@@ -67,7 +67,7 @@
                 </legend>
 
                 <div class="mt-15 clear-both">
-                    @include('trafikrak::storefront.partials.signup.payment')
+                    @include('trafikrak::storefront.partials.checkout.payment')
                 </div>
             </fieldset>
 

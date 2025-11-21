@@ -61,8 +61,8 @@
         </div>
     @endif
 
-    <form>
-        <fieldset class="mb-8">
+    <form wire:submit="register">
+        <fieldset class="mb-10">
             <legend class="at-heading is-2 float-left w-full">
                 {{ __('Elige el tipo de inscripción') }}
             </legend>
@@ -98,13 +98,66 @@
             <x-numaxlab-atomic::atoms.forms.input-error :messages="$errors->get('selectedVariant')"/>
         </fieldset>
 
-        <fieldset class="mb-8">
+        @if (!Auth::check())
+            <fieldset class="mb-10">
+                <legend class="at-heading is-2 float-left w-full">
+                    {{ __('Tus datos') }}
+                </legend>
+
+                <div class="mt-15 clear-both">
+                    @include('trafikrak::storefront.partials.checkout.embed-auth')
+                </div>
+            </fieldset>
+        @endif
+
+        <fieldset class="mb-10">
+            <legend class="at-heading is-2 float-left w-full">
+                {{ __('Necesitas factura?') }}
+            </legend>
+
+            <div class="mt-15 clear-both">
+                <ul class="flex gap-6">
+                    <li>
+                        <x-numaxlab-atomic::atoms.forms.radio
+                                wire:model.live="invoice"
+                                id="invoice-no"
+                                key="invoiceNo"
+                                name="invoice"
+                                value="0">
+                        <span class="text-2xl">
+                            {{ __('No') }}
+                        </span>
+                        </x-numaxlab-atomic::atoms.forms.radio>
+                    </li>
+                    <li>
+                        <x-numaxlab-atomic::atoms.forms.radio
+                                wire:model.live="invoice"
+                                id="invoice-yes"
+                                key="invoiceYes"
+                                name="invoice"
+                                value="1">
+                        <span class="text-2xl">
+                            {{ __('Si') }}
+                        </span>
+                        </x-numaxlab-atomic::atoms.forms.radio>
+                    </li>
+                </ul>
+
+                @if ($this->invoice)
+                    <div class="mt-6">
+                        @include('trafikrak::storefront.partials.checkout.billing-address')
+                    </div>
+                @endif
+            </div>
+        </fieldset>
+
+        <fieldset class="mb-10">
             <legend class="at-heading is-2 float-left w-full">
                 {{ __('Método de pago') }}
             </legend>
 
             <div class="mt-15 clear-both">
-                @include('trafikrak::storefront.partials.signup.payment')
+                @include('trafikrak::storefront.partials.checkout.payment')
             </div>
         </fieldset>
 

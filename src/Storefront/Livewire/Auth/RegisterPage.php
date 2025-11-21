@@ -3,6 +3,7 @@
 namespace Trafikrak\Storefront\Livewire\Auth;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -43,21 +44,28 @@ class RegisterPage extends Page
                 'lowercase',
                 'email',
                 'max:255',
-                'unique:' . config('auth.providers.users.model'),
+                'unique:'.config('auth.providers.users.model'),
             ],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
             'privacy_policy' => ['accepted', 'required'],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        self::createUser($validated);
+
+        $this->redirect(route('dashboard', absolute: false), navigate: true);
+    }
+
+    public static function createUser(array $data): User
+    {
+        $data['password'] = Hash::make($data['password']);
 
         DB::beginTransaction();
 
-        $user = config('auth.providers.users.model')::create($validated);
+        $user = config('auth.providers.users.model')::create($data);
 
         $customer = Customer::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
         ]);
 
         $customer->users()->attach($user);
@@ -69,6 +77,6 @@ class RegisterPage extends Page
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        return $user;
     }
 }

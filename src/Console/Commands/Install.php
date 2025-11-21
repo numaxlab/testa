@@ -264,7 +264,7 @@ class Install extends Command
 
         $product->productOptions()->attach($quantityOption->id, ['position' => 1]);
 
-        $taxClass = TaxClass::where('default', true)->firstOrFail();
+        $taxClass = TaxClass::where('name', 'LIKE', 'Sin IVA')->firstOrFail();
         $currency = Currency::where('default', true)->firstOrFail();
 
         foreach ($quantityValues as $key => $value) {

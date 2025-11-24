@@ -18,6 +18,7 @@ class LatestOrder extends Component
         $latestOrders = Auth::user()
             ->latestCustomer()
             ->orders()
+            ->where('is_geslib', true)
             ->whereNotIn('status', ['awaiting-payment', 'cancelled'])
             ->latest()
             ->take(2)

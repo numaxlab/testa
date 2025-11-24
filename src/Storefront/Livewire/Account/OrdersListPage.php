@@ -15,6 +15,7 @@ class OrdersListPage extends Page
     {
         $orders = Auth::user()->latestCustomer()->orders()
             ->whereNotIn('status', ['awaiting-payment', 'cancelled'])
+            ->where('is_geslib', true)
             ->latest()
             ->paginate(8);
 

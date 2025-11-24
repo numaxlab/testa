@@ -177,7 +177,7 @@
                                     @endforeach
                                 @endif
                                 <li>
-                                    <a>
+                                    <a href="{{ route('my-courses.index') }}" wire:navigate>
                                         {{ __('Mis cursos') }}
                                     </a>
                                 </li>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use NumaxLab\Lunar\Geslib\Storefront\Http\Controllers\Auth\VerifyEmailController;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Actions\Logout;
 use Trafikrak\Storefront\Http\Controllers\ProcessPaymentController;
+use Trafikrak\Storefront\Livewire\Account\CoursesListPage as AccountCoursesListPage;
 use Trafikrak\Storefront\Livewire\Account\DashboardPage;
 use Trafikrak\Storefront\Livewire\Account\FavouriteProductsPage;
 use Trafikrak\Storefront\Livewire\Account\HandleAddressPage;
@@ -206,6 +207,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/mis-pedidos', OrdersListPage::class)->name('orders.index');
     Route::get('/mis-pedidos/{reference}', OrderPage::class)->name('orders.show');
+
+    Route::get('/mis-cursos', AccountCoursesListPage::class)
+        ->name('my-courses.index');
 });
 
 Route::post('logout', Logout::class)->name('logout');

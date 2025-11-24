@@ -127,6 +127,7 @@ class SignupPage extends Page
 
         $cart = Cart::create([
             'user_id' => $user->id,
+            'customer_id' => $user->latestCustomer()?->id,
             'currency_id' => StorefrontSession::getCurrency()->id,
             'channel_id' => StorefrontSession::getChannel()->id,
             'meta' => $meta,

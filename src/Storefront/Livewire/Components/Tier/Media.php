@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Trafikrak\Models\Content\Tier;
+use Trafikrak\Models\Media\Visibility;
 
 class Media extends Component
 {
@@ -18,7 +19,9 @@ class Media extends Component
         $this->attachments = $this->tier
             ->attachments()
             ->whereHas('media', function ($query) {
-                $query->where('is_published', true);
+                $query
+                    ->where('is_published', true)
+                    ->where('visibility', Visibility::PUBLIC->value);
             })
             ->with([
                 'media',

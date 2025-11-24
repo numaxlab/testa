@@ -16,7 +16,7 @@
                     <li>
                         <x-trafikrak::course-modules.activity :module="$attachment->attachable"/>
                     </li>
-                @elseif ($attachment->attachable instanceof \Trafikrak\Models\News\Event)
+                @elseif ($attachment->attachable instanceof \Trafikrak\Models\News\Event && ! $attachment->media->is_private)
                     <li>
                         <x-trafikrak::events.summary :event="$attachment->attachable"/>
                     </li>

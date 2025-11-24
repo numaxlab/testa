@@ -51,6 +51,15 @@ class CourseRegisterPage extends Page
 
         $this->course = $this->url->element;
 
+        if (Auth::check()) {
+            $customer = Auth::user()->latestCustomer();
+
+            if ($customer->courses->contains($this->course)) {
+                redirect()->route('trafikrak.storefront.education.courses.show', $slug);
+                return;
+            }
+        }
+
         $this->billing->init();
 
         if (Auth::check()) {

@@ -26,6 +26,13 @@ return [
         'path' => [
             'label' => 'Archivo',
         ],
+        'visibility' => [
+            'label' => 'Visibilidad',
+            'options' => [
+                'public' => 'Público',
+                'private' => 'Privado',
+            ],
+        ],
         'is_published' => [
             'label' => 'Público',
         ],

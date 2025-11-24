@@ -11,6 +11,12 @@
             </h3>
         </a>
 
+        @if ($media->is_private)
+            <div class="mt-2">
+                <span class="at-tag is-primary text-sm">{{ __('Recurso privado') }}</span>
+            </div>
+        @endif
+
         @if ($media->description)
             <div class="summary-content">
                 {!! $media->description !!}

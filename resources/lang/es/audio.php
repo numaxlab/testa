@@ -53,6 +53,13 @@ return [
         'source_id' => [
             'label' => 'Código embebido',
         ],
+        'visibility' => [
+            'label' => 'Visibilidad',
+            'options' => [
+                'public' => 'Público',
+                'private' => 'Privado',
+            ],
+        ],
         'is_published' => [
             'label' => 'Público',
         ],

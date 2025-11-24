@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Trafikrak\Models\Attachment;
+use Trafikrak\Models\Media\Visibility;
 use Trafikrak\Models\News\Event;
 
 class EventMedia extends Component
@@ -18,7 +19,10 @@ class EventMedia extends Component
     {
         $this->attachments = Attachment::where('attachable_type', (new Event)->getMorphClass())
             ->where('attachable_id', $this->event->id)
-            ->whereHas('media', fn ($query) => $query->where('is_published', true))
+            ->whereHas(
+                'media',
+                fn ($query) => $query->where('is_published', true)->where('visibility', Visibility::PUBLIC->value),
+            )
             ->with('media')
             ->get();
     }

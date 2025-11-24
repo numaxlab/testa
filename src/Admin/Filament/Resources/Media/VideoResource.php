@@ -10,6 +10,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Media\Video;
+use Trafikrak\Models\Media\Visibility;
 
 class VideoResource extends BaseResource
 {
@@ -99,6 +100,17 @@ class VideoResource extends BaseResource
                                 Forms\Components\Textarea::make('source_id')
                                     ->label(__('trafikrak::video.form.source_id.label'))
                                     ->required(),
+                            ]),
+                        Forms\Components\Select::make('visibility')
+                            ->label(__('trafikrak::video.form.visibility.label'))
+                            ->required()
+                            ->options([
+                                Visibility::PUBLIC->value => __(
+                                    'trafikrak::video.form.visibility.options.public',
+                                ),
+                                Visibility::PRIVATE->value => __(
+                                    'trafikrak::video.form.visibility.options.private',
+                                ),
                             ]),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::video.form.is_published.label')),

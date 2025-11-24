@@ -10,6 +10,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Media\Document;
+use Trafikrak\Models\Media\Visibility;
 
 class DocumentResource extends BaseResource
 {
@@ -87,6 +88,17 @@ class DocumentResource extends BaseResource
                             ->label(__('trafikrak::document.form.path.label'))
                             ->directory('docs')
                             ->required(),
+                        Forms\Components\Select::make('visibility')
+                            ->label(__('trafikrak::document.form.visibility.label'))
+                            ->required()
+                            ->options([
+                                Visibility::PUBLIC->value => __(
+                                    'trafikrak::document.form.visibility.options.public',
+                                ),
+                                Visibility::PRIVATE->value => __(
+                                    'trafikrak::document.form.visibility.options.private',
+                                ),
+                            ]),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('trafikrak::document.form.is_published.label')),
                     ]),

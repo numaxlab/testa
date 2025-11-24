@@ -2,6 +2,7 @@
 
 namespace Trafikrak\Storefront\Livewire\Education;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Trafikrak\Models\Content\Banner;
@@ -40,6 +41,16 @@ class CoursePage extends Page
                 : null;
         }
 
-        return view('trafikrak::storefront.livewire.education.course', compact('banner'));
+        $userRegistered = false;
+
+        if (Auth::check()) {
+            $customer = Auth::user()->latestCustomer();
+
+            if ($customer->courses->contains($this->course)) {
+                $userRegistered = true;
+            }
+        }
+
+        return view('trafikrak::storefront.livewire.education.course', compact('banner', 'userRegistered'));
     }
 }

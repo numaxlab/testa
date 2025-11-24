@@ -69,13 +69,16 @@
                         </p>
                     </div>
 
-                    @if ($module->course->purchasable)
+                    @if (!$userRegistered && $module->course->purchasable)
                         <a
                                 href="{{ route('trafikrak.storefront.education.courses.register', $module->course->defaultUrl->slug) }}"
                                 wire:navigate class="at-button is-primary mt-4"
                         >
                             {{ __('Inscríbete') }}
                         </a>
+                    @endif
+                    @if ($userRegistered)
+                        <p class="mt-4">{{ __('Estás inscrito/a en este curso') }}</p>
                     @endif
                 </div>
                 @if ($module->description)

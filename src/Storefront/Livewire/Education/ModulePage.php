@@ -2,6 +2,7 @@
 
 namespace Trafikrak\Storefront\Livewire\Education;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Trafikrak\Models\Education\CourseModule;
@@ -28,6 +29,16 @@ class ModulePage extends Page
 
     public function render(): View
     {
-        return view('trafikrak::storefront.livewire.education.module');
+        $userRegistered = false;
+
+        if (Auth::check()) {
+            $customer = Auth::user()->latestCustomer();
+
+            if ($customer->courses->contains($this->module->course)) {
+                $userRegistered = true;
+            }
+        }
+
+        return view('trafikrak::storefront.livewire.education.module', compact('userRegistered'));
     }
 }

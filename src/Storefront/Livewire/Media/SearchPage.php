@@ -10,6 +10,7 @@ use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Trafikrak\Models\Education\Topic;
 use Trafikrak\Models\Media\Audio;
 use Trafikrak\Models\Media\Video;
+use Trafikrak\Models\Media\Visibility;
 
 class SearchPage extends Page
 {
@@ -38,6 +39,7 @@ class SearchPage extends Page
         $videosQuery = Video::query()
             ->select([...$this->columns, DB::raw("'videos' as type")])
             ->where('is_published', true)
+            ->where('visibility', Visibility::PUBLIC->value)
             ->when($this->q, function ($query) {
                 $videosByQuery = Video::search($this->q)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
@@ -46,6 +48,7 @@ class SearchPage extends Page
         $audiosQuery = Audio::query()
             ->select([...$this->columns, DB::raw("'audios' as type")])
             ->where('is_published', true)
+            ->where('visibility', Visibility::PUBLIC->value)
             ->when($this->q, function ($query) {
                 $audiosByQuery = Audio::search($this->q)->get();
                 $query->whereIn('id', $audiosByQuery->pluck('id'));

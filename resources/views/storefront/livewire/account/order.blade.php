@@ -31,6 +31,7 @@
                 {{ $order->created_at->format('d/m/Y') }}
             </div>
             <div class="border-b border-black py-2">
+                <i class="icon icon-shipping mr-2" aria-hidden="true"></i>
                 {{ $order->shipping_breakdown->items->pluck('name')->implode(', ') }}
                 {{ $order->shipping_total->formatted() }}
             </div>

@@ -41,7 +41,7 @@
                         wire:loading.attr="disabled"
                 >
                     @if ($isUserFavourite)
-                        <i class="icon icon-heart bg-primary" aria-hidden="true" wire:loading.remove></i>
+                        <i class="icon icon-heart-full" aria-hidden="true" wire:loading.remove></i>
                     @else
                         <i class="icon icon-heart" aria-hidden="true" wire:loading.remove></i>
                     @endif

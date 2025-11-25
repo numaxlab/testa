@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table(config('lunar.database.table_prefix').'orders', function (Blueprint $table) {
-            $table->boolean('was_redeemed')->default(false)->after('is_bookshop');
+            $table->boolean('was_redeemed')->default(false)->after('is_geslib');
         });
     }
 

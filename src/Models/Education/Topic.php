@@ -11,6 +11,7 @@ use Lunar\Base\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Trafikrak\Database\Factories\Education\TopicFactory;
+use Trafikrak\Media\StandardMediaDefinitions;
 
 class Topic extends Model implements SpatieHasMedia
 {
@@ -36,5 +37,15 @@ class Topic extends Model implements SpatieHasMedia
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class);
+    }
+
+    protected function getDefinitionClass()
+    {
+        $conversionClasses = config('lunar.media.definitions', []);
+
+        return $conversionClasses['education-topic']
+            ?? $conversionClasses[static::class] // fallback for published config
+            ?? $conversionClasses[get_parent_class(static::class)] // fallback use parent class
+            ?? StandardMediaDefinitions::class;
     }
 }

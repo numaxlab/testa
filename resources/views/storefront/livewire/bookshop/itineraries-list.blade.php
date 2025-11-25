@@ -23,18 +23,7 @@
             <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @foreach($itineraries as $collection)
                     <li>
-                        <x-numaxlab-atomic::molecules.banner
-                                :class="$collection->getFirstMediaUrl(config('lunar.media.collection'), 'medium') ? 'has-media' : ''"
-                                :image-src="$collection->getFirstMediaUrl(config('lunar.media.collection'), 'medium')"
-                                :href="route('trafikrak.storefront.bookshop.itineraries.show', $collection->defaultUrl->slug)">
-                            <h2 class="at-heading is-3 mb-4">{{ $collection->translateAttribute('name') }}</h2>
-
-                            @if ($collection->translateAttribute('description'))
-                                <x-slot:content>
-                                    {!! $collection->translateAttribute('description') !!}
-                                </x-slot:content>
-                            @endif
-                        </x-numaxlab-atomic::molecules.banner>
+                        <x-trafikrak::itineraries.summary :collection="$collection"/>
                     </li>
                 @endforeach
             </ul>

@@ -41,6 +41,9 @@ class TopicPage extends Page
 
     public function render(): View
     {
-        return view('trafikrak::storefront.livewire.education.topic');
+        $media = $this->topic->getFirstMedia(config('lunar.media.collection'));
+
+        return view('trafikrak::storefront.livewire.education.topic', compact('media'))
+            ->title($this->topic->name);
     }
 }

@@ -1,6 +1,6 @@
 <article>
     <div class="container mx-auto px-4">
-        <header class="md:flex gap-6">
+        <header class="md:flex gap-6 mb-10">
             <div class="md:w-1/2 lg:pr-20">
                 <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">
                     <li>
@@ -24,9 +24,9 @@
                 @endif
             </div>
 
-            @if ($topic->media->isNotEmpty())
+            @if ($media)
                 <figure class="mt-5 md:w-1/2">
-                    <img src="{{ $topic->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
+                    {{ $media('large') }}
                 </figure>
             @endif
         </header>

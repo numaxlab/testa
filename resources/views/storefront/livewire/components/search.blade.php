@@ -36,6 +36,19 @@
                             @endforeach
                         </div>
                         @if ($results->isNotEmpty())
+                            
+                            @if ($estimatedTotalHits > 0)
+                                <small class="block mt-5">
+                                    {{ __('Mostrando los 10 mejores resultados de :estimatedTotalHits', ['estimatedTotalHits' => $estimatedTotalHits]) }}
+                                </small>
+                            @endif
+
+                            @if ($contentTypeFilter !== 'all')
+                                <button class="mt-8 text-3xl" wire:click="search">
+                                    {{ __('Ver más') }}
+                                </button>
+                            @endif
+                            
                             <ul class="divide-y border-y mt-6">
                                 @foreach ($results as $result)
                                     <li wire:key="global-search-result-{{ $result->id }}">
@@ -55,18 +68,6 @@
                                     </li>
                                 @endforeach
                             </ul>
-
-                            @if ($estimatedTotalHits > 0)
-                                <small class="block mt-5">
-                                    {{ __('Mostrando los 10 mejores resultados de :estimatedTotalHits', ['estimatedTotalHits' => $estimatedTotalHits]) }}
-                                </small>
-                            @endif
-
-                            @if ($contentTypeFilter !== 'all')
-                                <button class="mt-8 text-3xl" wire:click="search">
-                                    {{ __('Ver más') }}
-                                </button>
-                            @endif
                         @else
                             <p class="text-sm mt-10">{{ __('No hay resultados para tu búsqueda') }}</p>
                         @endif

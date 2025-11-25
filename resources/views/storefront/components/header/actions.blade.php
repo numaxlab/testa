@@ -1,8 +1,9 @@
-<ul class="flex gap-5 text-lg">
+<ul class="flex gap-5 text-3xl">
     <li>
         @auth
             <a href="{{ route('dashboard') }}" wire:navigate>
                 <i class="icon icon-user" aria-hidden="true"></i>
+                <span class="text-lg">Carlos</span>
                 <span class="sr-only">{{ __('Entrar en perfil') }}</span>
             </a>
         @else

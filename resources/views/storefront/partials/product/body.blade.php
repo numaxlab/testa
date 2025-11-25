@@ -21,19 +21,19 @@
 
         @if ($product->translateAttribute('digital-book'))
             <a class="at-button border-primary text-primary">
-                Descarga este libro
+                {{ __('Descarga este libro') }}
             </a>
         @endif
 
         @if ($product->brand->translateAttribute('in-house') === true)
             <a class="at-button border-primary text-primary">
-                Haz una donación
+                {{ __('Haz una donación') }}
             </a>
         @endif
 
         @if ($product->translateAttribute('card'))
             <a class="at-button border-primary text-primary">
-                Descargar ficha
+                {{ __('Descargar ficha') }}
             </a>
         @endif
     </div>
@@ -99,6 +99,22 @@
         @endif
 
         <ul class="at-small flex flex-wrap gap-1 mt-3 mb-1 [&>li:not(:last-child)]:after:content-['|']">
+            @if ($product->translators->isNotEmpty())
+                <li>
+                    {{ __('Traducción') }}:
+                    @foreach ($product->translators as $author)
+                        {{ $author->name }}{{ $loop->last ? '' : ', ' }}
+                    @endforeach
+                </li>
+            @endif
+            @if ($product->illustrators->isNotEmpty())
+                <li>
+                    {{ __('Ilustración') }}:
+                    @foreach ($product->illustrators as $author)
+                        {{ $author->name }}{{ $loop->last ? '' : '; ' }}
+                    @endforeach
+                </li>
+            @endif
             @if ($product->translateAttribute('pages'))
                 <li>
                     {{ $product->translateAttribute('pages') }} {{ __('páginas') }}

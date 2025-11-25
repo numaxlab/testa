@@ -1,13 +1,15 @@
 <x-numaxlab-atomic::molecules.summary
         href="{{ route('trafikrak.storefront.education.courses.show', $course->defaultUrl->slug) }}"
 >
-    <x-slot name="thumbnail">
-        <img src="{{ $course->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
+    @if ($course->thumbnailImage())
+        <x-slot name="thumbnail">
+            {{ $course->thumbnailImage() }}
 
-        @if ($course->topic)
-            <span class="at-tag at-small absolute top-0 left-0 bg-primary border-primary text-white">{{ $course->topic->name }}</span>
-        @endif
-    </x-slot>
+            @if ($course->topic)
+                <span class="at-tag at-small absolute top-0 left-0 bg-primary border-primary text-white">{{ $course->topic->name }}</span>
+            @endif
+        </x-slot>
+    @endif
 
     <h2 class="at-heading is-3">
         {{ $course->name }}

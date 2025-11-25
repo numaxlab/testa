@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Livewire;
+use Livewire\Mechanisms\ComponentRegistry;
 use Lunar\Admin\Filament\Resources\CustomerResource;
 use Lunar\Admin\Filament\Resources\ProductResource;
 use Lunar\Admin\Support\Facades\LunarPanel;
@@ -21,6 +22,7 @@ use Spatie\StructureDiscoverer\Discover;
 use Symfony\Component\Finder\Finder;
 use Trafikrak\Admin\Filament\Extension\ProductResourceExtension;
 use Trafikrak\Admin\Filament\Resources\Extension\CustomerResourceExtension;
+use Trafikrak\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
 use Trafikrak\Console\Commands\Install;
 use Trafikrak\Models\Education\Course;
 use Trafikrak\Observers\CourseObserver;
@@ -64,6 +66,9 @@ class TrafikrakServiceProvider extends ServiceProvider
             'trafikrak::course' => 'lucide-book-plus',
             'trafikrak::course-module' => 'lucide-calendar-range',
         ]);
+
+        $componentName = app(ComponentRegistry::class)->getName(CourseMediaRelationManager::class);
+        Livewire::component($componentName, CourseMediaRelationManager::class);
 
         $modelClasses = collect(
             Discover::in(__DIR__.'/Models')

@@ -17,24 +17,22 @@
                             {{ __('Actividades') }}
                         </a>
                     </li>
+                    @if ($event->eventType)
+                        <li>
+                            <a
+                                    href="{{ route('trafikrak.storefront.activities.index', ['t' => $event->eventType->id]) }}"
+                                    wire:navigate
+                            >
+                                {{ $event->eventType->name }}
+                            </a>
+                        </li>
+                    @endif
                 </x-numaxlab-atomic::molecules.breadcrumb>
 
                 <h1 class="at-heading is-1 mt-4">{{ $event->name }}</h1>
 
                 @if ($event->subtitle)
                     <h2 class="at-heading is-3 font-normal mt-2">{{ $event->subtitle }}</h2>
-                @endif
-
-                @if ($event->eventType)
-                    <div class="mt-6">
-                        <a
-                                href="{{ route('trafikrak.storefront.activities.index', ['t' => $event->eventType->id]) }}"
-                                wire:navigate
-                                class="at-tag is-primary"
-                        >
-                            {{ $event->eventType->name }}
-                        </a>
-                    </div>
                 @endif
             </header>
 

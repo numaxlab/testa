@@ -8,7 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class CourseMediaDefinitions implements MediaDefinitionsInterface
+class StandardMediaDefinitions implements MediaDefinitionsInterface
 {
     public function registerMediaCollections(HasMedia $model): void
     {
@@ -37,16 +37,13 @@ class CourseMediaDefinitions implements MediaDefinitionsInterface
     {
         $conversions = [
             'zoom' => [
-                'width' => 500,
-                'height' => 375,
+                'width' => 1200,
             ],
             'large' => [
-                'width' => 800,
-                'height' => 600,
+                'width' => 1000,
             ],
             'medium' => [
-                'width' => 500,
-                'height' => 375,
+                'width' => 700,
             ],
         ];
 
@@ -57,9 +54,9 @@ class CourseMediaDefinitions implements MediaDefinitionsInterface
                     ->fit(
                         Fit::Contain,
                         $conversion['width'],
-                        $conversion['height'],
                     )
-                    ->keepOriginalImageFormat();
+                    ->keepOriginalImageFormat()
+                    ->withResponsiveImages();
             }
         });
     }
@@ -71,7 +68,6 @@ class CourseMediaDefinitions implements MediaDefinitionsInterface
             ->fit(
                 fit: Fit::Contain,
                 desiredWidth: 300,
-                desiredHeight: 300,
             )
             ->sharpen(10)
             ->keepOriginalImageFormat();

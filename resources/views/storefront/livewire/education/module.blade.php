@@ -1,7 +1,9 @@
 <article class="container mx-auto px-4">
     <div class="mt-6 lg:flex lg:gap-6">
         <figure class="mb-6 lg:w-4/12">
-            <img src="{{ $module->course->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
+            @if ($media)
+                {{ $media('large') }}
+            @endif
         </figure>
 
         <div class="lg:w-8/12">
@@ -17,16 +19,6 @@
                             {{ __('Cursos') }}
                         </a>
                     </li>
-                    @if ($module->course->topic)
-                        <li>
-                            <a
-                                    href="{{ route('trafikrak.storefront.education.topics.show', $module->course->topic->defaultUrl->slug) }}"
-                                    wire:navigate
-                            >
-                                {{ $module->course->topic->name }}
-                            </a>
-                        </li>
-                    @endif
                 </x-numaxlab-atomic::molecules.breadcrumb>
 
                 <h1 class="at-heading is-1 mt-4">{{ $module->name }}</h1>

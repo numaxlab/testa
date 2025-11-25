@@ -30,7 +30,8 @@ class CoursesListPage extends Page
 
         $queryBuilder = Course::where('is_published', true)
             ->with([
-                'media',
+                'horizontalImage',
+                'verticalImage',
                 'defaultUrl',
                 'topic',
             ])

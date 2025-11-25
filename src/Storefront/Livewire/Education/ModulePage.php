@@ -39,6 +39,8 @@ class ModulePage extends Page
             }
         }
 
-        return view('trafikrak::storefront.livewire.education.module', compact('userRegistered'));
+        $media = $this->module->course->verticalImage;
+
+        return view('trafikrak::storefront.livewire.education.module', compact('userRegistered', 'media'));
     }
 }

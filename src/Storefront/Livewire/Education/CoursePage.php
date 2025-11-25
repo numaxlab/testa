@@ -51,6 +51,8 @@ class CoursePage extends Page
             }
         }
 
-        return view('trafikrak::storefront.livewire.education.course', compact('banner', 'userRegistered'));
+        $media = $this->course->verticalImage;
+
+        return view('trafikrak::storefront.livewire.education.course', compact('banner', 'userRegistered', 'media'));
     }
 }

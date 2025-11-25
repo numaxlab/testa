@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Lunar\Base\Traits\HasMedia;
 use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
@@ -50,6 +51,20 @@ class Course extends Model implements SpatieHasMedia
         return $this->belongsTo(Topic::class);
     }
 
+    public function horizontalImage(): MorphOne
+    {
+        return $this
+            ->morphOne(config('media-library.media_model'), 'model')
+            ->where('custom_properties->orientation', 'horizontal');
+    }
+
+    public function verticalImage(): MorphOne
+    {
+        return $this
+            ->morphOne(config('media-library.media_model'), 'model')
+            ->where('custom_properties->orientation', 'vertical');
+    }
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -70,7 +85,18 @@ class Course extends Model implements SpatieHasMedia
 
     public function variants(): HasMany
     {
-        return $this->purchasable ? $this->purchasable->variants() : (new Product())->variants();
+        return $this->purchasable ? $this->purchasable->variants() : (new Product)->variants();
+    }
+
+    public function thumbnailImage()
+    {
+        if ($this->horizontalImage) {
+            return $this->horizontalImage;
+        } else {
+            $media = $this->verticalImage;
+        }
+
+        return $media('medium');
     }
 
     protected function casts(): array
@@ -80,4 +106,5 @@ class Course extends Model implements SpatieHasMedia
             'ends_at' => 'date',
         ];
     }
+
 }

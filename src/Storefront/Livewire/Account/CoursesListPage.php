@@ -17,6 +17,7 @@ class CoursesListPage extends Page
             ->latestCustomer()
             ->courses()
             ->where('is_published', true)
+            ->with(['horizontalImage', 'verticalImage'])
             ->paginate(6);
 
         return view('trafikrak::storefront.livewire.account.courses-list', compact('courses'));

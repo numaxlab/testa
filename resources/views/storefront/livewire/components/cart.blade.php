@@ -42,7 +42,7 @@
                                 </a>
 
                                 <div class="w-3/4">
-                                    <h3 class="at-heading is-4 mb-2">
+                                    <h3 class="at-heading is-4 mb-2 line-clamp-1">
                                         <a
                                                 href="{{ route('trafikrak.storefront.bookshop.products.show', $line['slug']) }}"
                                                 wire:navigate

@@ -1,14 +1,20 @@
 @import '../fonts/icomoon/style.css';
 
 @theme {
-    --text-base--line-height: 1.425rem;
     --text-5xl: 2.625rem; /* h1 */
     --text-4xl: 2rem; /* h2 */
-    --text-3xl: 1.625rem; /* h3 */
+    --text-3xl: 1.5rem; /* h3 */
     --text-2xl: 1.275rem; /* h4 */
-    --text-2xl--line-height: calc(2.15 / 1.875);
     --text-xl: 1.125rem; /* baixado para manter a coherencia de tamaño descendente, con este tamaño queda igual ca o text-lg */
+    --text-lg: 1rem;
+    --text-sm: 0.95rem;
+    --text-xs: 0.9rem; 
+    --text-base--line-height: 1.425rem;
+    --text-2xl--line-height: calc(2.15 / 1.875);
     --tw-prose-body: var(--color-black);
+    --color-grey: var(--color-stone-500);
+    --color-secondary: var(--color-stone-200);
+
 }
 
 @layer base {
@@ -25,9 +31,13 @@
         letter-spacing: var(--tracking-tight);
     }
 
+    a {
+        color: var(--color-primary);   
+    }
+
     a:hover {
         text-decoration: none;
-        opacity: 0.8;
+        opacity: 0.7;
     }
 
     input[type="checkbox"],
@@ -37,6 +47,11 @@
 }
 
 @layer components {
+
+    .ml-breadcrumb {
+        color: var(--color-grey)!important;
+    }
+
     .at-lead {
         font-size: var(--text-3xl);
     }
@@ -57,6 +72,15 @@
         &.is-secondary {
             border-color: var(--color-primary);
         }
+    }
+
+    .site-header-main-menu {
+        font-family: var(--font-sans);
+        font-size: var(--text-2xl);
+    }
+
+    .site-header-main-menu li {
+        margin-bottom: var(--spacing);
     }
 
     .tier-header {

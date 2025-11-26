@@ -98,7 +98,7 @@
             </div>
         @endif
 
-        <ul class="at-small flex flex-wrap gap-1 mt-3 mb-1 [&>li:not(:last-child)]:after:content-['|']">
+        <ul class="at-small text-grey flex flex-wrap gap-1 mt-3 mb-1 [&>li:not(:last-child)]:after:content-['|']">
             @if ($product->translators->isNotEmpty())
                 <li>
                     {{ __('Traducción') }}:
@@ -132,9 +132,9 @@
             @endforeach
             @if ($product->variant->width->getValue() && $product->variant->height->getValue())
                 <li>
-                    {{ $product->variant->width->to('length.cm')->format() }}
+                    {{ $product->variant->width->to('length.mm')->format() }}
                     x
-                    {{ $product->variant->height->to('length.cm')->format() }}
+                    {{ $product->variant->height->to('length.mm')->format() }}
                 </li>
             @endif
             @if ($product->variant->gtin)

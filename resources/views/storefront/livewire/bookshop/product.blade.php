@@ -41,9 +41,9 @@
                         wire:loading.attr="disabled"
                 >
                     @if ($isUserFavourite)
-                        <i class="icon icon-heart-full" aria-hidden="true" wire:loading.remove></i>
+                        <i class="icon icon-heart-full text-3xl" aria-hidden="true" wire:loading.remove></i>
                     @else
-                        <i class="icon icon-heart" aria-hidden="true" wire:loading.remove></i>
+                        <i class="icon icon-heart text-3xl" aria-hidden="true" wire:loading.remove></i>
                     @endif
 
                     <div wire:loading>
@@ -53,7 +53,7 @@
             </h1>
 
             @if ($product->translateAttribute('subtitle'))
-                <h2 class="at-heading is-3">{{ $product->translateAttribute('subtitle') }}</h2>
+                <h2 class="at-heading is-3 mt-1">{{ $product->translateAttribute('subtitle') }}</h2>
             @endif
 
             @if ($product->authors->isNotEmpty())
@@ -78,7 +78,7 @@
         </div>
 
         <div class="mt-1 lg:w-8/12 lg:ml-[25%] lg:pl-10">
-            <div class="lg:hidden">
+            <div class="lg:hidden mb-10">
                 @include('trafikrak::storefront.partials.product.body', ['prefix' => 'mobile'])
             </div>
 

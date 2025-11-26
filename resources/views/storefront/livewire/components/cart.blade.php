@@ -89,7 +89,7 @@
                 <ul class="flex flex-col divide-y divide-black border-t border-b border-black">
                     <li class="at-small py-2">
                         <i class="icon icon-shopping-bag" aria-hidden="true"></i>
-                        {{ __('Subtotal pedido') }}: {{ $this->cart->subTotal->formatted() }}
+                        {{ __('Subtotal pedido') }}: {{ $this->cart->total->formatted() }}
                     </li>
                 </ul>
             @else

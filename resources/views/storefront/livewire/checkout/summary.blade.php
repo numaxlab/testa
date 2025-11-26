@@ -51,7 +51,7 @@
             <ul class="divide-y divide-black border-y border-black">
                 <li class="at-small py-2">
                     <i class="icon icon-shopping-bag" aria-hidden="true"></i>
-                    {{ __('Total pedido') }}: {{ $this->cart->subTotal->formatted() }}
+                    {{ __('Total pedido') }}: {{ $this->cart->total->formatted() }}
                 </li>
             </ul>
         </div>

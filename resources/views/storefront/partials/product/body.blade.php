@@ -4,9 +4,10 @@
             <div class="at-heading is-3 mb-1 font-titles">
                 {{ $pricing->priceIncTax()->formatted() }}
             </div>
-            <div class="font-serif font-small text-primary mb-3">
-                Disponible <i class="icon icon-info" aria-hidden="true"></i>
-            </div>
+
+            <livewire:trafikrak.storefront.livewire.components.bookshop.product-availability
+                    :key="$prefix . 'availability-' . $product->id"
+                    :purchasable="$product->variant"/>
         @endif
 
         @foreach ($product->statuses as $status)

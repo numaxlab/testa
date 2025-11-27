@@ -23,7 +23,7 @@
             <div class="relative h-64 sm:h-96">
                 @foreach ($slides as $i => $slide)
                     <article
-                            @if ($i === 0)
+                            @if ($i !== 0)
                                 x-cloak
                             @endif
                             x-show="current === {{ $i }}"
@@ -43,7 +43,11 @@
 
                         <div class="relative container mx-auto px-4">
                             <div class="w-full p-8 lg:w-3/7 lg:py-8 lg:pr-20 lg:pl-0">
-                                <h2 class="at-heading is-2 mb-2">{{ $slide->name }}</h2>
+                                @if ($i === 0)
+                                    <h1 class="at-heading is-2 mb-2">{{ $slide->name }}</h1>
+                                @else
+                                    <h2 class="at-heading is-2 mb-2">{{ $slide->name }}</h2>
+                                @endif
 
                                 @if ($slide->description)
                                     <div class="mb-4">

@@ -41,7 +41,7 @@
                                 id="language"
                                 aria-label="{{ __('Filtrar por idioma') }}"
                         >
-                            <option value="">Todos los idiomas</option>
+                            <option value="">{{ __('Todos los idiomas') }}</option>
                             @foreach($languages as $language)
                                 <option value="{{ $language->id }}">
                                     {{ $language->translateAttribute('name') }}
@@ -57,7 +57,7 @@
                                 id="priceRange"
                                 aria-label="{{ __('Filtrar por precio') }}"
                         >
-                            <option value="">Todos los precios</option>
+                            <option value="">{{ __('Todos los precios') }}</option>
                             @foreach($this->priceRanges as $value => $tag)
                                 <option value="{{ $value }}">
                                     {{ $tag }}
@@ -73,7 +73,7 @@
                                 id="availability"
                                 aria-label="{{ __('Filtrar por disponibilidad') }}"
                         >
-                            <option value="">Todos las disponibilidades</option>
+                            <option value="">{{ __('Todos las disponibilidades') }}</option>
                             @foreach($statuses as $status)
                                 <option value="{{ $status->id }}">
                                     {{ $status->translateAttribute('name') }}

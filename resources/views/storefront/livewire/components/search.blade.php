@@ -40,7 +40,7 @@
                         @if ($results->isNotEmpty())
 
                             @if ($estimatedTotalHits > 0)
-                                <small class="block mt-5">
+                                <p class="block mt-5">
                                     @if ($results->count() > 9)
                                         {{ __('Mostrando los :quantity mejores resultados de :estimatedTotalHits', ['quantity' => $results->count(), 'estimatedTotalHits' => $estimatedTotalHits]) }}
                                     @elseif ($results->count() === 1)
@@ -48,13 +48,13 @@
                                     @else
                                         {{ __('Encontramos :quantity resultados', ['quantity' => $results->count()]) }}
                                     @endif
-                                </small>
-                            @endif
 
-                            @if ($contentTypeFilter !== 'all')
-                                <button class="mt-8 text-3xl" type="submit">
-                                    {{ __('Ver más') }}
-                                </button>
+                                    @if ($contentTypeFilter !== 'all')
+                                        <button class="font-bold" type="submit">
+                                            {{ __('Ver más') }}
+                                        </button>
+                                    @endif
+                                </p>
                             @endif
 
                             <ul class="divide-y border-y mt-6">

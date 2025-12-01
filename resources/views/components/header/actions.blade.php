@@ -3,7 +3,7 @@
         @auth
             <a href="{{ route('dashboard') }}" wire:navigate>
                 <i class="icon icon-user" aria-hidden="true"></i>
-                <span class="text-lg">Carlos</span>
+                <span class="text-lg">{{ Auth::user()->name }}</span>
                 <span class="sr-only">{{ __('Entrar en perfil') }}</span>
             </a>
         @else

@@ -6,6 +6,7 @@
     "require": {
         "php": "^8.2",
         "ext-bcmath": "*",
+        "awcodes/filament-tiptap-editor": "^3.5",
         "intervention/validation": "^4.6",
         "numaxlab/lunar-geslib": "*",
         "spatie/laravel-translatable": "^6.0",

@@ -10,6 +10,7 @@ use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Education\CourseModule;
 use Trafikrak\Models\EventDeliveryMethod;
@@ -104,8 +105,9 @@ class CourseModuleResource extends BaseResource
                         Forms\Components\TextInput::make('subtitle')
                             ->label(__('trafikrak::coursemodule.form.subtitle.label'))
                             ->maxLength(255),
-                        Forms\Components\RichEditor::make('description')
-                            ->label(__('trafikrak::coursemodule.form.description.label')),
+                        TiptapEditor::make('description')
+                            ->label(__('trafikrak::coursemodule.form.description.label'))
+                            ->profile('default'),
                         Forms\Components\DateTimePicker::make('starts_at')
                             ->label(__('trafikrak::coursemodule.form.starts_at.label'))
                             ->required(),

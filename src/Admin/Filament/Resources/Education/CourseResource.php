@@ -10,6 +10,7 @@ use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Education\Course;
 
@@ -102,8 +103,9 @@ class CourseResource extends BaseResource
                         Forms\Components\TextInput::make('subtitle')
                             ->label(__('trafikrak::course.form.subtitle.label'))
                             ->maxLength(255),
-                        Forms\Components\RichEditor::make('description')
-                            ->label(__('trafikrak::course.form.description.label')),
+                        TiptapEditor::make('description')
+                            ->label(__('trafikrak::course.form.description.label'))
+                            ->profile('default'),
                         Forms\Components\Grid::make()
                             ->columns([
                                 'sm' => 1,

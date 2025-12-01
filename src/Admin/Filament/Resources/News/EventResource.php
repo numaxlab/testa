@@ -8,6 +8,7 @@ use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\EventDeliveryMethod;
 use Trafikrak\Models\News\Event;
@@ -86,8 +87,9 @@ class EventResource extends BaseResource
                         Forms\Components\TextInput::make('subtitle')
                             ->label(__('trafikrak::event.form.subtitle.label'))
                             ->maxLength(255),
-                        Forms\Components\RichEditor::make('description')
-                            ->label(__('trafikrak::event.form.description.label')),
+                        TiptapEditor::make('description')
+                            ->label(__('trafikrak::event.form.description.label'))
+                            ->profile('default'),
                         Forms\Components\DateTimePicker::make('starts_at')
                             ->label(__('trafikrak::event.form.starts_at.label'))
                             ->required(),

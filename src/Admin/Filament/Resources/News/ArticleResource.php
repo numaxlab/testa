@@ -8,6 +8,7 @@ use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\News\Article;
 
@@ -79,8 +80,9 @@ class ArticleResource extends BaseResource
                             ->autofocus(),
                         Forms\Components\Textarea::make('summary')
                             ->label(__('trafikrak::article.form.summary.label')),
-                        Forms\Components\RichEditor::make('content')
-                            ->label(__('trafikrak::article.form.content.label')),
+                        TiptapEditor::make('content')
+                            ->label(__('trafikrak::article.form.content.label'))
+                            ->profile('default'),
                         Forms\Components\FileUpload::make('image')
                             ->label(__('trafikrak::article.form.image.label'))
                             ->image()

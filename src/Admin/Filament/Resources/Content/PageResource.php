@@ -8,6 +8,7 @@ use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Trafikrak\Models\Content\Page;
 use Trafikrak\Models\Content\Section;
@@ -97,8 +98,9 @@ class PageResource extends BaseResource
                             ->required(),
                         Forms\Components\RichEditor::make('intro')
                             ->label(__('trafikrak::page.form.intro.label')),
-                        Forms\Components\RichEditor::make('description')
-                            ->label(__('trafikrak::page.form.description.label')),
+                        TiptapEditor::make('description')
+                            ->label(__('trafikrak::page.form.description.label'))
+                            ->profile('default'),
                         Forms\Components\Repeater::make('content')
                             ->label(__('trafikrak::page.form.content.label'))
                             ->schema([
@@ -106,8 +108,9 @@ class PageResource extends BaseResource
                                     ->label(__('trafikrak::page.form.name.label'))
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\RichEditor::make('description')
-                                    ->label(__('trafikrak::page.form.description.label')),
+                                TiptapEditor::make('description')
+                                    ->label(__('trafikrak::page.form.description.label'))
+                                    ->profile('default'),
                                 Forms\Components\Grid::make()
                                     ->columns([
                                         'sm' => 1,

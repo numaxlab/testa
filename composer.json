@@ -4,7 +4,7 @@
     "version": "1.0.0-beta.1",
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-bcmath": "*",
         "awcodes/filament-tiptap-editor": "^3.5",
         "intervention/validation": "^4.6",

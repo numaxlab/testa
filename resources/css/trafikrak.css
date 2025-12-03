@@ -46,10 +46,23 @@
 
 @layer utilities {
     .prose {
+        --tw-prose-body: var(--color-black);
+        --tw-prose-headings: var(--color-black);
+        --tw-prose-lead: var(--color-black);
+
         font-size: var(--text-base);
         line-height: var(--text-base--line-height);
         max-width: none;
-        color: var(--color-black);
+
+        & :where([class~="lead"]):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+            font-size: var(--text-3xl);
+            line-height: var(--text-xl--line-height);
+        }
+
+        & :where(small):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+            font-size: var(--text-sm);
+            line-height: var(--text-sm--line-height);
+        }
 
         & :where(strong):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
             font-weight: var(--font-weight-bold);

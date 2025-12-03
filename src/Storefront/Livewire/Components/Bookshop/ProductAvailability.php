@@ -5,6 +5,7 @@ namespace Trafikrak\Storefront\Livewire\Components\Bookshop;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Base\Purchasable;
+use NumaxLab\Lunar\Geslib\Services\CegalAvailabilityService;
 
 class ProductAvailability extends Component
 {
@@ -14,7 +15,7 @@ class ProductAvailability extends Component
 
     public string $moreInfo = '';
 
-    public function mount(): void
+    public function mount(CegalAvailabilityService $cegalAvailabilityService): void
     {
         if (! $this->purchasable) {
             return;
@@ -31,6 +32,12 @@ class ProductAvailability extends Component
 
             if (! empty($byCenter)) {
                 $this->moreInfo = $this->buildStockByCenterInfo($byCenter);
+            }
+        } else {
+            $trustedStockProvider = $cegalAvailabilityService->getAvailability($this->purchasable);
+
+            if ($trustedStockProvider) {
+                $this->moreInfo = $trustedStockProvider->delivery_period;
             }
         }
     }

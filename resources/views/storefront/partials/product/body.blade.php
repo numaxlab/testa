@@ -6,6 +6,7 @@
             </div>
 
             <livewire:trafikrak.storefront.livewire.components.bookshop.product-availability
+                    lazy
                     :key="$prefix . 'availability-' . $product->id"
                     :purchasable="$product->variant"/>
         @endif

@@ -22,7 +22,6 @@
             >
                 <div
                         class="lg:flex lg:w-full lg:justify-between relative"
-                        :class="bookshopExpanded || editorialExpanded || educationExpanded || mediaExpanded ? 'after:bg-white after:absolute after:top-7 after:right-0 after:z-9 after:h-40 after:lg:w-1/2 after:xl:w-2/3 after:border-b after:border-primary after:shadow-lg' : ''"
                 >
                     <ul class="site-header-main-menu">
                         <li
@@ -38,7 +37,7 @@
                             </a>
 
                             <div x-cloak x-show="bookshopExpanded"
-                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 flex gap-5 shadow-[-10px_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 flex gap-5 shadow-lg">
                                 @if ($sections->isNotEmpty())
                                     <ul class="grid grid-cols-3 place-content-start gap-x-5">
                                         @foreach($sections as $collection)
@@ -92,7 +91,7 @@
                             </a>
 
                             <div x-cloak x-show="editorialExpanded"
-                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 flex gap-5 shadow-[-10px_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                                 class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 flex gap-5 shadow-lg">
                                 @if ($editorialCollections->isNotEmpty())
                                     <ul class="grid grid-cols-2 place-content-start gap-x-5">
                                         @foreach($editorialCollections as $collection)
@@ -155,7 +154,7 @@
                             </a>
 
                             <ul x-cloak x-show="educationExpanded"
-                                class="absolute bg-white top-full -left-3 z-10 pl-3 pt-3 pb-8 pr-40 border-l border-b border-primary min-w-max h-40 shadow-[-10px_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                                class="absolute bg-white top-full -left-3 z-10 pl-3 pt-3 pb-8 pr-40 border-l border-b border-primary min-w-max h-40 shadow-lg">
                                 <li>
                                     <a href="{{ route('trafikrak.storefront.education.topics.index') }}" wire:navigate>
                                         {{ __('Temas') }}

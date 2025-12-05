@@ -11,12 +11,6 @@
                     :purchasable="$product->variant"/>
         @endif
 
-        @foreach ($product->statuses as $status)
-            <span class="text-primary mb-3">
-                {{ $status->translateAttribute('name') }}
-            </span>
-        @endforeach
-
         <livewire:testa.storefront.livewire.components.bookshop.add-to-cart
                 :key="$prefix . 'add-to-cart-' . $product->id"
                 :purchasable="$product->variant"/>

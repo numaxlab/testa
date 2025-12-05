@@ -59,7 +59,7 @@ composer require numaxlab/testa
 
 The package service provider will be auto-discovered by Laravel.
 
-1. **Add the Filament Plugins to the Lunar Panel in the register method of your `AppServiceProvider`:**
+1. **Add the Filament Plugins to the Lunar Panel in the register method of your `AppServiceProvider`**
    ```php
    LunarPanel::panel(function ($panel) {
         return $panel
@@ -82,6 +82,41 @@ The package service provider will be auto-discovered by Laravel.
    ```bash
    php artisan lunar:geslib:install
    php artisan lunar:testa:install
+   ```
+
+3. **Install the npm required packages**
+
+   ```bash
+   npm i @numaxlab/atomic@^1.0.0
+   npm i @tailwindcss/typography
+   ```
+4. **Setup your app.css and app.(ts|js) files**
+
+   `app.css`:
+   ```css
+    @import '@numaxlab/atomic/src/css/atomic.css';
+    @import '@numaxlab/atomic/src/css/icons.css';
+    @import '../../vendor/numaxlab/testa/resources/css/testa.css';
+    
+    @plugin "@tailwindcss/typography";
+    
+    @source '../views/**/*.blade.php';
+    @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+    @source '../../vendor/numaxlab/atomic-laravel/resources/views/*.blade.php';
+    @source '../../vendor/numaxlab/testa/resources/views/components/**/*.blade.php';
+    @source '../../vendor/numaxlab/testa/resources/views/storefront/**/*.blade.php';
+    @source '../../vendor/numaxlab/testa/resources/views/vendor/numaxlab-atomic/**/*.blade.php';
+   ```
+
+   `app.(ts|js)`:
+   ```typescript
+    import collapsible from '@numaxlab/atomic/src/js/components/collapsible';
+    import lineClamp from '../../vendor/numaxlab/testa/resources/js/components/line-clamp';
+    import horizontalScroll from '../../vendor/numaxlab/testa/resources/js/components/horizontal-scroll';
+    
+    Alpine.data('collapsible', collapsible);
+    Alpine.data('lineClamp', lineClamp);
+    Alpine.data('horizontalScroll', horizontalScroll);
    ```
 
 ## Testing

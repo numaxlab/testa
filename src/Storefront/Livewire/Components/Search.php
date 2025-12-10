@@ -66,9 +66,9 @@ class Search extends Component
     public function search(): void
     {
         $redirectRoute = match ($this->contentTypeFilter) {
-            'products' => 'testa.storefront.bookshop.search',
-            'courses' => 'testa.storefront.education.courses.index',
-            'audios', 'videos' => 'testa.storefront.media.search',
+            (new Product)->searchableAs() => 'testa.storefront.bookshop.search',
+            (new Course)->searchableAs() => 'testa.storefront.education.courses.index',
+            (new Audio)->searchableAs(), (new Video)->searchableAs() => 'testa.storefront.media.search',
             default => null,
         };
 

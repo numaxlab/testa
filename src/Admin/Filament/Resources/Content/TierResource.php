@@ -123,17 +123,18 @@ class TierResource extends BaseResource
                         Forms\Components\Select::make('collections')
                             ->relationship(
                                 modifyQueryUsing: fn (Builder $query)
-                                    => $query->whereHas('group',
+                                    => $query->whereHas(
+                                    'group',
                                     function (Builder $query) {
                                         $query
-                                            ->whereNull('parent_id')
                                             ->whereIn('handle', [
                                                 Handle::COLLECTION_GROUP_TAXONOMIES,
                                                 Handle::COLLECTION_GROUP_FEATURED,
                                                 \Testa\Handle::COLLECTION_GROUP_EDITORIAL_FEATURED,
                                                 Handle::COLLECTION_GROUP_ITINERARIES,
                                             ]);
-                                    }),
+                                    },
+                                ),
                             )
                             ->getOptionLabelFromRecordUsing(function (Collection $record): string {
                                 return "{$record->translateAttribute('name')} [{$record->group->name}]";

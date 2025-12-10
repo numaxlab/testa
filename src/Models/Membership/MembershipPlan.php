@@ -135,6 +135,7 @@ class MembershipPlan extends Model implements Purchasable
     {
         return (object) [
             'collections' => new \Illuminate\Database\Eloquent\Collection(),
+            'brand_id' => null,
         ];
     }
 

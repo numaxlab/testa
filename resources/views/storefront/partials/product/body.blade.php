@@ -76,14 +76,10 @@
             @endif
         </ul>
 
-        @if ($product->translateAttribute('bookshop-reference') || $product->translateAttribute('editorial-reference'))
+        @if ($synopsis)
             <div x-data="lineClamp">
                 <div x-ref="description" :class="{ 'line-clamp-9 ': !showMore }">
-                    @if ($product->translateAttribute('bookshop-reference'))
-                        {!! $product->translateAttribute('bookshop-reference') !!}
-                    @elseif ($product->translateAttribute('editorial-reference'))
-                        {!! $product->translateAttribute('editorial-reference') !!}
-                    @endif
+                    {!! $synopsis !!}
                 </div>
 
                 <button x-show="!showMore" @click.prevent="showMore = true" class="text-primary">

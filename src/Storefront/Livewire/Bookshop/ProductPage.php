@@ -87,8 +87,19 @@ class ProductPage extends Page
         $taxonomies = $this->buildTaxonomies();
         $editorialCollections = $this->filterEditorialCollections($this->product->editorialCollections);
 
-        return view('testa::storefront.livewire.bookshop.product', compact('taxonomies', 'editorialCollections'))
-            ->title($this->product->recordFullTitle);
+        $synopsis = null;
+        if ($this->product->translateAttribute('bookshop-reference')) {
+            $synopsis = $this->product->translateAttribute('bookshop-reference');
+        } else {
+            if ($this->product->translateAttribute('editorial-reference')) {
+                $synopsis = $this->product->translateAttribute('editorial-reference');
+            }
+        }
+
+        return view(
+            'testa::storefront.livewire.bookshop.product',
+            compact('taxonomies', 'editorialCollections', 'synopsis'),
+        )->title($this->product->recordFullTitle);
     }
 
     protected function buildTaxonomies(): SupportCollection

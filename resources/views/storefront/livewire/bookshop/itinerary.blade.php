@@ -1,3 +1,10 @@
+<x-slot name="description">{{ Str::limit(strip_tags($itinerary->translateAttribute('description')), 160) }}</x-slot>
+<x-slot name="ogImage">{{ $itinerary->getFirstMediaUrl(config('lunar.media.collection'), 'open-graph') }}</x-slot>
+
+<x-slot name="head">
+    <meta property="og:type" content="article">
+</x-slot>
+
 <article>
     <div class="container mx-auto px-4">
         <header class="md:flex gap-6">

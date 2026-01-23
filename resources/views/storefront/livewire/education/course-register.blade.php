@@ -1,3 +1,6 @@
+<x-slot name="description">{{ Str::limit(strip_tags($course->description), 160) }}</x-slot>
+<x-slot name="ogImage">{{ $course->getFirstMediaUrl(config('lunar.media.collection'), 'open-graph') }}</x-slot>
+
 <x-slot name="bodyClass">bg-secondary</x-slot>
 
 <article class="container mx-auto px-4 lg:max-w-4xl">

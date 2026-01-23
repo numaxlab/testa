@@ -1,3 +1,5 @@
+<x-slot name="description">{{ Str::limit(strip_tags($slides->first()?->description), 160) }}</x-slot>
+
 <div>
     @if ($slides->isNotEmpty())
         <div class="-mt-10 mb-5">

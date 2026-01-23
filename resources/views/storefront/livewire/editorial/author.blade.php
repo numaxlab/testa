@@ -1,3 +1,12 @@
+<x-slot name="description">{{ Str::limit(strip_tags($author->translateAttribute('biography')), 160) }}</x-slot>
+<x-slot name="ogImage">{{ $author->getFirstMediaUrl(config('lunar.media.collection'), 'open-graph') }}</x-slot>
+
+<x-slot name="head">
+    <meta property="og:type" content="profile">
+    <meta property="profile:first_name" content="{{ $author->first_name }}">
+    <meta property="profile:last_name" content="{{ $author->last_name }}">
+</x-slot>
+
 <article>
     <div class="container mx-auto px-4">
         <header class="md:flex gap-6">

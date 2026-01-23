@@ -3,6 +3,7 @@
 namespace Testa\Media;
 
 use Lunar\Base\MediaDefinitionsInterface;
+use Spatie\Image\Enums\BorderType;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\MediaCollection;
@@ -38,25 +39,46 @@ class StandardMediaDefinitions implements MediaDefinitionsInterface
         $conversions = [
             'zoom' => [
                 'width' => 1200,
+                'fit' => Fit::Contain,
             ],
             'large' => [
                 'width' => 1000,
+                'fit' => Fit::Contain,
             ],
             'medium' => [
                 'width' => 700,
+                'fit' => Fit::Contain,
+            ],
+            'open-graph' => [
+                'width' => 1200,
+                'height' => 630,
+                'fit' => Fit::Fill,
             ],
         ];
 
         $collection->registerMediaConversions(function (Media $media) use ($model, $conversions) {
             foreach ($conversions as $key => $conversion) {
-                $model
-                    ->addMediaConversion($key)
-                    ->fit(
-                        Fit::Contain,
-                        $conversion['width'],
-                    )
-                    ->keepOriginalImageFormat()
-                    ->withResponsiveImages();
+                if ($conversion['fit']->value === Fit::Fill->value) {
+                    $model
+                        ->addMediaConversion($key)
+                        ->fit(
+                            fit: $conversion['fit'],
+                            desiredWidth: $conversion['width'],
+                            desiredHeight: $conversion['height'],
+                        )
+                        ->border(0, BorderType::Overlay, color: '#FFF')
+                        ->background('#FFF')
+                        ->keepOriginalImageFormat();
+                } else {
+                    $model
+                        ->addMediaConversion($key)
+                        ->fit(
+                            fit: $conversion['fit'],
+                            desiredWidth: $conversion['width'],
+                        )
+                        ->keepOriginalImageFormat()
+                        ->withResponsiveImages();
+                }
             }
         });
     }

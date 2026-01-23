@@ -1,3 +1,5 @@
+<x-slot name="description">{{ Str::limit(strip_tags($collection->translateAttribute('description')), 160) }}</x-slot>
+
 <article>
     <div class="container mx-auto px-4">
         <header class="md:flex gap-6">

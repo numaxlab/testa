@@ -29,4 +29,8 @@ return [
         'city' => env('DEFAULT_BILLING_ADDRESS_CITY'),
         'postcode' => env('DEFAULT_BILLING_ADDRESS_POSTCODE'),
     ],
+
+    'open_graph' => [
+        'fallback_image' => env('OPEN_GRAPH_FALLBACK_IMAGE'),
+    ],
 ];

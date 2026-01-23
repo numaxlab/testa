@@ -1,3 +1,5 @@
+<x-slot name="description">{{ Str::limit(strip_tags($audio->description), 160) }}</x-slot>
+
 <article class="container mx-auto px-4">
     <header class="mb-10">
         <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">

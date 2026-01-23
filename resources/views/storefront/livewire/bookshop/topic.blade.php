@@ -1,3 +1,5 @@
+<x-slot name="description">{{ Str::limit(strip_tags($topic->translateAttribute('description')), 160) }}</x-slot>
+
 <article>
     <div class="container mx-auto px-4">
         <header>
@@ -15,6 +17,12 @@
             <h1 class="at-heading is-1">
                 {{ $topic->translateAttribute('name') }}
             </h1>
+
+            @if ($topic->translateAttribute('description'))
+                <div class="mt-5 md:w-1/2 lg:pr-20">
+                    {!! $topic->translateAttribute('description') !!}
+                </div>
+            @endif
 
             <form class="my-6 flex flex-col gap-3 md:flex-row md:gap-6" wire:submit.prevent="search">
                 <div class="relative w-full">

@@ -1,3 +1,28 @@
+<x-slot name="description">{{ Str::limit(strip_tags($synopsis), 160) }}</x-slot>
+<x-slot name="ogImage">{{ $product->getFirstMediaUrl(config('lunar.media.collection'), 'open-graph') }}</x-slot>
+
+<x-slot name="head">
+    <meta property="og:type" content="book">
+    @if ($product->variant->gtin)
+        <meta property="book:isbn" content="{{ $product->variant->gtin }}">
+    @endif
+    @if ($product->authors->isNotEmpty())
+        @foreach ($product->authors as $author)
+            <meta property="book:author" content="{{ $author->name }}">
+        @endforeach
+    @endif
+    @if ($product->translateAttribute('issue-date'))
+        <meta property="book:release_date" content="{{ $product->translateAttribute('issue-date') }}">
+    @endif
+    @if ($taxonomies->isNotEmpty())
+        @foreach ($taxonomies as $taxonomy)
+            <meta property="book:tag" content="{{ $taxonomy['name'] }}">
+        @endforeach
+    @endif
+    <meta property="og:image:alt"
+          content="{{ __('Portada del libro :title', ['title' => $product->recordFullTitle]) }}"/>
+</x-slot>
+
 <article class="container mx-auto px-4">
     <div class="lg:flex lg:flex-wrap lg:gap-10">
         <header class="lg:w-8/12">

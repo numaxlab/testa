@@ -1,3 +1,6 @@
+<x-slot name="description">{{ Str::limit(strip_tags($module->description), 160) }}</x-slot>
+<x-slot name="ogImage">{{ $module->course->getFirstMediaUrl(config('lunar.media.collection'), 'open-graph') }}</x-slot>
+
 <article class="container mx-auto px-4">
     <div class="mt-6 lg:flex lg:gap-6">
         <figure class="mb-6 lg:w-4/12">

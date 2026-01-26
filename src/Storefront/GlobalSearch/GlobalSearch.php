@@ -17,6 +17,8 @@ use Testa\Storefront\GlobalSearch\Mappers\VideoMapper;
 
 class GlobalSearch
 {
+    private const int LIMIT = 10;
+
     public int $processingTimeMs = 0;
     public int $estimatedTotalHits = 0;
     private array $mappers = [
@@ -68,7 +70,7 @@ class GlobalSearch
 
         $results = $this->meilisearch->multiSearch(
             $queries,
-            (new MultiSearchFederation())->setLimit(10),
+            new MultiSearchFederation()->setLimit(self::LIMIT),
         );
 
         $this->processingTimeMs = $results['processingTimeMs'];

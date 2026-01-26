@@ -3,8 +3,10 @@
 namespace Testa\Storefront\Livewire\Bookshop;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Lunar\Facades\StorefrontSession;
@@ -14,9 +16,12 @@ use Meilisearch\Endpoints\Indexes;
 use NumaxLab\Lunar\Geslib\InterCommands\LanguageCommand;
 use NumaxLab\Lunar\Geslib\InterCommands\StatusCommand;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Livewire\Features\WithPagination;
 
 class SearchPage extends Page
 {
+    use WithPagination;
+
     #[Url]
     public ?string $q;
 
@@ -27,8 +32,6 @@ class SearchPage extends Page
     public string $priceRange = '';
 
     public string $availabilityId = '';
-
-    public Collection $results;
 
     public Collection $languages;
 
@@ -62,15 +65,34 @@ class SearchPage extends Page
         })->channel(StorefrontSession::getChannel())
             ->customerGroup(StorefrontSession::getCustomerGroups())
             ->get();
+    }
+
+    #[On('taxonomy-selected')]
+    public function updateSearch($params): void
+    {
+        $this->taxonId = $params['id'];
 
         $this->search();
     }
 
-    public function search(): void
+    public function updated($property): void
+    {
+        if (in_array($property, ['languageId', 'priceRange', 'availabilityId'])) {
+            $this->search();
+        }
+    }
+
+    public function render(): View
+    {
+        return view('testa::storefront.livewire.bookshop.search');
+    }
+
+    #[Computed]
+    public function results(): LengthAwarePaginator
     {
         $filters = $this->buildFilters();
 
-        $this->results = Product::search(
+        return Product::search(
             trim($this->q),
             function (Indexes $search, string $query, array $options) use ($filters) {
                 if (! empty($filters)) {
@@ -79,7 +101,7 @@ class SearchPage extends Page
 
                 return $search->search($query, $options);
             })
-            ->query(fn (Builder $query) => $query->with([
+            ->query(fn(Builder $query) => $query->with([
                 'variant',
                 'variant.taxClass',
                 'defaultUrl',
@@ -88,7 +110,7 @@ class SearchPage extends Page
                 'authors',
                 'prices',
             ]))
-            ->get();
+            ->paginate(18);
     }
 
     private function buildFilters(): string
@@ -113,25 +135,5 @@ class SearchPage extends Page
         }
 
         return implode(' AND ', $filters);
-    }
-
-    #[On('taxonomy-selected')]
-    public function updateSearch($params): void
-    {
-        $this->taxonId = $params['id'];
-
-        $this->search();
-    }
-
-    public function updated($property): void
-    {
-        if (in_array($property, ['languageId', 'priceRange', 'availabilityId'])) {
-            $this->search();
-        }
-    }
-
-    public function render(): View
-    {
-        return view('testa::storefront.livewire.bookshop.search');
     }
 }

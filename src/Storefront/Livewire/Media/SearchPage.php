@@ -41,7 +41,7 @@ class SearchPage extends Page
             ->where('is_published', true)
             ->where('visibility', Visibility::PUBLIC->value)
             ->when($this->q, function ($query) {
-                $videosByQuery = Video::search($this->q)->get();
+                $videosByQuery = Video::search($this->q)->take(PHP_INT_MAX)->get();
                 $query->whereIn('id', $videosByQuery->pluck('id'));
             });
 
@@ -50,7 +50,7 @@ class SearchPage extends Page
             ->where('is_published', true)
             ->where('visibility', Visibility::PUBLIC->value)
             ->when($this->q, function ($query) {
-                $audiosByQuery = Audio::search($this->q)->get();
+                $audiosByQuery = Audio::search($this->q)->take(PHP_INT_MAX)->get();
                 $query->whereIn('id', $audiosByQuery->pluck('id'));
             });
 

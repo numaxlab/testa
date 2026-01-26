@@ -85,11 +85,11 @@
             </form>
         </header>
 
-        @if ($results->isEmpty())
+        @if ($this->results->isEmpty())
             <p class="mt-10">{{ __('No hay resultados para tu búsqueda.') }}</p>
         @else
             <ul class="mt-10 grid gap-6 grid-cols-2 mb-9 md:grid-cols-4 lg:grid-cols-6">
-                @foreach ($results as $product)
+                @foreach ($this->results as $product)
                     <li wire:key="result-{{ $product->id }}">
                         <x-testa::products.summary
                                 :product="$product"
@@ -98,6 +98,8 @@
                     </li>
                 @endforeach
             </ul>
+
+            {{ $this->results->links() }}
         @endif
     </div>
 </article>

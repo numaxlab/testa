@@ -38,7 +38,7 @@ class CoursesListPage extends Page
             ->orderBy('ends_at', 'desc');
 
         if ($this->q) {
-            $coursesByQuery = Course::search($this->q)->get();
+            $coursesByQuery = Course::search($this->q)->take(PHP_INT_MAX)->get();
 
             $queryBuilder->whereIn('id', $coursesByQuery->pluck('id'));
         }

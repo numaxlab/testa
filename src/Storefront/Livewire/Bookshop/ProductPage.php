@@ -96,9 +96,11 @@ class ProductPage extends Page
             }
         }
 
+        $isEditorialProduct = $this->product->brand && $this->product->brand->translateAttribute('in-house') === true;
+
         return view(
             'testa::storefront.livewire.bookshop.product',
-            compact('taxonomies', 'editorialCollections', 'synopsis'),
+            compact('taxonomies', 'editorialCollections', 'synopsis', 'isEditorialProduct'),
         )->title($this->product->recordFullTitle);
     }
 

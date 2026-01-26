@@ -27,7 +27,7 @@
     <div class="lg:flex lg:flex-wrap lg:gap-10">
         <header class="lg:w-8/12">
             <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">
-                @if ($product->brand && $product->brand->translateAttribute('in-house') === true)
+                @if ($isEditorialProduct)
                     <li>
                         <a href="{{ route('testa.storefront.editorial.homepage') }}" wire:navigate>
                             {{ __('Editorial') }}
@@ -116,6 +116,7 @@
             <livewire:testa.storefront.livewire.components.bookshop.product-associations
                     :key="$product->id . '-associations'"
                     :product="$product"
+                    :is-editorial-product="$isEditorialProduct"
                     lazy="true"
             />
 

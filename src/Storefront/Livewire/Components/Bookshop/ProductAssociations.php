@@ -2,8 +2,10 @@
 
 namespace Testa\Storefront\Livewire\Components\Bookshop;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Product;
@@ -14,20 +16,81 @@ class ProductAssociations extends Component
 
     public Product $product;
 
-    public Collection $manualAssociations;
+    public bool $isEditorialProduct = false;
 
-    public Collection $automaticAssociations;
-
-    public function mount(): void
+    public function render(): View
     {
-        $this->manualAssociations = $this->product->associations;
-        $this->automaticAssociations = new Collection;
+        return view('testa::storefront.livewire.components.bookshop.product-associations');
+    }
 
-        if ($this->manualAssociations->isNotEmpty()) {
-            return;
+    #[Computed]
+    public function automaticAssociations(): Collection
+    {
+        if ($this->manualAssociations()->isNotEmpty() && $this->manualAssociations()->count() >= self::LIMIT) {
+            return new Collection();
         }
 
-        $queryBuilder = Product::channel(StorefrontSession::getChannel())
+        $remainingLimit = self::LIMIT - $this->manualAssociations()->count();
+
+        $associations = new Collection();
+
+        $relationships = [
+            'authors',
+            'editorialCollections',
+            'taxonomies',
+        ];
+
+        if ($this->isEditorialProduct) {
+            $relationships = [
+                'editorialCollections',
+                'authors',
+            ];
+        }
+
+        foreach ($relationships as $relationship) {
+            if ($associations->count() >= $remainingLimit) {
+                break;
+            }
+
+            $results = $this->getAssociationsByRelationship(
+                relationship: $relationship,
+                limit: $remainingLimit - $associations->count(),
+                excludeIds: $associations->pluck('id'),
+            );
+
+            $associations = $associations->merge($results);
+        }
+
+        return $associations;
+    }
+
+    #[Computed]
+    public function manualAssociations(): Collection
+    {
+        return $this->product->associations;
+    }
+
+    private function getAssociationsByRelationship(string $relationship, int $limit, Collection $excludeIds): Collection
+    {
+        $relatedIds = $this->product->$relationship->pluck('id');
+
+        if ($relatedIds->isEmpty()) {
+            return new Collection();
+        }
+
+        return $this
+            ->getBaseQuery()
+            ->whereHas($relationship, function ($query) use ($relatedIds) {
+                $query->whereKey($relatedIds);
+            })
+            ->whereNotIn('id', $excludeIds)
+            ->take($limit)
+            ->get();
+    }
+
+    private function getBaseQuery(): Builder
+    {
+        return Product::channel(StorefrontSession::getChannel())
             ->customerGroup(StorefrontSession::getCustomerGroups())
             ->status('published')
             ->whereHas('productType', function ($query) {
@@ -45,50 +108,5 @@ class ProductAssociations extends Component
                 'defaultUrl',
                 'authors',
             ]);
-
-        if ($this->product->authors->isNotEmpty()) {
-            $authorsQueryBuilder = $queryBuilder->clone();
-
-            $authorsQueryBuilder->whereHas('authors', function ($query) {
-                $query->whereIn('id', $this->product->authors->pluck('id'));
-            });
-
-            $this->automaticAssociations = $authorsQueryBuilder->take(self::LIMIT)->get();
-        }
-
-        if ($this->automaticAssociations->count() < self::LIMIT) {
-            $editorialCollectionsQueryBuilder = $queryBuilder->clone();
-
-            $editorialCollectionsQueryBuilder->whereHas('editorialCollections', function ($query) {
-                $query->whereIn(
-                    (new \Lunar\Models\Collection)->getTable().'.id',
-                    $this->product->editorialCollections->pluck('id'),
-                );
-            });
-
-            $this->automaticAssociations = $editorialCollectionsQueryBuilder
-                ->take(self::LIMIT - $this->automaticAssociations->count())
-                ->get();
-        }
-
-        if ($this->automaticAssociations->count() < self::LIMIT) {
-            $taxonomiesQueryBuilder = $queryBuilder->clone();
-
-            $taxonomiesQueryBuilder->whereHas('taxonomies', function ($query) {
-                $query->whereIn(
-                    (new \Lunar\Models\Collection)->getTable().'.id',
-                    $this->product->taxonomies->pluck('id'),
-                );
-            });
-
-            $this->automaticAssociations = $taxonomiesQueryBuilder
-                ->take(self::LIMIT - $this->automaticAssociations->count())
-                ->get();
-        }
-    }
-
-    public function render(): View
-    {
-        return view('testa::storefront.livewire.components.bookshop.product-associations');
     }
 }

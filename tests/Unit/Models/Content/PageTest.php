@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Lunar\Models\Language;
 use Testa\Models\Content\Page;
 use Testa\Models\Content\Section;
+use Testa\Tests\TestCase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
+
+beforeEach(fn() => Language::factory()->create());
 
 it('casts section to Section enum', function () {
     $page = new Page(['section' => Section::BOOKSHOP]);
@@ -12,7 +16,7 @@ it('casts section to Section enum', function () {
 });
 
 it('casts content to array', function () {
-    $page = Page::factory()->create(['content' => '{"foo":"bar"}']);
+    $page = Page::factory()->create();
     expect($page->content)->toBeArray();
 });
 

@@ -2,7 +2,14 @@
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Lunar\Models\Language;
 use Testa\Models\Product;
+use Testa\Tests\TestCase;
+
+uses(TestCase::class, RefreshDatabase::class);
+
+beforeEach(fn() => Language::factory()->create());
 
 it('has reviews', function () {
     $product = new Product();

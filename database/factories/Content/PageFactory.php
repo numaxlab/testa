@@ -4,6 +4,7 @@ namespace Testa\Database\Factories\Content;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Testa\Models\Content\Page;
+use Testa\Models\Content\Section;
 
 class PageFactory extends Factory
 {
@@ -12,8 +13,9 @@ class PageFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->words(6),
-            'intro' => $this->faker->sentences(rand(3, 8)),
+            'section' => Section::BOOKSHOP->value,
+            'name' => $this->faker->words(6, true),
+            'intro' => $this->faker->sentences(rand(3, 8), true),
             'description' => $this->faker->paragraph,
             'content' => [
                 [

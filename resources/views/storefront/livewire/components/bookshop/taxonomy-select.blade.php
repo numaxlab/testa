@@ -27,13 +27,22 @@
                    class="w-full px-2 py-1 border border-black focus:outline-none focus:ring-1 focus:ring-indigo-500">
         </div>
 
+        @if ($selectedId)
+            <div wire:click="clearSelection"
+                 class="cursor-pointer hover:bg-primary hover:text-white p-2 text-gray-500 border-b border-gray-200">
+                Todas las materias
+            </div>
+        @endif
+
         @forelse ($options as $option)
             <div wire:click="selectOption('{{ $option->id }}', '{{ $option->translateAttribute('name') }}')"
                  class="cursor-pointer hover:bg-primary hover:text-white p-2">
                 {{ $option->translateAttribute('name') }}
             </div>
         @empty
-            <div class="p-2 text-gray-500">No se encontraron resultados.</div>
+            @if (!$selectedId)
+                <div class="p-2 text-gray-500">No se encontraron resultados.</div>
+            @endif
         @endforelse
     </div>
 

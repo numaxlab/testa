@@ -25,13 +25,13 @@ class SearchPage extends Page
     #[Url]
     public ?string $q;
 
-    public string $taxonId = '';
+    public ?string $taxonId = '';
 
-    public string $languageId = '';
+    public ?string $languageId = '';
 
-    public string $priceRange = '';
+    public ?string $priceRange = '';
 
-    public string $availabilityId = '';
+    public ?string $availabilityId = '';
 
     public Collection $languages;
 
@@ -72,13 +72,13 @@ class SearchPage extends Page
     {
         $this->taxonId = $params['id'];
 
-        $this->search();
+        $this->resetPage();
     }
 
     public function updated($property): void
     {
         if (in_array($property, ['languageId', 'priceRange', 'availabilityId'])) {
-            $this->search();
+            $this->resetPage();
         }
     }
 

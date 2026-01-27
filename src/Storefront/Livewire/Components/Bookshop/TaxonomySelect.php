@@ -16,7 +16,7 @@ class TaxonomySelect extends Component
     public $selectedName = 'Selecciona una materia';
     public $isOpen = false;
 
-    public function selectOption($id, $name)
+    public function selectOption($id, $name): void
     {
         $this->selectedId = $id;
         $this->selectedName = $name;
@@ -24,6 +24,16 @@ class TaxonomySelect extends Component
         $this->search = '';
 
         $this->dispatch('taxonomy-selected', ['id' => $id]);
+    }
+
+    public function clearSelection(): void
+    {
+        $this->selectedId = null;
+        $this->selectedName = 'Selecciona una materia';
+        $this->isOpen = false;
+        $this->search = '';
+
+        $this->dispatch('taxonomy-selected', ['id' => null]);
     }
 
     public function render(): View

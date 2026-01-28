@@ -20,7 +20,7 @@ it('casts content to array', function () {
     expect($page->content)->toBeArray();
 });
 
-/*it('returns correct has_breadcrumb attribute', function (?Section $section, bool $expected) {
+it('returns correct has_breadcrumb attribute', function (?Section $section, bool $expected) {
     $page = new Page();
     $page->section = $section;
     expect($page->has_breadcrumb)->toBe($expected);
@@ -54,5 +54,5 @@ it('returns correct human_section attribute', function (?Section $section, ?stri
     [Section::EDUCATION, 'Formación'],
     [Section::HOMEPAGE, null],
     [null, null],
-]);*/
+]);
 

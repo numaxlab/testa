@@ -11,12 +11,12 @@ uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(fn() => Language::factory()->create());
 
-it('has reviews', function () {
+it('has reviews relationship', function () {
     $product = new Product();
     expect($product->reviews())->toBeInstanceOf(HasMany::class);
 });
 
-it('has courses', function () {
+it('has courses relationship', function () {
     $product = new Product();
     expect($product->courses())->toBeInstanceOf(BelongsToMany::class);
 });

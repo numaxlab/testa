@@ -2,18 +2,21 @@
 
 namespace Testa\Models\Content;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Lunar\Base\Traits\LogsActivity;
 use Lunar\Models\Collection;
 use Spatie\Translatable\HasTranslations;
+use Testa\Database\Factories\Content\TierFactory;
 use Testa\Models\Attachment;
 use Testa\Models\Education\Course;
 use Testa\Models\Education\Topic;
 
 class Tier extends Model
 {
+    use HasFactory;
     use HasTranslations;
     use LogsActivity;
 
@@ -23,6 +26,11 @@ class Tier extends Model
         'link_name',
     ];
     protected $guarded = [];
+
+    protected static function newFactory()
+    {
+        return TierFactory::new();
+    }
 
     public function banners(): BelongsToMany
     {

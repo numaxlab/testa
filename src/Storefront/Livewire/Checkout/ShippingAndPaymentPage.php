@@ -19,6 +19,8 @@ use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class ShippingAndPaymentPage extends Page
 {
+    private const int GESLIB_PRODUCT_TYPE_ID = 1;
+
     public ?Cart $cart;
 
     public AddressForm $shipping;
@@ -66,12 +68,20 @@ class ShippingAndPaymentPage extends Page
             return;
         }
 
+        $this->removeNonGeslibItems();
+
+        if ($this->cart->lines->isEmpty()) {
+            $this->redirect('/');
+
+            return;
+        }
+
         $this->paymentTypes = config('testa.payment_types.store');
 
         if (! Auth::user()?->latestCustomer()?->canBuyOnCredit()) {
             $this->paymentTypes = array_values(array_filter(
                 $this->paymentTypes,
-                fn ($type) => $type !== 'credit',
+                fn($type) => $type !== 'credit',
             ));
         }
 
@@ -93,6 +103,27 @@ class ShippingAndPaymentPage extends Page
         }
 
         $this->determineCheckoutStep();
+    }
+
+    private function removeNonGeslibItems(): void
+    {
+        $cartLines = $this->cart->lines()->with('purchasable.product')->get();
+
+        $invalidLineIds = $cartLines->filter(function ($line) {
+            if ($line->purchasable_type !== 'product_variant') {
+                return true;
+            }
+
+            return ! $line->purchasable || $line->purchasable->product?->product_type_id !== self::GESLIB_PRODUCT_TYPE_ID;
+        })->pluck('id');
+
+        foreach ($invalidLineIds as $lineId) {
+            CartSession::remove($lineId);
+        }
+
+        if ($invalidLineIds->isNotEmpty()) {
+            $this->cart = CartSession::current();
+        }
     }
 
     public function determineCheckoutStep(): void
@@ -173,7 +204,7 @@ class ShippingAndPaymentPage extends Page
     public function saveAddress(string $type): void
     {
         $rules = collect($this->shipping->getRules())
-            ->mapWithKeys(fn ($value, $key) => ["$type.$key" => $value])
+            ->mapWithKeys(fn($value, $key) => ["$type.$key" => $value])
             ->toArray();
 
         $this->validate($rules);
@@ -249,7 +280,7 @@ class ShippingAndPaymentPage extends Page
 
     public function saveShippingOption(): void
     {
-        $option = $this->shippingOptions->first(fn ($option) => $option->getIdentifier() == $this->chosenShipping);
+        $option = $this->shippingOptions->first(fn($option) => $option->getIdentifier() == $this->chosenShipping);
 
         CartSession::setShippingOption($option);
 

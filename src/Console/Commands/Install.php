@@ -58,6 +58,10 @@ class Install extends Command
         $this->components->info('Setting up education product.');
 
         $this->setupEducationProduct();
+
+        $this->components->info('Setting up membership product.');
+
+        $this->setupMembershipProduct();
     }
 
     private function setupBrandAttributes(): void
@@ -351,5 +355,19 @@ class Install extends Command
         ]);
 
         $type->mappedAttributes()->attach($attribute->id);
+    }
+
+    private function setupMembershipProduct(): void
+    {
+        $type = ProductType::create([
+            'name' => 'Membresía',
+        ]);
+
+        $type->mappedAttributes()->attach(
+            Attribute::whereAttributeType(Product::morphName())
+                ->whereIn('handle', ['name'])
+                ->get()
+                ->pluck('id'),
+        );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Testa\Observers;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 use Lunar\Models\Customer;
 use Lunar\Models\Order;
 use Testa\Models\Education\Course;
@@ -17,8 +17,10 @@ class OrderObserver
         $validStatuses = ['payment-received', 'dispatched'];
 
         if (! $order->was_redeemed && $order->isDirty('status') && in_array($order->status, $validStatuses)) {
-            $this->activateSubscriptionFor($order);
-            $this->activateCourseFor($order);
+            DB::transaction(function () use ($order) {
+                $this->activateSubscriptionFor($order);
+                $this->activateCourseFor($order);
+            });
         }
     }
 
@@ -28,25 +30,33 @@ class OrderObserver
 
         $customer = $order->user->latestCustomer();
 
-        $existingSubscriptions = Subscription::where('order_id', $order->id)
-            ->where('customer_id', $customer->id)
-            ->where('status', Subscription::STATUS_ACTIVE)
-            ->where('expires_at', '>', now())
-            ->get()->keyBy('membership_plan_id');
-
         foreach ($order->lines as $line) {
-            if ($line->purchasable_type !== Relation::getMorphAlias(MembershipPlan::class)) {
+            if ($line->purchasable_type !== 'product_variant') {
                 continue;
             }
 
-            $membershipPlan = $line->purchasable;
+            if ($line->purchasable->product->product_type_id !== MembershipTierObserver::PRODUCT_TYPE_ID) {
+                continue;
+            }
+
+            $membershipPlan = MembershipPlan::where('variant_id', $line->purchasable_id)->first();
+
+            if (! $membershipPlan) {
+                continue;
+            }
+
+            $existingSubscription = Subscription::where('customer_id', $customer->id)
+                ->where('membership_plan_id', $membershipPlan->id)
+                ->where('status', Subscription::STATUS_ACTIVE)
+                ->where('expires_at', '>', now())
+                ->first();
 
             $startsAt = now();
             $expiresAt = now()->addYear();
 
-            if ($existingSubscriptions->has($membershipPlan->id)) {
-                $startsAt = $existingSubscriptions[$membershipPlan->id]->expires_at->addDay();
-                $expiresAt = $existingSubscriptions[$membershipPlan->id]->expires_at->addYear();
+            if ($existingSubscription) {
+                $startsAt = $existingSubscription->expires_at->addDay();
+                $expiresAt = $existingSubscription->expires_at->addYear();
             }
 
             $customer->subscriptions()->create([
@@ -61,8 +71,6 @@ class OrderObserver
 
             $this->applyBenefits($customer, $membershipPlan);
             $this->calculateRecurringPayment($membershipPlan);
-
-            // Envía email, notifica, etc.
 
             break;
         }

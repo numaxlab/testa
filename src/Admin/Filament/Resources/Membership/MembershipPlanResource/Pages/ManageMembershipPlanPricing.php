@@ -82,12 +82,30 @@ class ManageMembershipPlanPricing extends BaseEditRecord
 
         $prices = collect();
 
-        $basePrices = $this
-            ->getRecord()
+        $variant = $this->getRecord()->variant;
+
+        if (! $variant) {
+            return $currencies->map(fn($currency)
+                => [
+                'id' => null,
+                'original_value' => 0,
+                'value' => 0,
+                'original_compare_price' => 0,
+                'compare_price' => 0,
+                'factor' => $currency->factor,
+                'label' => $currency->name,
+                'currency_code' => $currency->code,
+                'default_currency' => $currency->default,
+                'sync_prices' => $currency->sync_prices,
+                'currency_id' => $currency->id,
+            ])->values()->toArray();
+        }
+
+        $basePrices = $variant
             ->basePrices()
             ->with('currency')
             ->get()
-            ->sortByDesc(fn ($p) => (int) $p->currency->default)
+            ->sortByDesc(fn($p) => (int) $p->currency->default)
             ->values();
 
         foreach ($basePrices as $price) {
@@ -110,7 +128,7 @@ class ManageMembershipPlanPricing extends BaseEditRecord
         }
 
         $defaultCurrencyPrice = $prices->first(
-            fn ($price) => $price['default_currency'],
+            fn($price) => $price['default_currency'],
         );
 
         foreach ($currencies as $currency) {
@@ -186,7 +204,7 @@ class ManageMembershipPlanPricing extends BaseEditRecord
 
                                 return __('lunarpanel::relationmanagers.pricing.form.basePrices.tooltip');
                             })
-                            ->disabled(fn () => $price['sync_prices'] ?? false)
+                            ->disabled(fn() => $price['sync_prices'] ?? false)
                             ->live(),
                         Forms\Components\TextInput::make('compare_price')
                             ->label('')
@@ -225,7 +243,7 @@ class ManageMembershipPlanPricing extends BaseEditRecord
 
                                 return __('lunarpanel::relationmanagers.pricing.form.basePrices.tooltip');
                             })
-                            ->disabled(fn () => $price['sync_prices'] ?? false)
+                            ->disabled(fn() => $price['sync_prices'] ?? false)
                             ->live(),
                     ])->columns(2);
                 })->toArray(),
@@ -237,27 +255,34 @@ class ManageMembershipPlanPricing extends BaseEditRecord
         $data = $this->callLunarHook('beforeUpdate', $data, $record);
 
         $membershipPlan = $this->getRecord();
+        $variant = $membershipPlan->variant;
 
         $prices = collect($data['basePrices']);
         unset($data['basePrices']);
         $membershipPlan->update($data);
 
-        $prices->filter(
-            fn ($price) => ! $price['id'] && isset($price['value']),
-        )->each(fn ($price) => $membershipPlan->prices()->create([
-            'currency_id' => $price['currency_id'],
-            'price' => (int) round((float) ($price['value'] * $price['factor'])),
-            'compare_price' => (int) round((float) ($price['compare_price'] * $price['factor'])),
-            'min_quantity' => 1,
-            'customer_group_id' => null,
-        ]));
+        if ($variant) {
+            $variant->update([
+                'tax_class_id' => $data['tax_class_id'],
+            ]);
 
-        $prices->filter(function ($price) {
-            return $price['id'] && isset($price['value']) && ($price['value'] != $price['original_value'] || $price['compare_price'] != $price['original_compare_price']);
-        })->each(fn ($price) => Price::find($price['id'])->update([
-            'price' => (int) round((float) ($price['value'] * $price['factor'])),
-            'compare_price' => (int) round((float) ($price['compare_price'] * $price['factor'])),
-        ]));
+            $prices->filter(
+                fn($price) => ! $price['id'] && isset($price['value']),
+            )->each(fn($price) => $variant->prices()->create([
+                'currency_id' => $price['currency_id'],
+                'price' => (int) round((float) ($price['value'] * $price['factor'])),
+                'compare_price' => (int) round((float) ($price['compare_price'] * $price['factor'])),
+                'min_quantity' => 1,
+                'customer_group_id' => null,
+            ]));
+
+            $prices->filter(function ($price) {
+                return $price['id'] && isset($price['value']) && ($price['value'] != $price['original_value'] || $price['compare_price'] != $price['original_compare_price']);
+            })->each(fn($price) => Price::find($price['id'])->update([
+                'price' => (int) round((float) ($price['value'] * $price['factor'])),
+                'compare_price' => (int) round((float) ($price['compare_price'] * $price['factor'])),
+            ]));
+        }
 
         $this->basePrices = $this->getBasePrices();
 

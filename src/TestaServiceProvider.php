@@ -25,7 +25,11 @@ use Testa\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Testa\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
 use Testa\Console\Commands\Install;
 use Testa\Models\Education\Course;
+use Testa\Models\Membership\MembershipPlan;
+use Testa\Models\Membership\MembershipTier;
 use Testa\Observers\CourseObserver;
+use Testa\Observers\MembershipPlanObserver;
+use Testa\Observers\MembershipTierObserver;
 use Testa\Observers\OrderObserver;
 
 class TestaServiceProvider extends ServiceProvider
@@ -42,7 +46,7 @@ class TestaServiceProvider extends ServiceProvider
         ], ['testa']);
 
         Route::middleware('web')
-            ->group(fn () => $this->loadRoutesFrom(__DIR__.'/../routes/storefront.php'));
+            ->group(fn() => $this->loadRoutesFrom(__DIR__.'/../routes/storefront.php'));
 
         Blade::componentNamespace('Testa\\Storefront\\Views\\Components', 'testa');
         Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'testa');
@@ -76,7 +80,7 @@ class TestaServiceProvider extends ServiceProvider
                 ->extending(Model::class)
                 ->get(),
         )->mapWithKeys(
-            fn ($class)
+            fn($class)
                 => [
                 Str::snake(str_replace('\\', '_', Str::after($class, 'Testa\\Models\\'))) => $class,
             ],
@@ -86,6 +90,8 @@ class TestaServiceProvider extends ServiceProvider
 
         Order::observe(OrderObserver::class);
         Course::observe(CourseObserver::class);
+        MembershipTier::observe(MembershipTierObserver::class);
+        MembershipPlan::observe(MembershipPlanObserver::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([

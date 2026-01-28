@@ -62,6 +62,7 @@ class SignupPage extends Page
         }
 
         $this->plans = MembershipPlan::where('membership_tier_id', $this->selectedTier)
+            ->with(['variant'])
             ->where('is_published', true)
             ->get();
     }
@@ -88,7 +89,7 @@ class SignupPage extends Page
         }
 
         $rules = collect($this->billing->getRules())
-            ->mapWithKeys(fn ($value, $key) => ["billing.$key" => $value])
+            ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
             ->toArray();
 
         $this->validate(
@@ -133,7 +134,7 @@ class SignupPage extends Page
             'meta' => $meta,
         ]);
 
-        $cart->add($membershipPlan);
+        $cart->add($membershipPlan->variant);
 
         $billing = new CartAddress();
         $billing->fill($this->billing->all());

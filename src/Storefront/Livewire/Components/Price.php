@@ -5,7 +5,6 @@ namespace Testa\Storefront\Livewire\Components;
 use Livewire\Component;
 use Lunar\Base\Purchasable;
 use Lunar\Facades\StorefrontSession;
-use Testa\Models\Membership\MembershipPlan;
 
 class Price extends Component
 {
@@ -22,10 +21,6 @@ class Price extends Component
             ->get()->matched;
 
         $this->price = $pricing->priceIncTax()->formatted();
-
-        if ($this->purchasable instanceof MembershipPlan) {
-            $this->price = $pricing->priceIncTax()->formatted().' / '.$this->purchasable->period();
-        }
 
         return <<<'BLADE'
             <span>

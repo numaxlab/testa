@@ -53,7 +53,6 @@ class CourseObserver
                 'purchasable' => 'always',
             ]);
 
-
             $variant->values()->attach($optionValue);
 
             $variant->prices()->create([

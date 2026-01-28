@@ -84,6 +84,10 @@ class AddressForm extends Form
     {
         $address = $this->customerAddresses->firstWhere('id', $customerAddressId);
 
+        if (! $address) {
+            return;
+        }
+
         $this->first_name = $address->first_name;
         $this->last_name = $address->last_name;
         $this->company_name = $address->company_name;

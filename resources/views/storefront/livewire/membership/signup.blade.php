@@ -76,7 +76,7 @@
                                         (
                                         <livewire:testa.storefront.livewire.components.price
                                                 :key="'price-' . $plan->id"
-                                                :purchasable="$plan"/>
+                                                :purchasable="$plan->variant"/>
                                         )
                                     </div>
                                     @if ($plan->description)

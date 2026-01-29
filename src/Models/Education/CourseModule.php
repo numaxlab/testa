@@ -2,6 +2,7 @@
 
 namespace Testa\Models\Education;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -11,15 +12,22 @@ use Lunar\Base\Traits\LogsActivity;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\Translatable\HasTranslations;
+use Testa\Database\Factories\Education\CourseModuleFactory;
 use Testa\Models\Attachment;
 use Testa\Models\EventDeliveryMethod;
 use Testa\Models\Venue;
 
 class CourseModule extends Model
 {
+    use HasFactory;
     use HasUrls;
     use HasTranslations;
     use LogsActivity;
+
+    protected static function newFactory()
+    {
+        return CourseModuleFactory::new();
+    }
 
     public $translatable = [
         'name',

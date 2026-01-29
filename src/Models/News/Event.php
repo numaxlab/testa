@@ -14,6 +14,7 @@ use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
+use Testa\Database\Factories\News\EventFactory;
 use Testa\Models\Attachment;
 use Testa\Models\EventDeliveryMethod;
 use Testa\Models\Venue;
@@ -25,6 +26,11 @@ class Event extends Model implements SpatieHasMedia
     use HasMedia;
     use HasTranslations;
     use LogsActivity;
+
+    protected static function newFactory()
+    {
+        return EventFactory::new();
+    }
 
     public $translatable = [
         'name',

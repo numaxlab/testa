@@ -9,6 +9,7 @@ use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
 use Lunar\Models\Product;
 use Spatie\Translatable\HasTranslations;
+use Testa\Database\Factories\News\ArticleFactory;
 
 class Article extends Model
 {
@@ -16,6 +17,11 @@ class Article extends Model
     use HasUrls;
     use HasTranslations;
     use LogsActivity;
+
+    protected static function newFactory()
+    {
+        return ArticleFactory::new();
+    }
 
     public $translatable = [
         'name',

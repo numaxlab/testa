@@ -19,6 +19,7 @@ use Livewire\LivewireServiceProvider;
 use Lunar\Admin\LunarPanelProvider;
 use Lunar\Admin\Models\Staff;
 use Lunar\LunarServiceProvider;
+use NumaxLab\Atomic\Laravel\Providers\AtomicServiceProvider;
 use NumaxLab\Lunar\Geslib\LunarGeslibServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
@@ -70,6 +71,7 @@ class TestCase extends OrchestraTestCase
             BlinkServiceProvider::class,
 
             LunarGeslibServiceProvider::class,
+            AtomicServiceProvider::class,
             TestaServiceProvider::class,
         ];
     }

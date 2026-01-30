@@ -90,7 +90,7 @@ function createCartWithLines(int $lineCount = 1): Cart
         ]);
     }
 
-    return $cart->fresh(['lines.purchasable.product.urls', 'lines.purchasable.prices']);
+    return $cart->fresh(['lines.purchasable.product.defaultUrl', 'lines.purchasable.prices']);
 }
 
 describe('Cart component initialization', function () {

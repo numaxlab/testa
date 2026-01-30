@@ -51,7 +51,7 @@
         }
     ],
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "vendor/bin/pest --parallel"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

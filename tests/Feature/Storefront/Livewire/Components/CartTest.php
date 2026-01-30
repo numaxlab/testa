@@ -6,6 +6,7 @@ use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
 use Lunar\Models\Country;
 use Lunar\Models\Currency;
+use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
 use Lunar\Models\Price;
 use Lunar\Models\Product;
@@ -25,6 +26,7 @@ beforeEach(function () {
     $this->currency = Currency::factory()->create(['default' => true, 'decimal_places' => 2]);
     $this->channel = Channel::factory()->create(['default' => true]);
     $this->taxClass = TaxClass::factory()->create(['default' => true]);
+    $this->customerGroup = CustomerGroup::factory()->create(['default' => true]);
 
     // Set up tax zone with country and tax rate
     $this->country = Country::factory()->create();

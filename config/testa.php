@@ -3,23 +3,16 @@
 return [
     'payment_types' => [
         'store' => [
-            'card',
-            'bizum',
-            'paypal',
             'cash-on-delivery',
-            'credit',
         ],
         'education' => [
-            'card',
             'transfer',
         ],
         'membership' => [
             'direct-debit',
-            'card',
         ],
         'donation' => [
-            'card',
-            'bizum',
+            'direct-debit',
         ],
     ],
 
@@ -50,9 +43,6 @@ return [
     |
     */
     'payment_gateways' => [
-        \Testa\Payment\Adapters\RedsysPaymentAdapter::class => [
-            'config_key' => 'default',
-        ],
         \Testa\Payment\Adapters\OfflinePaymentAdapter::class => [],
     ],
 ];

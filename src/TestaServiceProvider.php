@@ -24,6 +24,7 @@ use Testa\Admin\Filament\Extension\ProductResourceExtension;
 use Testa\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Testa\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
 use Testa\Console\Commands\Install;
+use Testa\Contracts\Payment\PaymentGatewayAdapter;
 use Testa\Models\Education\Course;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
@@ -31,6 +32,7 @@ use Testa\Observers\CourseObserver;
 use Testa\Observers\MembershipPlanObserver;
 use Testa\Observers\MembershipTierObserver;
 use Testa\Observers\OrderObserver;
+use Testa\Payment\PaymentGatewayRegistry;
 
 class TestaServiceProvider extends ServiceProvider
 {
@@ -104,6 +106,8 @@ class TestaServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/testa.php', 'testa');
 
+        $this->registerPaymentGatewayRegistry();
+
         ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
             \Testa\Models\Product::class,
@@ -118,5 +122,27 @@ class TestaServiceProvider extends ServiceProvider
             CustomerResource::class => CustomerResourceExtension::class,
             ProductResource::class => ProductResourceExtension::class,
         ]);
+    }
+
+    private function registerPaymentGatewayRegistry(): void
+    {
+        $this->app->singleton(PaymentGatewayRegistry::class, function ($app) {
+            $registry = new PaymentGatewayRegistry();
+
+            foreach (config('testa.payment_gateways', []) as $adapterClass => $options) {
+                if (! class_exists($adapterClass)) {
+                    continue;
+                }
+
+                if (! is_subclass_of($adapterClass, PaymentGatewayAdapter::class)) {
+                    continue;
+                }
+
+                $adapter = $app->make($adapterClass, $options);
+                $registry->register($adapter);
+            }
+
+            return $registry;
+        });
     }
 }

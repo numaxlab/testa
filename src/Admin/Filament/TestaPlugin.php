@@ -4,6 +4,7 @@ namespace Testa\Admin\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Testa\Admin\Filament\Resources\Config\MenuItemResource;
 use Testa\Admin\Filament\Resources\Content\BannerResource;
 use Testa\Admin\Filament\Resources\Content\PageResource;
 use Testa\Admin\Filament\Resources\Content\SlideResource;
@@ -59,6 +60,7 @@ class TestaPlugin implements Plugin
             ArticleResource::class,
             EventTypeResource::class,
             EventResource::class,
+            MenuItemResource::class,
         ]);
     }
 

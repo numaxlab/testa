@@ -20,6 +20,6 @@ class CourseRegisterSuccessPage extends Page
     public function render(): View
     {
         return view('testa::storefront.livewire.education.course-register-success')
-            ->title(__('Inscripción completada'));
+            ->title(__('Inscripción en curso completada'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Testa\Models\Education;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -101,6 +102,21 @@ class Course extends Model implements SpatieHasMedia
         }
 
         return $media('medium');
+    }
+
+    protected function fullTitle(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value) {
+                $fullTitle = $this->name;
+
+                if ($this->subtitle) {
+                    $fullTitle .= ' - '.$this->subtitle;
+                }
+
+                return $fullTitle;
+            },
+        );
     }
 
     protected function casts(): array

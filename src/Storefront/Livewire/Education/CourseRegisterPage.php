@@ -85,7 +85,8 @@ class CourseRegisterPage extends Page
             ->where('is_published', true)
             ->first();
 
-        return view('testa::storefront.livewire.education.course-register', compact('banner'));
+        return view('testa::storefront.livewire.education.course-register', compact('banner'))
+            ->title(__('Inscripción en: ').$this->course->fullTitle);
     }
 
     public function redirectToLogin(): Redirector|RedirectResponse
@@ -120,7 +121,7 @@ class CourseRegisterPage extends Page
 
         if ($this->invoice) {
             $rules = collect($this->billing->getRules())
-                ->mapWithKeys(fn ($value, $key) => ["billing.$key" => $value])
+                ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
                 ->toArray();
         }
 

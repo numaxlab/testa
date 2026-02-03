@@ -53,6 +53,7 @@ class CoursePage extends Page
 
         $media = $this->course->verticalImage;
 
-        return view('testa::storefront.livewire.education.course', compact('banner', 'userRegistered', 'media'));
+        return view('testa::storefront.livewire.education.course', compact('banner', 'userRegistered', 'media'))
+            ->title($this->course->fullTitle);
     }
 }

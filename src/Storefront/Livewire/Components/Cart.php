@@ -2,83 +2,26 @@
 
 namespace Testa\Storefront\Livewire\Components;
 
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Livewire\Component;
-use Lunar\Facades\CartSession;
-use Lunar\Models\Contracts\Cart as CartContract;
+use Testa\Storefront\Livewire\Concerns\AbstractCart;
 
-class Cart extends Component
+class Cart extends AbstractCart
 {
-    public array $lines;
-
     public bool $linesVisible = false;
 
     protected $listeners = [
         'add-to-cart' => 'handleAddToCart',
     ];
 
-    public function rules(): array
-    {
-        return [
-            'lines.*.quantity' => 'required|numeric|min:1|max:100',
-        ];
-    }
-
     public function mount(): void
     {
-        $this->mapLines();
-    }
-
-    private function mapLines(): void
-    {
-        $this->lines = $this->cartLines->map(function ($line) {
-            return [
-                'id' => $line->id,
-                'slug' => $line->purchasable->product->defaultUrl->slug,
-                'quantity' => $line->quantity,
-                'description' => $line->purchasable->getDescription(),
-                'thumbnail' => $line->purchasable->getThumbnailUrl(),
-                'sub_total' => $line->subTotal?->formatted(),
-                'unit_price' => $line->unitPriceInclTax?->formatted(),
-            ];
-        })->toArray();
-
-        if (count($this->lines) === 0) {
-            CartSession::forget();
-        }
-    }
-
-    public function getCartProperty(): ?CartContract
-    {
-        return CartSession::current();
-    }
-
-    public function getCartLinesProperty(): Collection
-    {
-        return $this->cart->lines ?? collect();
-    }
-
-    public function updateLines(): void
-    {
-        $this->validate();
-
-        CartSession::updateLines(collect($this->lines));
-
-        $this->mapLines();
-
-        $this->dispatch('cartUpdated');
-    }
-
-    public function removeLine($id): void
-    {
-        CartSession::remove($id);
-
+        $this->removeNonGeslibItems();
         $this->mapLines();
     }
 
     public function handleAddToCart(): void
     {
+        $this->removeNonGeslibItems();
         $this->mapLines();
         $this->linesVisible = true;
     }

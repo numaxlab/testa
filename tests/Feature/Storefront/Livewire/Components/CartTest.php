@@ -10,6 +10,7 @@ use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
 use Lunar\Models\Price;
 use Lunar\Models\Product;
+use Lunar\Models\ProductType;
 use Lunar\Models\ProductVariant;
 use Lunar\Models\TaxClass;
 use Lunar\Models\TaxRate;
@@ -27,6 +28,9 @@ beforeEach(function () {
     $this->channel = Channel::factory()->create(['default' => true]);
     $this->taxClass = TaxClass::factory()->create(['default' => true]);
     $this->customerGroup = CustomerGroup::factory()->create(['default' => true]);
+
+    // Create Geslib product type with ID 1
+    $this->geslibProductType = ProductType::factory()->create(['id' => 1]);
 
     // Set up tax zone with country and tax rate
     $this->country = Country::factory()->create();
@@ -61,7 +65,9 @@ function createCartWithLines(int $lineCount = 1): Cart
     ]);
 
     for ($i = 0; $i < $lineCount; $i++) {
-        $product = Product::factory()->create();
+        $product = Product::factory()->create([
+            'product_type_id' => 1, // Geslib product type
+        ]);
         $variant = ProductVariant::factory()->create([
             'product_id' => $product->id,
             'tax_class_id' => $taxClass->id,

@@ -4,6 +4,7 @@ namespace Testa\Admin\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Testa\Admin\Filament\Pages\ContactSettings;
 use Testa\Admin\Filament\Resources\Config\MenuItemResource;
 use Testa\Admin\Filament\Resources\Content\BannerResource;
 use Testa\Admin\Filament\Resources\Content\PageResource;
@@ -61,6 +62,10 @@ class TestaPlugin implements Plugin
             EventTypeResource::class,
             EventResource::class,
             MenuItemResource::class,
+        ]);
+
+        $panel->pages([
+            ContactSettings::class,
         ]);
     }
 

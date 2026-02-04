@@ -98,7 +98,6 @@ class SignupPage extends Page
             ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
             ->toArray();
 
-        // For guests, name and email fields come from registration form, not billing
         if ($isGuest) {
             unset($rules['billing.first_name'], $rules['billing.last_name'], $rules['billing.contact_email']);
         }
@@ -145,7 +144,6 @@ class SignupPage extends Page
                 'password' => $this->password,
             ]);
 
-            // Copy registration data to billing address
             $this->billing->first_name = $this->first_name;
             $this->billing->last_name = $this->last_name;
             $this->billing->contact_email = $this->email;

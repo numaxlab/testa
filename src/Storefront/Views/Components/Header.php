@@ -5,10 +5,16 @@ namespace Testa\Storefront\Views\Components;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Testa\Models\MenuItem;
+use Testa\Settings\ContactSettings;
 
 class Header extends Component
 {
-    public function __construct() {}
+    public ContactSettings $contactSettings;
+
+    public function __construct(ContactSettings $contactSettings)
+    {
+        $this->contactSettings = $contactSettings;
+    }
 
     public function render(): View
     {

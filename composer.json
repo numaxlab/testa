@@ -13,7 +13,8 @@
         "filament/spatie-laravel-translatable-plugin": "^3.3",
         "lunarphp/table-rate-shipping": "^1.0",
         "meilisearch/meilisearch-php": "^1.15",
-        "lunarphp/meilisearch": "^1.1"
+        "lunarphp/meilisearch": "^1.1",
+        "filament/spatie-laravel-settings-plugin": "^3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",

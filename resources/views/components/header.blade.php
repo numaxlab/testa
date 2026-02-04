@@ -65,9 +65,102 @@
                     </div>
                 </div>
 
-                <ul class="mb-5">
-                    <li><a>Menú de utilidades</a></li>
-                </ul>
+                <div class="flex mb-5 text-sm">
+                    <ul class="flex gap-5 mr-5">
+                        <li>
+                            <a href="mailto:{{ $contactSettings->email_address }}">
+                                {{ $contactSettings->email_address }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:{{ $contactSettings->phone_number }}">
+                                {{ $contactSettings->phone_number }}
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="flex gap-2">
+                        @if ($contactSettings->instagram_url)
+                            <li>
+                                <a href="{{ $contactSettings->instagram_url }}">
+                                    <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                    <span class="sr-only">Instagram</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->facebook_url)
+                            <li>
+                                <a href="{{ $contactSettings->facebook_url }}" target="_blank">
+                                    <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                                    <span class="sr-only">Facebook</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->youtube_url)
+                            <li>
+                                <a href="{{ $contactSettings->youtube_url }}" target="_blank">
+                                    <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                                    <span class="sr-only">Youtube</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->vimeo_url)
+                            <li>
+                                <a href="{{ $contactSettings->vimeo_url }}" target="_blank">
+                                    <i class="fa-brands fa-vimeo" aria-hidden="true"></i>
+                                    <span class="sr-only">Vimeo</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->x_url)
+                            <li>
+                                <a href="{{ $contactSettings->x_url }}" target="_blank">
+                                    <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                                    <span class="sr-only">X/Twitter</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->bluesky_url)
+                            <li>
+                                <a href="{{ $contactSettings->bluesky_url }}" target="_blank">
+                                    <i class="fa-brands fa-bluesky" aria-hidden="true"></i>
+                                    <span class="sr-only">Bluesky</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->mastodon_url)
+                            <li>
+                                <a href="{{ $contactSettings->mastodon_url }}" target="_blank">
+                                    <i class="fa-brands fa-mastodon" aria-hidden="true"></i>
+                                    <span class="sr-only">Mastodon</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->soundcloud_url)
+                            <li>
+                                <a href="{{ $contactSettings->soundcloud_url }}" target="_blank">
+                                    <i class="fa-brands fa-soundcloud" aria-hidden="true"></i>
+                                    <span class="sr-only">Soundcloud</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->telegram_url)
+                            <li>
+                                <a href="{{ $contactSettings->telegram_url }}" target="_blank">
+                                    <i class="fa-brands fa-telegram" aria-hidden="true"></i>
+                                    <span class="sr-only">Telegram</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($contactSettings->whatsapp_url)
+                            <li>
+                                <a href="{{ $contactSettings->whatsapp_url }}" target="_blank">
+                                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                    <span class="sr-only">Whatsapp</span>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
             </nav>
         </header>
     </div>

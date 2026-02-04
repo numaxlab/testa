@@ -7,7 +7,7 @@
     </p>
 
     <div class="mt-4">
-        <p>{{ __('¿No tienes cuenta de usuaria? Regístrate con tu inscripción') }}</p>
+        <p>{{ __('¿No tienes cuenta de usuaria? Regístrate ahora') }}</p>
 
         <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
             @include('testa::storefront.partials.auth.register-form')

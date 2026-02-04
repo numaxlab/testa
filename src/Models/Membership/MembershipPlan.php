@@ -18,21 +18,20 @@ class MembershipPlan extends Model
     use HasTranslations;
     use LogsActivity;
 
-    protected static function newFactory()
-    {
-        return MembershipPlanFactory::new();
-    }
-
     public const string BILLING_INTERVAL_MONTHLY = 'monthly';
     public const string BILLING_INTERVAL_BIMONTHLY = 'bimonthly';
     public const string BILLING_INTERVAL_QUARTERLY = 'quarterly';
     public const string BILLING_INTERVAL_YEARLY = 'yearly';
-
     public $translatable = [
         'name',
         'description',
     ];
     protected $guarded = [];
+
+    protected static function newFactory()
+    {
+        return MembershipPlanFactory::new();
+    }
 
     public function tier(): BelongsTo
     {
@@ -51,7 +50,7 @@ class MembershipPlan extends Model
 
     public function variant(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::modelClass());
+        return $this->belongsTo(ProductVariant::modelClass(), 'variant_id');
     }
 
     public function period(): string

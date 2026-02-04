@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 use Intervention\Validation\Rules\Iban;
 use Livewire\Attributes\Url;
@@ -15,6 +16,7 @@ use Lunar\Models\CartAddress;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
+use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class SignupPage extends Page
@@ -40,6 +42,12 @@ class SignupPage extends Page
     public ?string $directDebitOwnerName = null;
     public ?string $directDebitBankName = null;
     public ?string $directDebitIban = null;
+
+    public string $first_name = '';
+    public string $last_name = '';
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
 
     public function mount(): void
     {
@@ -84,32 +92,64 @@ class SignupPage extends Page
 
     public function signup(): RedirectResponse|Redirector
     {
-        if (! Auth::check()) {
-            return $this->redirectToLogin();
-        }
+        $isGuest = ! Auth::check();
 
         $rules = collect($this->billing->getRules())
             ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
             ->toArray();
 
-        $this->validate(
-            array_merge(
-                [
-                    'selectedTier' => ['required'],
-                    'selectedPlan' => ['required'],
-                    'paymentType' => ['required'],
-                    'directDebitOwnerName' => ['required_if:paymentType,direct-debit'],
-                    'directDebitBankName' => ['required_if:paymentType,direct-debit'],
-                    'directDebitIban' => [
-                        'required_if:paymentType,direct-debit',
-                        'nullable',
-                        new Iban(),
-                    ],
-                    'privacy_policy' => ['accepted', 'required'],
+        // For guests, name and email fields come from registration form, not billing
+        if ($isGuest) {
+            unset($rules['billing.first_name'], $rules['billing.last_name'], $rules['billing.contact_email']);
+        }
+
+        $baseRules = [
+            'selectedTier' => ['required'],
+            'selectedPlan' => ['required'],
+            'paymentType' => ['required'],
+            'directDebitOwnerName' => ['required_if:paymentType,direct-debit'],
+            'directDebitBankName' => ['required_if:paymentType,direct-debit'],
+            'directDebitIban' => [
+                'required_if:paymentType,direct-debit',
+                'nullable',
+                new Iban(),
+            ],
+            'privacy_policy' => ['accepted', 'required'],
+        ];
+
+        if ($isGuest) {
+            $registrationRules = [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'lowercase',
+                    'email',
+                    'max:255',
+                    'unique:'.config('auth.providers.users.model'),
                 ],
-                $rules,
-            ),
-        );
+                'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            ];
+
+            $baseRules = array_merge($baseRules, $registrationRules);
+        }
+
+        $this->validate(array_merge($baseRules, $rules));
+
+        if ($isGuest) {
+            RegisterPage::createUser([
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'password' => $this->password,
+            ]);
+
+            // Copy registration data to billing address
+            $this->billing->first_name = $this->first_name;
+            $this->billing->last_name = $this->last_name;
+            $this->billing->contact_email = $this->email;
+        }
 
         $user = Auth::user();
 

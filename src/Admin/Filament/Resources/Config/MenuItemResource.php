@@ -161,9 +161,6 @@ class MenuItemResource extends BaseResource
                                                 $query
                                                     ->whereIn('handle', [
                                                         Handle::COLLECTION_GROUP_TAXONOMIES,
-                                                        Handle::COLLECTION_GROUP_FEATURED,
-                                                        \Testa\Handle::COLLECTION_GROUP_EDITORIAL_FEATURED,
-                                                        Handle::COLLECTION_GROUP_ITINERARIES,
                                                         CollectionCommand::HANDLE,
                                                     ]);
                                             })->get()

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Lunar\Base\Traits\LogsActivity;
 use Spatie\Translatable\HasTranslations;
+use Testa\Database\Factories\MenuItemFactory;
 
 class MenuItem extends Model
 {
@@ -21,11 +22,16 @@ class MenuItem extends Model
     ];
     protected $guarded = [];
 
+    protected static function newFactory()
+    {
+        return MenuItemFactory::new();
+    }
+
     public function children(): HasMany
     {
         return $this
             ->hasMany(MenuItem::class, 'parent_id')
-            ->orderBy('order');
+            ->orderBy('sort_position');
     }
 
     public function parent(): BelongsTo
@@ -43,7 +49,7 @@ class MenuItem extends Model
         return match ($this->type) {
             'manual' => $this->link_value,
             'route' => route($this->link_value),
-            'model' => $this->linkable?->url,
+            'model' => $this->linkable?->url ?? '#',
             default => '#',
         };
     }

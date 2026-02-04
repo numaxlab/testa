@@ -18,7 +18,7 @@ use Testa\Payment\PaymentGatewayRegistry;
 
 class ProcessPaymentController
 {
-    private const SUCCESS_ROUTES = [
+    private const array SUCCESS_ROUTES = [
         'Pedido librería' => 'testa.storefront.checkout.success',
         'Curso' => 'testa.storefront.education.courses.register.success',
         'Subscripción socias' => 'testa.storefront.membership.signup.success',
@@ -26,7 +26,7 @@ class ProcessPaymentController
         'default' => 'testa.storefront.checkout.success',
     ];
 
-    private const CHECKOUT_ROUTES = [
+    private const array CHECKOUT_ROUTES = [
         'Pedido librería' => 'testa.storefront.checkout.shipping-and-payment',
         'Curso' => 'testa.storefront.education.courses.register',
         'Subscripción socias' => 'testa.storefront.membership.signup',

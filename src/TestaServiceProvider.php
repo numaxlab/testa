@@ -114,6 +114,11 @@ class TestaServiceProvider extends ServiceProvider
         );
 
         ModelManifest::replace(
+            \Lunar\Models\Contracts\Collection::class,
+            \Testa\Models\Collection::class,
+        );
+
+        ModelManifest::replace(
             \Lunar\Models\Contracts\Customer::class,
             \Testa\Models\Customer::class,
         );

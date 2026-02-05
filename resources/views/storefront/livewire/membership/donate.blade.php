@@ -57,7 +57,7 @@
                 </legend>
 
                 <div class="mt-15 clear-both">
-                    @include('testa::storefront.partials.signup.user')
+                    @include('testa::storefront.partials.donation.user')
                 </div>
             </fieldset>
 

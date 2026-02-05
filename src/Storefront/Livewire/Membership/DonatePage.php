@@ -11,10 +11,10 @@ use Illuminate\View\View;
 use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
+use Lunar\Models\Country;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
-use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class DonatePage extends Page
 {
@@ -27,8 +27,6 @@ class DonatePage extends Page
     public string $selectedQuantity;
 
     public ?float $freeQuantityValue;
-
-    public AddressForm $billing;
 
     public ?string $paymentType = 'card';
 
@@ -49,20 +47,6 @@ class DonatePage extends Page
             'variants.basePrices.priceable',
             'variants.values.option',
         ])->firstOrFail();
-
-        $this->billing->init();
-
-        if (Auth::check()) {
-            $user = Auth::user();
-            $customer = $user->latestCustomer();
-
-            $this->billing->contact_email = $user->email;
-
-            if ($customer) {
-                $this->billing->first_name = $customer->first_name ?? '';
-                $this->billing->last_name = $customer->last_name ?? '';
-            }
-        }
 
         $this->paymentTypes = config('testa.payment_types.donation');
     }
@@ -91,15 +75,7 @@ class DonatePage extends Page
     {
         $isGuest = ! Auth::check();
 
-        $rules = collect($this->billing->getRules())
-            ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
-            ->toArray();
-
-        if ($isGuest) {
-            unset($rules['billing.first_name'], $rules['billing.last_name'], $rules['billing.contact_email']);
-        }
-
-        $baseRules = [
+        $rules = [
             'selectedQuantity' => ['required'],
             'freeQuantityValue' => ['required_if:selectedQuantity,free', 'nullable', 'numeric', 'min:1'],
             'paymentType' => ['required'],
@@ -107,7 +83,7 @@ class DonatePage extends Page
         ];
 
         if ($isGuest) {
-            $registrationRules = [
+            $rules = array_merge($rules, [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'email' => [
@@ -119,12 +95,10 @@ class DonatePage extends Page
                     'unique:'.config('auth.providers.users.model'),
                 ],
                 'password' => ['required', 'string', 'confirmed', Password::defaults()],
-            ];
-
-            $baseRules = array_merge($baseRules, $registrationRules);
+            ]);
         }
 
-        $this->validate(array_merge($baseRules, $rules));
+        $this->validate($rules);
 
         if ($isGuest) {
             RegisterPage::createUser([
@@ -133,10 +107,6 @@ class DonatePage extends Page
                 'email' => $this->email,
                 'password' => $this->password,
             ]);
-
-            $this->billing->first_name = $this->first_name;
-            $this->billing->last_name = $this->last_name;
-            $this->billing->contact_email = $this->email;
         }
 
         $user = Auth::user();
@@ -154,14 +124,20 @@ class DonatePage extends Page
 
         if ($this->selectedQuantity === 'free') {
             $variant = $this->product->variants->firstWhere('sku', self::DONATION_PRODUCT_SKU);
+            $unitPriceInCents = (int) ($this->freeQuantityValue * 100);
+            $cart->add($variant, 1, ['unit_price' => $unitPriceInCents]);
         } else {
             $variant = $this->product->variants->find($this->selectedQuantity);
+            $cart->add($variant);
         }
 
-        $cart->add($variant);
-
         $billing = new CartAddress();
-        $billing->fill($this->billing->all());
+        $billing->first_name = $user->latestCustomer()->first_name;
+        $billing->country_id = Country::where('iso2', config('testa.default_billing_address.country_iso2'))
+            ->firstOrFail()->id;
+        $billing->city = config('testa.default_billing_address.city');
+        $billing->postcode = config('testa.default_billing_address.postcode');
+        $billing->line_one = config('testa.default_billing_address.line_one');
         $cart->setBillingAddress($billing);
 
         $cart->calculate();
@@ -178,15 +154,5 @@ class DonatePage extends Page
         session()->put('url.intended', route('testa.storefront.membership.donate'));
 
         return redirect()->route('login');
-    }
-
-    public function updated($field, $value): void
-    {
-        if ($field === 'billing.customer_address_id') {
-            $this->billing->loadAddress($value);
-        }
-        if ($field === 'billing.country_id') {
-            $this->billing->loadStates($value);
-        }
     }
 }

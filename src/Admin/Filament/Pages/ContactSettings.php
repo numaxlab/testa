@@ -35,12 +35,28 @@ class ContactSettings extends SettingsPage
                 Forms\Components\Section::make(__('Básico'))
                     ->schema([
                         Forms\Components\TextInput::make('email_address')
-                            ->label(__('Email address'))
+                            ->label(__('Email'))
                             ->email()
                             ->required(),
                         Forms\Components\TextInput::make('phone_number')
-                            ->label(__('Phone number'))
+                            ->label(__('Teléfono'))
                             ->required(),
+                        Forms\Components\Repeater::make('address')
+                            ->label(__('Dirección'))
+                            ->schema([
+                                Forms\Components\Checkbox::make('is_primary')
+                                    ->label(__('Principal')),
+                                Forms\Components\TextInput::make('country_iso2')
+                                    ->label(__('Código ISO 2 del país')),
+                                Forms\Components\TextInput::make('line_one')
+                                    ->label(__('Dirección')),
+                                Forms\Components\TextInput::make('city')
+                                    ->label(__('Ciudad/Población')),
+                                Forms\Components\TextInput::make('postcode')
+                                    ->label(__('Código postal')),
+                                Forms\Components\TextInput::make('opening_hours')
+                                    ->label(__('Horario de apertura')),
+                            ])->columnSpan(2)->grid(2),
                     ])->columns(2),
                 Forms\Components\Section::make(__('Redes Sociales'))
                     ->schema([

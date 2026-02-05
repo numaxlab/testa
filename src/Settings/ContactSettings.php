@@ -8,6 +8,7 @@ class ContactSettings extends Settings
 {
     public string $email_address;
     public string $phone_number;
+    public ?array $address;
     public ?string $instagram_url;
     public ?string $facebook_url;
     public ?string $x_url;
@@ -22,5 +23,16 @@ class ContactSettings extends Settings
     public static function group(): string
     {
         return 'contact';
+    }
+
+    public function getPrimaryAddress(): ?array
+    {
+        foreach ($this->address as $address) {
+            if ($address['is_primary'] === true) {
+                return $address;
+            }
+        }
+
+        return null;
     }
 }

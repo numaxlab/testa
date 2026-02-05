@@ -16,6 +16,7 @@ use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Content\Banner;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
+use Testa\Settings\ContactSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
@@ -99,7 +100,7 @@ class CourseRegisterPage extends Page
         return redirect()->route('login');
     }
 
-    public function register(): Redirector|RedirectResponse
+    public function register(ContactSettings $contactSettings): Redirector|RedirectResponse
     {
         $rules = [];
 
@@ -169,11 +170,12 @@ class CourseRegisterPage extends Page
             $billing->fill($this->billing->all());
         } else {
             $billing->first_name = $user->latestCustomer()->first_name;
-            $billing->country_id = Country::where('iso2', config('testa.default_billing_address.country_iso2'))
+            $primaryAddress = $contactSettings->getPrimaryAddress();
+            $billing->country_id = Country::where('iso2', $primaryAddress['country_iso2'])
                 ->firstOrFail()->id;
-            $billing->city = config('testa.default_billing_address.city');
-            $billing->postcode = config('testa.default_billing_address.postcode');
-            $billing->line_one = config('testa.default_billing_address.line_one');
+            $billing->city = $primaryAddress['city'];
+            $billing->postcode = $primaryAddress['postcode'];
+            $billing->line_one = $primaryAddress['line_one'];
         }
 
         $cart->setBillingAddress($billing);

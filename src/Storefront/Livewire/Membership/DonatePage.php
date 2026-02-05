@@ -14,6 +14,7 @@ use Lunar\Models\CartAddress;
 use Lunar\Models\Country;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\ContactSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 
 class DonatePage extends Page
@@ -71,7 +72,7 @@ class DonatePage extends Page
             ->title(__('Donación'));
     }
 
-    public function donate()
+    public function donate(ContactSettings $contactSettings)
     {
         $isGuest = ! Auth::check();
 
@@ -133,11 +134,12 @@ class DonatePage extends Page
 
         $billing = new CartAddress();
         $billing->first_name = $user->latestCustomer()->first_name;
-        $billing->country_id = Country::where('iso2', config('testa.default_billing_address.country_iso2'))
+        $primaryAddress = $contactSettings->getPrimaryAddress();
+        $billing->country_id = Country::where('iso2', $primaryAddress['country_iso2'])
             ->firstOrFail()->id;
-        $billing->city = config('testa.default_billing_address.city');
-        $billing->postcode = config('testa.default_billing_address.postcode');
-        $billing->line_one = config('testa.default_billing_address.line_one');
+        $billing->city = $primaryAddress['city'];
+        $billing->postcode = $primaryAddress['postcode'];
+        $billing->line_one = $primaryAddress['line_one'];
         $cart->setBillingAddress($billing);
 
         $cart->calculate();

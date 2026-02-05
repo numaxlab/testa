@@ -16,6 +16,7 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
+use Testa\Settings\ContactSettings;
 use Testa\Storefront\Livewire\Membership\DonatePage;
 
 use function Pest\Livewire\livewire;
@@ -89,14 +90,17 @@ beforeEach(function () {
     ]);
 
     config(['testa.payment_types.donation' => ['card']]);
-    config([
-        'testa.default_billing_address' => [
-            'country_iso2' => 'ES',
-            'line_one' => 'Test Street 123',
-            'city' => 'Madrid',
-            'postcode' => '28001',
-        ],
+
+    // Mock ContactSettings with primary address
+    $mockSettings = Mockery::mock(ContactSettings::class);
+    $mockSettings->shouldReceive('getPrimaryAddress')->andReturn([
+        'is_primary' => true,
+        'country_iso2' => 'ES',
+        'line_one' => 'Test Street 123',
+        'city' => 'Madrid',
+        'postcode' => '28001',
     ]);
+    app()->instance(ContactSettings::class, $mockSettings);
 });
 
 describe('DonatePage free quantity', function () {

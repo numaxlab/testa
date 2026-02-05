@@ -7,6 +7,7 @@ return new class extends SettingsMigration {
     {
         $this->migrator->add('contact.email_address', 'info@email.net');
         $this->migrator->add('contact.phone_number', '000 000 000');
+        $this->migrator->add('contact.address');
         $this->migrator->add('contact.instagram_url');
         $this->migrator->add('contact.facebook_url');
         $this->migrator->add('contact.x_url');

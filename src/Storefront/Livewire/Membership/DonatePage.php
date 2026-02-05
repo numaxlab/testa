@@ -6,12 +6,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class DonatePage extends Page
@@ -32,6 +34,12 @@ class DonatePage extends Page
 
     public ?string $privacy_policy;
 
+    public string $first_name = '';
+    public string $last_name = '';
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
+
     public function mount(): void
     {
         $this->product = Product::whereHas('variants', function ($query) {
@@ -45,7 +53,15 @@ class DonatePage extends Page
         $this->billing->init();
 
         if (Auth::check()) {
-            $this->billing->contact_email = Auth::user()->email;
+            $user = Auth::user();
+            $customer = $user->latestCustomer();
+
+            $this->billing->contact_email = $user->email;
+
+            if ($customer) {
+                $this->billing->first_name = $customer->first_name ?? '';
+                $this->billing->last_name = $customer->last_name ?? '';
+            }
         }
 
         $this->paymentTypes = config('testa.payment_types.donation');
@@ -73,25 +89,55 @@ class DonatePage extends Page
 
     public function donate()
     {
-        if (! Auth::check()) {
-            return $this->redirectToLogin();
-        }
+        $isGuest = ! Auth::check();
 
         $rules = collect($this->billing->getRules())
-            ->mapWithKeys(fn ($value, $key) => ["billing.$key" => $value])
+            ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
             ->toArray();
 
-        $this->validate(
-            array_merge(
-                [
-                    'selectedQuantity' => ['required'],
-                    'freeQuantityValue' => ['required_if:selectedQuantity,free', 'nullable', 'numeric', 'min:1'],
-                    'paymentType' => ['required'],
-                    'privacy_policy' => ['accepted', 'required'],
+        if ($isGuest) {
+            unset($rules['billing.first_name'], $rules['billing.last_name'], $rules['billing.contact_email']);
+        }
+
+        $baseRules = [
+            'selectedQuantity' => ['required'],
+            'freeQuantityValue' => ['required_if:selectedQuantity,free', 'nullable', 'numeric', 'min:1'],
+            'paymentType' => ['required'],
+            'privacy_policy' => ['accepted', 'required'],
+        ];
+
+        if ($isGuest) {
+            $registrationRules = [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'lowercase',
+                    'email',
+                    'max:255',
+                    'unique:'.config('auth.providers.users.model'),
                 ],
-                $rules,
-            ),
-        );
+                'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            ];
+
+            $baseRules = array_merge($baseRules, $registrationRules);
+        }
+
+        $this->validate(array_merge($baseRules, $rules));
+
+        if ($isGuest) {
+            RegisterPage::createUser([
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'password' => $this->password,
+            ]);
+
+            $this->billing->first_name = $this->first_name;
+            $this->billing->last_name = $this->last_name;
+            $this->billing->contact_email = $this->email;
+        }
 
         $user = Auth::user();
 

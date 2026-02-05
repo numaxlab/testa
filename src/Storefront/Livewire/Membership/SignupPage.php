@@ -57,7 +57,15 @@ class SignupPage extends Page
         $this->billing->init();
 
         if (Auth::check()) {
-            $this->billing->contact_email = Auth::user()->email;
+            $user = Auth::user();
+            $customer = $user->latestCustomer();
+
+            $this->billing->contact_email = $user->email;
+
+            if ($customer) {
+                $this->billing->first_name = $customer->first_name ?? '';
+                $this->billing->last_name = $customer->last_name ?? '';
+            }
         }
 
         $this->paymentTypes = config('testa.payment_types.membership');

@@ -16,6 +16,7 @@ use Lunar\Models\CartAddress;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
+use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
@@ -68,7 +69,7 @@ class SignupPage extends Page
             }
         }
 
-        $this->paymentTypes = config('testa.payment_types.membership');
+        $this->paymentTypes = app(PaymentSettings::class)->membership;
     }
 
     private function retrieveTierPlans(): void

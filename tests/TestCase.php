@@ -98,6 +98,17 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('cache.stores.array', [
             'driver' => 'array',
         ]);
+
+        // Configure spatie/laravel-settings for tests
+        $app['config']->set('settings.default_repository', 'database');
+        $app['config']->set('settings.repositories', [
+            'database' => [
+                'type' => \Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository::class,
+                'model' => null,
+                'table' => 'settings',
+                'connection' => null,
+            ],
+        ]);
     }
 
     protected function asStaff($admin = true): TestCase

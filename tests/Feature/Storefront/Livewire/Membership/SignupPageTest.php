@@ -17,6 +17,7 @@ use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
+use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Membership\SignupPage;
 
 use function Pest\Livewire\livewire;
@@ -75,7 +76,10 @@ beforeEach(function () {
         'variant_id' => $this->variant->id,
     ]);
 
-    config(['testa.payment_types.membership' => ['direct-debit']]);
+    // Mock PaymentSettings
+    $mockPaymentSettings = Mockery::mock(PaymentSettings::class);
+    $mockPaymentSettings->membership = ['direct-debit'];
+    app()->instance(PaymentSettings::class, $mockPaymentSettings);
 });
 
 describe('SignupPage for guests', function () {

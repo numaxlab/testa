@@ -15,6 +15,7 @@ use Lunar\Models\Country;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\ContactSettings;
+use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 
 class DonatePage extends Page
@@ -49,7 +50,7 @@ class DonatePage extends Page
             'variants.values.option',
         ])->firstOrFail();
 
-        $this->paymentTypes = config('testa.payment_types.donation');
+        $this->paymentTypes = app(PaymentSettings::class)->donation;
     }
 
     public function getQuantitiesProperty(): Collection

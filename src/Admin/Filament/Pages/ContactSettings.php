@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class ContactSettings extends SettingsPage
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static ?string $navigationIcon = 'heroicon-o-phone';
 
     protected static string $settings = \Testa\Settings\ContactSettings::class;
 

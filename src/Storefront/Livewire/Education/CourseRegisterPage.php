@@ -17,6 +17,7 @@ use Testa\Models\Content\Banner;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
 use Testa\Settings\ContactSettings;
+use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
@@ -67,7 +68,7 @@ class CourseRegisterPage extends Page
             $this->billing->contact_email = Auth::user()->email;
         }
 
-        $this->paymentTypes = config('testa.payment_types.education');
+        $this->paymentTypes = app(PaymentSettings::class)->education;
     }
 
     public function updated($field, $value): void

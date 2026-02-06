@@ -1,21 +1,12 @@
 <?php
 
 return [
-    'payment_types' => [
-        'store' => [
-            'cash-on-delivery',
-        ],
-        'education' => [
-            'transfer',
-        ],
-        'membership' => [
-            'direct-debit',
-        ],
-        'donation' => [
-            'direct-debit',
-        ],
-    ],
-
+    /*
+    |--------------------------------------------------------------------------
+    | Open Graph
+    |--------------------------------------------------------------------------
+    |
+    */
     'open_graph' => [
         'fallback_image' => env('OPEN_GRAPH_FALLBACK_IMAGE'),
     ],

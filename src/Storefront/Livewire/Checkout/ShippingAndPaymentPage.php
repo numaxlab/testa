@@ -15,6 +15,7 @@ use Lunar\Models\Contracts\Cart;
 use Lunar\Models\Country;
 use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
 class ShippingAndPaymentPage extends Page
@@ -76,7 +77,7 @@ class ShippingAndPaymentPage extends Page
             return;
         }
 
-        $this->paymentTypes = config('testa.payment_types.store');
+        $this->paymentTypes = app(PaymentSettings::class)->store;
 
         if (! Auth::user()?->latestCustomer()?->canBuyOnCredit()) {
             $this->paymentTypes = array_values(array_filter(

@@ -1,0 +1,12 @@
+@import '@numaxlab/atomic/src/css/atomic.css';
+@import '@numaxlab/atomic/src/css/icons.css';
+@import '../../vendor/numaxlab/testa/resources/css/testa.css';
+
+@plugin "@tailwindcss/typography";
+
+@source '../views/**/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/numaxlab/atomic-laravel/resources/views/*.blade.php';
+@source '../../vendor/numaxlab/testa/resources/views/components/**/*.blade.php';
+@source '../../vendor/numaxlab/testa/resources/views/storefront/**/*.blade.php';
+@source '../../vendor/numaxlab/testa/resources/views/vendor/numaxlab-atomic/**/*.blade.php';

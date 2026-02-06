@@ -19,17 +19,61 @@ use Lunar\Models\ProductType;
 use Lunar\Models\ProductVariant;
 use Lunar\Models\Tag;
 use Lunar\Models\TaxClass;
+use Testa\Console\Commands\Concerns\ConfiguresFrontendAssets;
+use Testa\Console\Commands\Concerns\ConfiguresLivewire;
+use Testa\Console\Commands\Concerns\ConfiguresLunarMedia;
+use Testa\Console\Commands\Concerns\ConfiguresLunarSearch;
+use Testa\Console\Commands\Concerns\ConfiguresUserModel;
+use Testa\Console\Commands\Concerns\InstallsNpmPackages;
 use Testa\Handle;
 use Testa\Observers\CourseObserver;
 use Testa\Storefront\Livewire\Membership\DonatePage;
 
 class Install extends Command
 {
-    protected $signature = 'lunar:testa:install';
+    use ConfiguresFrontendAssets;
+    use ConfiguresLivewire;
+    use ConfiguresLunarMedia;
+    use ConfiguresLunarSearch;
+    use ConfiguresUserModel;
+    use InstallsNpmPackages;
+
+    protected $signature = 'lunar:testa:install
+                            {--force : Overwrite existing files without confirmation}
+                            {--skip-npm : Skip npm package installation}
+                            {--skip-frontend : Skip frontend assets configuration}
+                            {--skip-data : Skip database setup (attributes, tags, products)}';
 
     protected $description = 'Install Testa Lunar based features';
 
     public function handle(): void
+    {
+        $this->components->info('Installing Testa...');
+
+        $this->configureUserModel();
+        $this->configureLivewire();
+        $this->configureLunarSearch();
+        $this->configureLunarMedia();
+        $this->installNpmPackages();
+        $this->configureFrontendAssets();
+
+        if (! $this->option('skip-data')) {
+            $this->setupDatabaseData();
+        } else {
+            $this->components->info('Skipping database setup.');
+        }
+
+        $this->components->info('Testa installation complete!');
+        $this->newLine();
+        $this->components->info('Next steps:');
+        $this->components->bulletList([
+            'Run migrations: php artisan migrate',
+            'Build frontend assets: npm run build',
+            'Clear caches: php artisan optimize:clear',
+        ]);
+    }
+
+    private function setupDatabaseData(): void
     {
         $this->components->info('Setting up attributes.');
 

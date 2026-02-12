@@ -1,4 +1,14 @@
 <x-numaxlab-atomic::atoms.input
+        wire:model="id_number"
+        type="text"
+        name="id_number"
+        id="id_number"
+        maxlength="20"
+>
+    {{ __('DNI/NIF') }}
+</x-numaxlab-atomic::atoms.input>
+
+<x-numaxlab-atomic::atoms.input
         wire:model="billing.company_name"
         type="text"
         name="billing.company_name"

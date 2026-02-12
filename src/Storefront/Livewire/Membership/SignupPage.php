@@ -44,6 +44,8 @@ class SignupPage extends Page
     public ?string $directDebitBankName = null;
     public ?string $directDebitIban = null;
 
+    public string $id_number = '';
+
     public string $first_name = '';
     public string $last_name = '';
     public string $email = '';
@@ -123,6 +125,7 @@ class SignupPage extends Page
                 new Iban(),
             ],
             'privacy_policy' => ['accepted', 'required'],
+            'id_number' => ['nullable', 'string', 'max:20'],
         ];
 
         if ($isGuest) {
@@ -165,6 +168,7 @@ class SignupPage extends Page
         $meta = [
             'Tipo de pedido' => 'Subscripción socias',
             'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
+            'DNI/NIF' => $this->id_number,
         ];
 
         if ($this->paymentType === 'direct-debit') {

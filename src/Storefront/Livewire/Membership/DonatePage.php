@@ -34,6 +34,9 @@ class DonatePage extends Page
 
     public ?string $privacy_policy;
 
+    public string $id_number = '';
+    public string $comments = '';
+
     public string $first_name = '';
     public string $last_name = '';
     public string $email = '';
@@ -82,6 +85,8 @@ class DonatePage extends Page
             'freeQuantityValue' => ['required_if:selectedQuantity,free', 'nullable', 'numeric', 'min:1'],
             'paymentType' => ['required'],
             'privacy_policy' => ['accepted', 'required'],
+            'id_number' => ['nullable', 'string', 'max:20'],
+            'comments' => ['nullable', 'string', 'max:500'],
         ];
 
         if ($isGuest) {
@@ -121,6 +126,8 @@ class DonatePage extends Page
             'meta' => [
                 'Tipo de pedido' => 'Donación',
                 'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
+                'DNI/NIF' => $this->id_number,
+                'Comentarios' => $this->comments,
             ],
         ]);
 

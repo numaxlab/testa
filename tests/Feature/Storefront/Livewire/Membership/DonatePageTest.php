@@ -326,6 +326,130 @@ describe('DonatePage validation', function () {
     });
 });
 
+describe('DonatePage id_number and comments fields', function () {
+    it('stores id_number and comments in cart meta', function () {
+        $userModel = config('auth.providers.users.model');
+        $userModel::unguard();
+        $user = $userModel::create([
+            'first_name' => 'Test',
+            'last_name' => 'Donor',
+            'email' => 'donor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $userModel::reguard();
+
+        $customer = \Lunar\Models\Customer::create([
+            'first_name' => 'Test',
+            'last_name' => 'Donor',
+        ]);
+        $customer->users()->attach($user);
+
+        $this->actingAs($user);
+
+        livewire(DonatePage::class)
+            ->set('selectedQuantity', 'free')
+            ->set('freeQuantityValue', 25)
+            ->set('paymentType', 'card')
+            ->set('privacy_policy', true)
+            ->set('id_number', '12345678A')
+            ->set('comments', 'Keep up the great work!')
+            ->call('donate')
+            ->assertHasNoErrors()
+            ->assertRedirectContains('checkout/procesar-pago');
+
+        $cart = Cart::latest()->first();
+        expect($cart->meta['DNI/NIF'])->toBe('12345678A');
+        expect($cart->meta['Comentarios'])->toBe('Keep up the great work!');
+    });
+
+    it('allows donation without id_number and comments', function () {
+        $userModel = config('auth.providers.users.model');
+        $userModel::unguard();
+        $user = $userModel::create([
+            'first_name' => 'Test',
+            'last_name' => 'Donor',
+            'email' => 'donor@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $userModel::reguard();
+
+        $customer = \Lunar\Models\Customer::create([
+            'first_name' => 'Test',
+            'last_name' => 'Donor',
+        ]);
+        $customer->users()->attach($user);
+
+        $this->actingAs($user);
+
+        livewire(DonatePage::class)
+            ->set('selectedQuantity', 'free')
+            ->set('freeQuantityValue', 10)
+            ->set('paymentType', 'card')
+            ->set('privacy_policy', true)
+            ->call('donate')
+            ->assertHasNoErrors()
+            ->assertRedirectContains('checkout/procesar-pago');
+    });
+
+    it('validates id_number max length', function () {
+        $userModel = config('auth.providers.users.model');
+        $userModel::unguard();
+        $user = $userModel::create([
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'testuser@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $userModel::reguard();
+
+        $customer = \Lunar\Models\Customer::create([
+            'first_name' => 'Test',
+            'last_name' => 'User',
+        ]);
+        $customer->users()->attach($user);
+
+        $this->actingAs($user);
+
+        livewire(DonatePage::class)
+            ->set('selectedQuantity', 'free')
+            ->set('freeQuantityValue', 10)
+            ->set('paymentType', 'card')
+            ->set('privacy_policy', true)
+            ->set('id_number', str_repeat('A', 21))
+            ->call('donate')
+            ->assertHasErrors(['id_number']);
+    });
+
+    it('validates comments max length', function () {
+        $userModel = config('auth.providers.users.model');
+        $userModel::unguard();
+        $user = $userModel::create([
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'testuser@example.com',
+            'password' => bcrypt('password'),
+        ]);
+        $userModel::reguard();
+
+        $customer = \Lunar\Models\Customer::create([
+            'first_name' => 'Test',
+            'last_name' => 'User',
+        ]);
+        $customer->users()->attach($user);
+
+        $this->actingAs($user);
+
+        livewire(DonatePage::class)
+            ->set('selectedQuantity', 'free')
+            ->set('freeQuantityValue', 10)
+            ->set('paymentType', 'card')
+            ->set('privacy_policy', true)
+            ->set('comments', str_repeat('A', 501))
+            ->call('donate')
+            ->assertHasErrors(['comments']);
+    });
+});
+
 describe('DonatePage login redirect', function () {
     it('redirects to login with intended URL', function () {
         livewire(DonatePage::class)

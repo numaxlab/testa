@@ -2,6 +2,7 @@
 
 namespace Testa\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,14 @@ class MenuItem extends Model
             ->orderBy('sort_position');
     }
 
+    public function publishedChildren(): HasMany
+    {
+        return $this
+            ->hasMany(MenuItem::class, 'parent_id')
+            ->where('is_published', true)
+            ->orderBy('sort_position');
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(MenuItem::class, 'parent_id');
@@ -50,8 +59,24 @@ class MenuItem extends Model
             'manual' => $this->link_value,
             'route' => route($this->link_value),
             'model' => $this->linkable?->url ?? '#',
+            'group' => '#',
             default => '#',
         };
+    }
+
+    public function getIsGroupAttribute(): bool
+    {
+        return $this->type === 'group';
+    }
+
+    public function getGroupChildrenAttribute(): Collection
+    {
+        return $this->publishedChildren->filter(fn($item) => $item->is_group);
+    }
+
+    public function getLinkChildrenAttribute(): Collection
+    {
+        return $this->publishedChildren->filter(fn($item) => ! $item->is_group);
     }
 
     public function getBreadcrumbsAttribute(): string
@@ -59,6 +84,9 @@ class MenuItem extends Model
         $breadcrumbs = [];
 
         if ($this->parent) {
+            if ($this->parent->parent) {
+                $breadcrumbs[] = $this->parent->parent->name;
+            }
             $breadcrumbs[] = $this->parent->name;
         }
 

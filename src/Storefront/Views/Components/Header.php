@@ -21,7 +21,7 @@ class Header extends Component
         $menuItems = MenuItem::where('is_published', true)
             ->whereNull('parent_id')
             ->orderBy('sort_position')
-            ->with(['children'])
+            ->with(['publishedChildren.publishedChildren'])
             ->get();
 
         return view('testa::components.header', compact('menuItems'));

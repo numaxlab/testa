@@ -107,3 +107,52 @@ it('returns breadcrumbs with parent', function () {
 
     expect($child->breadcrumbs)->toBe('Parent / Child');
 });
+
+it('returns hash for group type url', function () {
+    $menuItem = MenuItem::factory()->group()->create();
+
+    expect($menuItem->url)->toBe('#');
+});
+
+it('returns true for is_group when type is group', function () {
+    $menuItem = MenuItem::factory()->group()->create();
+
+    expect($menuItem->is_group)->toBeTrue();
+});
+
+it('returns false for is_group when type is not group', function () {
+    $menuItem = MenuItem::factory()->manual()->create();
+
+    expect($menuItem->is_group)->toBeFalse();
+});
+
+it('returns 3-level breadcrumbs', function () {
+    $root = MenuItem::factory()->create(['name' => 'Root']);
+    $group = MenuItem::factory()->group()->withParent($root)->create(['name' => 'Group']);
+    $child = MenuItem::factory()->withParent($group)->create(['name' => 'Child']);
+
+    expect($child->breadcrumbs)->toBe('Root / Group / Child');
+});
+
+it('filters unpublished items with publishedChildren', function () {
+    $parent = MenuItem::factory()->create();
+
+    $published = MenuItem::factory()->withParent($parent)->create(['is_published' => true, 'sort_position' => 1]);
+    $unpublished = MenuItem::factory()->withParent($parent)->unpublished()->create(['sort_position' => 2]);
+
+    $publishedChildren = $parent->publishedChildren;
+
+    expect($publishedChildren)
+        ->toHaveCount(1)
+        ->and($publishedChildren->first()->id)->toBe($published->id);
+});
+
+it('clears link fields with group factory state', function () {
+    $menuItem = MenuItem::factory()->group()->create();
+
+    expect($menuItem->type)
+        ->toBe('group')
+        ->and($menuItem->link_value)->toBeNull()
+        ->and($menuItem->linkable_type)->toBeNull()
+        ->and($menuItem->linkable_id)->toBeNull();
+});

@@ -34,13 +34,17 @@ return [
         'parent_id' => [
             'label' => 'Elemento madre',
             'placeholder' => 'Nivel superior',
+            'max_depth_error' => 'El nivel de anidamiento máximo es 3.',
         ],
         'type' => [
-            'label' => 'Tipo de enlace',
+            'label' => 'Tipo',
             'options' => [
                 'manual' => 'URL libre',
                 'route' => 'Página estática',
-                'model' => 'Página de contenido',
+                'page' => 'Página de contenido',
+                'collection' => 'Categoría',
+                'model' => 'Página de contenido / Categoría',
+                'group' => 'Grupo',
             ],
         ],
         'url' => [
@@ -68,13 +72,6 @@ return [
                 'testa_storefront_checkout_shipping-and-payment' => 'Carrito / Envío y pago',
                 'testa_storefront_membership_signup' => 'Apoya el proyecto / Hazte socix',
                 'testa_storefront_membership_donate' => 'Apoya el proyecto / Dona',
-            ],
-        ],
-        'linkable_type' => [
-            'label' => 'Tipo de contenido',
-            'options' => [
-                'page' => 'Página',
-                'collection' => 'Grupos de categorías',
             ],
         ],
         'linkable_id' => [

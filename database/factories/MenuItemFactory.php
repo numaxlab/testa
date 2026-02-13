@@ -55,6 +55,17 @@ class MenuItemFactory extends Factory
         ]);
     }
 
+    public function group(): static
+    {
+        return $this->state(fn()
+            => [
+            'type' => 'group',
+            'link_value' => null,
+            'linkable_type' => null,
+            'linkable_id' => null,
+        ]);
+    }
+
     public function unpublished(): static
     {
         return $this->state(fn()

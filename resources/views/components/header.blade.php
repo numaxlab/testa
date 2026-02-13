@@ -25,7 +25,7 @@
                     <ul class="site-header-main-menu">
                         @foreach ($menuItems as $menuItem)
                             <li
-                                    @if ($menuItem->children->isNotEmpty())
+                                    @if ($menuItem->publishedChildren->isNotEmpty())
                                         x-data="{ submenuExpanded: false }"
                                     @mouseenter="submenuExpanded = true"
                                     @mouseleave="submenuExpanded = false"
@@ -39,21 +39,43 @@
                                     {{ $menuItem->name }}
                                 </a>
 
-                                @if ($menuItem->children->isNotEmpty())
+                                @if ($menuItem->publishedChildren->isNotEmpty())
                                     <div x-cloak x-show="submenuExpanded"
-                                         class="absolute bg-white top-full -left-3 z-10 px-3 pt-3 pb-8 border-l border-b border-primary min-w-max h-40 flex gap-5 shadow-lg">
-                                        <ul class="grid grid-cols-3 place-content-start gap-x-5">
-                                            @foreach($menuItem->children as $childMenuItem)
-                                                <li>
-                                                    <a
-                                                            href="{{ $childMenuItem->url }}"
-                                                            wire:navigate
-                                                    >
-                                                        {{ $childMenuItem->name }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                         class="absolute bg-white top-full -left-3 z-10 pl-3 pr-8 pt-3 pb-8 border-l border-b border-primary min-w-max flex gap-5 shadow-lg">
+                                        @foreach($menuItem->groupChildren as $group)
+                                            <div>
+                                                <h3 class="font-bold mb-2">{{ $group->name }}</h3>
+                                                @if ($group->publishedChildren->isNotEmpty())
+                                                    <ul>
+                                                        @foreach($group->publishedChildren as $groupChild)
+                                                            <li>
+                                                                <a
+                                                                        href="{{ $groupChild->url }}"
+                                                                        wire:navigate
+                                                                >
+                                                                    {{ $groupChild->name }}
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </div>
+                                        @endforeach
+
+                                        @if ($menuItem->linkChildren->isNotEmpty())
+                                            <ul class="{{ $menuItem->groupChildren->isNotEmpty() ? 'ml-5' : '' }}">
+                                                @foreach($menuItem->linkChildren as $childMenuItem)
+                                                    <li>
+                                                        <a
+                                                                href="{{ $childMenuItem->url }}"
+                                                                wire:navigate
+                                                        >
+                                                            {{ $childMenuItem->name }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
                                     </div>
                                 @endif
                             </li>

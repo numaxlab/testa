@@ -7,20 +7,21 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Lunar\DataTypes\ShippingOption;
 use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
-use Lunar\Models\Country;
 use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
+use Testa\Storefront\Livewire\Concerns\FiltersGeslibProducts;
 
 class ShippingAndPaymentPage extends Page
 {
-    private const int GESLIB_PRODUCT_TYPE_ID = 1;
+    use FiltersGeslibProducts;
 
     public ?Cart $cart;
 
@@ -49,16 +50,6 @@ class ShippingAndPaymentPage extends Page
 
     public array $paymentTypes = [];
 
-    protected $listeners = [
-        'cartUpdated' => 'refreshCart',
-        'selectedShippingOption' => 'refreshCart',
-    ];
-
-    public function getCountriesProperty(): Collection
-    {
-        return Country::orderBy('native')->get();
-    }
-
     public function mount(): void
     {
         $this->cart = CartSession::current();
@@ -70,6 +61,8 @@ class ShippingAndPaymentPage extends Page
         }
 
         $this->removeNonGeslibItems();
+
+        $this->cart = CartSession::current();
 
         if ($this->cart->lines->isEmpty()) {
             $this->redirect('/');
@@ -106,27 +99,6 @@ class ShippingAndPaymentPage extends Page
         $this->determineCheckoutStep();
     }
 
-    private function removeNonGeslibItems(): void
-    {
-        $cartLines = $this->cart->lines()->with('purchasable.product')->get();
-
-        $invalidLineIds = $cartLines->filter(function ($line) {
-            if ($line->purchasable_type !== 'product_variant') {
-                return true;
-            }
-
-            return ! $line->purchasable || $line->purchasable->product?->product_type_id !== self::GESLIB_PRODUCT_TYPE_ID;
-        })->pluck('id');
-
-        foreach ($invalidLineIds as $lineId) {
-            CartSession::remove($lineId);
-        }
-
-        if ($invalidLineIds->isNotEmpty()) {
-            $this->cart = CartSession::current();
-        }
-    }
-
     public function determineCheckoutStep(): void
     {
         $shippingAddress = $this->cart->shippingAddress;
@@ -136,7 +108,7 @@ class ShippingAndPaymentPage extends Page
             $this->currentStep = $this->steps['billing_address'];
 
             if ($billingAddress) {
-                $this->currentStep = $this->steps['billing_address'] + 1;
+                $this->currentStep = $this->steps['payment'];
             }
 
             return;
@@ -148,43 +120,38 @@ class ShippingAndPaymentPage extends Page
             return;
         }
 
-        $this->currentStep = $this->steps['shipping_address'] + 1;
+        $this->currentStep = $this->steps['shipping_option'];
 
         if (! $this->shippingOption) {
-            $this->currentStep = $this->steps['shipping_option'];
             return;
         }
 
         $this->chosenShipping = $this->shippingOption->getIdentifier();
-        $this->currentStep = $this->steps['shipping_option'] + 1;
+        $this->currentStep = $this->steps['billing_address'];
 
         if ($billingAddress) {
-            $this->currentStep = $this->steps['billing_address'] + 1;
+            $this->currentStep = $this->steps['payment'];
         }
     }
 
     public function updated($field, $value): void
     {
-        if ($field === 'shippingMethod') {
-            $this->determineCheckoutStep();
-        }
-        if ($field === 'shipping.customer_address_id') {
-            $this->shipping->loadAddress($value);
-        }
-        if ($field === 'billing.customer_address_id') {
-            $this->billing->loadAddress($value);
-        }
-        if ($field === 'shipping.country_id') {
-            $this->shipping->loadStates($value);
-        }
-        if ($field === 'billing.country_id') {
-            $this->billing->loadStates($value);
-        }
-        if ($field === 'couponCode') {
-            $this->cart->coupon_code = $value;
-            $this->cart->save();
-            $this->cart->calculate();
-        }
+        match ($field) {
+            'shippingMethod' => $this->determineCheckoutStep(),
+            'shipping.customer_address_id' => $this->shipping->loadAddress($value),
+            'billing.customer_address_id' => $this->billing->loadAddress($value),
+            'shipping.country_id' => $this->shipping->loadStates($value),
+            'billing.country_id' => $this->billing->loadStates($value),
+            'couponCode' => $this->saveCouponCode($value),
+            default => null,
+        };
+    }
+
+    private function saveCouponCode(?string $value): void
+    {
+        $this->cart->coupon_code = $value;
+        $this->cart->save();
+        $this->cart->calculate();
     }
 
     public function hydrate(): void
@@ -204,13 +171,13 @@ class ShippingAndPaymentPage extends Page
 
     public function saveAddress(string $type): void
     {
-        $rules = collect($this->shipping->getRules())
+        $rules = collect($this->{$type}->getRules())
             ->mapWithKeys(fn($value, $key) => ["$type.$key" => $value])
             ->toArray();
 
         $this->validate($rules);
 
-        if ($type == 'billing') {
+        if ($type === 'billing') {
             $this->shippingIsBilling = false;
 
             $billing = new CartAddress();
@@ -219,7 +186,7 @@ class ShippingAndPaymentPage extends Page
             $this->cart->setBillingAddress($billing);
         }
 
-        if ($type == 'shipping') {
+        if ($type === 'shipping') {
             $shipping = new CartAddress();
             $shipping->fill($this->shipping->all());
             $this->cart->setShippingAddress($shipping);
@@ -240,10 +207,10 @@ class ShippingAndPaymentPage extends Page
             }
         }
 
-        if ($type == 'shipping' && $this->shipping->saveToUser) {
+        if ($type === 'shipping' && $this->shipping->saveToUser) {
             $this->shipping->store();
         }
-        if ($type == 'billing' && $this->billing->saveToUser) {
+        if ($type === 'billing' && $this->billing->saveToUser) {
             $this->billing->store();
         }
 
@@ -272,7 +239,7 @@ class ShippingAndPaymentPage extends Page
 
         if ($option) {
             return ShippingManifest::getOptions($this->cart)->first(function ($opt) use ($option) {
-                return $opt->getIdentifier() == $option;
+                return $opt->getIdentifier() === $option;
             });
         }
 
@@ -281,7 +248,7 @@ class ShippingAndPaymentPage extends Page
 
     public function saveShippingOption(): void
     {
-        $option = $this->shippingOptions->first(fn($option) => $option->getIdentifier() == $this->chosenShipping);
+        $option = $this->shippingOptions->first(fn($option) => $option->getIdentifier() === $this->chosenShipping);
 
         CartSession::setShippingOption($option);
 
@@ -290,6 +257,8 @@ class ShippingAndPaymentPage extends Page
         $this->determineCheckoutStep();
     }
 
+    #[On('cartUpdated')]
+    #[On('selectedShippingOption')]
     public function refreshCart(): void
     {
         $this->cart = CartSession::current();
@@ -299,19 +268,36 @@ class ShippingAndPaymentPage extends Page
     {
         if ($this->currentStep < $this->steps['payment']) {
             $this->dispatch('uncompleted-steps');
+
             return null;
         }
 
         if (! $this->paymentType) {
             $this->dispatch('uncompleted-steps');
+
             return null;
         }
 
         if ($this->shippingMethod !== 'send') {
             $this->cart->setShippingAddress($this->cart->billingAddress);
 
-            $shippingMethod = ShippingMethod::where('id', $this->shippingMethod)->firstOrFail();
-            $shippingOption = $shippingMethod->shippingRates->first()->getShippingOption($this->cart);
+            $shippingMethod = ShippingMethod::find($this->shippingMethod);
+
+            if (! $shippingMethod) {
+                $this->dispatch('uncompleted-steps');
+
+                return null;
+            }
+
+            $shippingRate = $shippingMethod->shippingRates->first();
+
+            if (! $shippingRate) {
+                $this->dispatch('uncompleted-steps');
+
+                return null;
+            }
+
+            $shippingOption = $shippingRate->getShippingOption($this->cart);
 
             $this->cart->setShippingOption($shippingOption);
         }

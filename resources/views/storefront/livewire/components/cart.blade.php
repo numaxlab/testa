@@ -100,7 +100,7 @@
         </div>
 
         @if ($this->cart && count($lines) > 0)
-            <a class="at-button is-primary mt-4" href="{{ route('testa.storefront.checkout.summary') }}"
+            <a class="at-button is-primary mt-4" href="{{ route('testa.storefront.checkout.shipping-and-payment') }}"
                wire:navigate>
                 {{ __('Tramitar pedido') }}
             </a>

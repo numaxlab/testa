@@ -13,9 +13,11 @@
             </a>
         @endauth
     </li>
-    <li>
-        <livewire:testa.storefront.livewire.components.cart lazy/>
-    </li>
+    @unless(request()->routeIs('testa.storefront.checkout.*'))
+        <li>
+            <livewire:testa.storefront.livewire.components.cart lazy/>
+        </li>
+    @endunless
     <li>
         <button class="text-primary" @click="searchExpanded = !searchExpanded">
             <i class="icon icon-magnifying-glass" aria-hidden="true"></i>

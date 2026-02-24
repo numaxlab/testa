@@ -26,6 +26,9 @@ class AddressForm extends Form
     #[Validate('nullable|string|max:255')]
     public ?string $company_name;
 
+    #[Validate('nullable|string|max:255')]
+    public ?string $tax_identifier;
+
     #[Validate('required')]
     public ?int $country_id;
 
@@ -63,6 +66,7 @@ class AddressForm extends Form
         $this->first_name = $this->address->first_name;
         $this->last_name = $this->address->last_name;
         $this->company_name = $this->address->company_name;
+        $this->tax_identifier = $this->address->tax_identifier;
         $this->country_id = $this->address->country_id;
 
         if ($this->country_id !== null) {

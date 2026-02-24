@@ -55,6 +55,16 @@
             {{ __('Nombre de la empresa') }}
         </x-numaxlab-atomic::atoms.input>
 
+        <x-numaxlab-atomic::atoms.input
+                wire:model="form.tax_identifier"
+                type="text"
+                name="form.tax_identifier"
+                id="form.tax_identifier"
+                placeholder="{{ __('NIF/CIF') }}"
+        >
+            {{ __('NIF/CIF') }}
+        </x-numaxlab-atomic::atoms.input>
+
         <div class="flex flex-col gap-6 md:flex-row">
             <div class="md:w-1/2">
                 <x-numaxlab-atomic::atoms.select

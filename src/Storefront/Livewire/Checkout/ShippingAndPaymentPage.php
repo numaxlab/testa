@@ -86,9 +86,19 @@ class ShippingAndPaymentPage extends Page
 
         if ($this->cart->shippingAddress) {
             $this->shipping->fill($this->cart->shippingAddress->toArray());
+            if ($this->shipping->country_id) {
+                $savedState = $this->shipping->state;
+                $this->shipping->loadStates($this->shipping->country_id);
+                $this->shipping->state = $savedState;
+            }
         }
         if ($this->cart->billingAddress) {
             $this->billing->fill($this->cart->billingAddress->toArray());
+            if ($this->billing->country_id) {
+                $savedState = $this->billing->state;
+                $this->billing->loadStates($this->billing->country_id);
+                $this->billing->state = $savedState;
+            }
         }
 
         if (! $this->shipping->contact_email) {

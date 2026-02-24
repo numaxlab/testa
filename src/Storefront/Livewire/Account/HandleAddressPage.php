@@ -26,12 +26,19 @@ class HandleAddressPage extends Page
         if ($id !== null) {
             $this->form->setAddress($customer->addresses()->findOrFail($id));
 
+            if ($this->form->country_id !== null) {
+                $savedState = $this->form->state;
+                $this->form->loadStates($this->form->country_id);
+                $this->form->state = $savedState;
+            }
+
             return;
         }
 
         $this->form->first_name = $user->name;
         $this->form->last_name = $user->last_name;
         $this->form->company_name = $user->latestCustomer()?->company_name;
+        $this->form->tax_identifier = $user->latestCustomer()?->tax_identifier;
     }
 
     public function save(): void

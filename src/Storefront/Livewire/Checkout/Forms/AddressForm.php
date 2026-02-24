@@ -32,6 +32,9 @@ class AddressForm extends Form
     #[Validate('nullable|string|max:255')]
     public ?string $company_name = null;
 
+    #[Validate('nullable|string|max:255')]
+    public ?string $tax_identifier = null;
+
     #[Validate('nullable|string|max:20')]
     public ?string $contact_phone = null;
 

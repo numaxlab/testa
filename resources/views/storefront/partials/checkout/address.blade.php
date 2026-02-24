@@ -75,6 +75,19 @@
                         {{ __('Nombre de empresa') }}
                     </x-numaxlab-atomic::atoms.input>
 
+
+                    @if ($type === 'billing')
+                        <x-numaxlab-atomic::atoms.input
+                                wire:model="{{ $type }}.tax_identifier"
+                                type="text"
+                                name="{{ $type }}.tax_identifier"
+                                id="{{ $type }}.tax_identifier"
+                                placeholder="{{ __('NIF/CIF') }}"
+                        >
+                            {{ __('NIF/CIF') }}
+                        </x-numaxlab-atomic::atoms.input>
+                    @endif
+
                     <x-numaxlab-atomic::atoms.input
                             wire:model="{{ $type }}.contact_phone"
                             type="text"
@@ -173,6 +186,15 @@
                         </x-numaxlab-atomic::atoms.forms.checkbox>
                     @endif
 
+                    @if ($type === 'billing')
+                        <x-numaxlab-atomic::atoms.forms.checkbox
+                                wire:model.live="wantsInvoice"
+                                id="wantsInvoice"
+                        >
+                            {{ __('Quiero factura') }}
+                        </x-numaxlab-atomic::atoms.forms.checkbox>
+                    @endif
+
                     <x-numaxlab-atomic::atoms.button
                             class="is-primary"
                             type="submit"
@@ -201,38 +223,47 @@
                                 <dd>
                                     {{ $this->{$type}->first_name }} {{ $this->{$type}->last_name }}
                                 </dd>
-                            </div>
-
-                            @if ($this->{$type}->company_name)
-                                <div>
-                                    <dt class="font-bold">
-                                        {{ __('Empresa') }}
-                                    </dt>
+                                @if ($this->{$type}->company_name)
                                     <dd>
                                         {{ $this->{$type}->company_name }}
                                     </dd>
-                                </div>
-                            @endif
-
-                            @if ($this->{$type}->contact_phone)
-                                <div>
-                                    <dt class="font-bold">
-                                        {{ __('Teléfono') }}
-                                    </dt>
+                                @endif
+                                @if ($this->{$type}->tax_identifier && $type === 'shipping')
                                     <dd>
-                                        {{ $this->{$type}->contact_phone }}
+                                        {{ $this->{$type}->tax_identifier }}
                                     </dd>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
 
                             <div>
                                 <dt class="font-bold">
-                                    {{ __('Email') }}
+                                    {{ __('Datos de contacto') }}
                                 </dt>
                                 <dd>
                                     {{ $this->{$type}->contact_email }}
                                 </dd>
+                                @if ($this->{$type}->contact_phone)
+                                    <dd>
+                                        {{ $this->{$type}->contact_phone }}
+                                    </dd>
+                                @endif
                             </div>
+
+                            @if ($type === 'billing')
+                                <div>
+                                    <dt class="font-bold">
+                                        {{ __('Factura') }}
+                                    </dt>
+                                    <dd>
+                                        {{ $this->wantsInvoice ? __('Sí') : __('No') }}
+                                    </dd>
+                                    @if ($this->{$type}->tax_identifier)
+                                        <dd>
+                                            {{ $this->{$type}->tax_identifier }}
+                                        </dd>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
 

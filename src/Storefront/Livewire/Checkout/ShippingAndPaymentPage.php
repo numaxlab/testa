@@ -41,6 +41,8 @@ class ShippingAndPaymentPage extends Page
 
     public ?string $paymentType = null;
 
+    public bool $wantsInvoice = false;
+
     public array $steps = [
         'shipping_address' => 1,
         'shipping_option' => 2,
@@ -96,6 +98,36 @@ class ShippingAndPaymentPage extends Page
             $this->billing->contact_email = $this->cart->user->email;
         }
 
+        $customer = $this->cart->user?->latestCustomer();
+
+        if ($customer) {
+            if (! $this->shipping->first_name) {
+                $this->shipping->first_name = $customer->first_name ?? '';
+            }
+            if (! $this->shipping->last_name) {
+                $this->shipping->last_name = $customer->last_name ?? '';
+            }
+            if (! $this->shipping->company_name) {
+                $this->shipping->company_name = $customer->company_name;
+            }
+            if (! $this->shipping->tax_identifier) {
+                $this->shipping->tax_identifier = $customer->tax_identifier;
+            }
+
+            if (! $this->billing->first_name) {
+                $this->billing->first_name = $customer->first_name ?? '';
+            }
+            if (! $this->billing->last_name) {
+                $this->billing->last_name = $customer->last_name ?? '';
+            }
+            if (! $this->billing->company_name) {
+                $this->billing->company_name = $customer->company_name;
+            }
+            if (! $this->billing->tax_identifier) {
+                $this->billing->tax_identifier = $customer->tax_identifier;
+            }
+        }
+
         $this->determineCheckoutStep();
     }
 
@@ -137,7 +169,7 @@ class ShippingAndPaymentPage extends Page
     public function updated($field, $value): void
     {
         match ($field) {
-            'shippingMethod' => $this->determineCheckoutStep(),
+            'shippingMethod' => $this->onShippingMethodChanged($value),
             'shipping.customer_address_id' => $this->shipping->loadAddress($value),
             'billing.customer_address_id' => $this->billing->loadAddress($value),
             'shipping.country_id' => $this->shipping->loadStates($value),
@@ -145,6 +177,21 @@ class ShippingAndPaymentPage extends Page
             'couponCode' => $this->saveCouponCode($value),
             default => null,
         };
+    }
+
+    private function onShippingMethodChanged(string $value): void
+    {
+        $this->shippingMethod = $value;
+        $this->chosenShipping = null;
+
+        if ($this->cart->shippingAddress && $this->cart->shippingAddress->shipping_option) {
+            $this->cart->shippingAddress->shipping_option = null;
+            $this->cart->shippingAddress->save();
+        }
+
+        $this->cart->shippingBreakdown = null;
+        $this->cart->refresh()->recalculate();
+        $this->determineCheckoutStep();
     }
 
     private function saveCouponCode(?string $value): void
@@ -305,6 +352,7 @@ class ShippingAndPaymentPage extends Page
         $this->cart->meta = [
             'Tipo de pedido' => 'Pedido librería',
             'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
+            'Solicita factura' => $this->wantsInvoice ? __('Sí') : __('No'),
         ];
 
         $this->cart->save();

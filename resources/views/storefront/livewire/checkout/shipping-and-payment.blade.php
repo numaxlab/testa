@@ -57,7 +57,7 @@
             <dl class="mt-4 text-sm divide-y divide-black">
                 <div class="flex flex-wrap py-2">
                     <dt class="w-1/2 font-medium">
-                        {{ __('Subtotal') }}
+                        {{ __('Productos') }}
                     </dt>
 
                     <dd class="w-1/2 text-right">
@@ -89,8 +89,8 @@
                     </div>
                 @endforeach
 
-                <div class="flex flex-wrap py-2">
-                    <dt class="w-1/2 font-medium">
+                <div class="flex flex-wrap py-2 font-bold">
+                    <dt class="w-1/2">
                         {{ __('Total') }}
                     </dt>
 
@@ -106,7 +106,7 @@
         </x-testa::action-message>
 
         <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
-            {{ __('Pagar') }}
+            {{ __('Finalizar pedido') }}
         </x-numaxlab-atomic::atoms.button>
     </form>
 </article>

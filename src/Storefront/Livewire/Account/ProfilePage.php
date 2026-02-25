@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Storefront\Livewire\Actions\Logout;
 
 class ProfilePage extends Page
 {

@@ -24,7 +24,11 @@
                                 </a>
                             </li>
                             <li>
-                                <button class="text-primary">
+                                <button
+                                        wire:click="deleteAddress({{ $address->id }})"
+                                        wire:confirm="{{ __('¿Estás seguro de que quieres eliminar esta dirección?') }}"
+                                        class="text-primary"
+                                >
                                     {{ __('Eliminar') }}
                                 </button>
                             </li>

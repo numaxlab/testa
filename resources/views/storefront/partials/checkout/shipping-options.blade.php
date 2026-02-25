@@ -31,6 +31,10 @@
                     @endif
                 @endforeach
 
+                @error('chosenShipping')
+                <p class="text-danger text-sm mt-2">{{ $message }}</p>
+                @enderror
+
                 <x-testa::loading-button
                         target="saveShippingOption"
                         class="is-primary mt-10">

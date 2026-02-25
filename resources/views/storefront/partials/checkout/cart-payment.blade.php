@@ -25,6 +25,10 @@
                 </li>
             @endforeach
         </ul>
+
+        @error('paymentType')
+        <p class="text-danger text-sm mt-2">{{ $message }}</p>
+        @enderror
     @else
         <p>{{ __('Primero necesitamos tus datos de facturación.') }}</p>
     @endif

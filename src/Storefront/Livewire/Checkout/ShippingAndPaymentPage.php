@@ -305,6 +305,8 @@ class ShippingAndPaymentPage extends Page
 
     public function saveShippingOption(): void
     {
+        $this->validate(['chosenShipping' => 'required']);
+
         $option = $this->shippingOptions->first(fn($option) => $option->getIdentifier() === $this->chosenShipping);
 
         CartSession::setShippingOption($option);
@@ -329,11 +331,7 @@ class ShippingAndPaymentPage extends Page
             return null;
         }
 
-        if (! $this->paymentType) {
-            $this->dispatch('uncompleted-steps');
-
-            return null;
-        }
+        $this->validate(['paymentType' => 'required']);
 
         if ($this->shippingMethod !== 'send') {
             $this->cart->setShippingAddress($this->cart->billingAddress);

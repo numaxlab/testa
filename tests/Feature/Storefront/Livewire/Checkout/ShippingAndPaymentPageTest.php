@@ -547,12 +547,11 @@ describe('finish', function () {
             ->assertDispatched('uncompleted-steps');
     });
 
-    it('dispatches uncompleted-steps when paymentType is not set', function () {
+    it('shows a paymentType validation error when no payment method is selected', function () {
         $user = createUser();
         $this->actingAs($user);
         $cart = createGeslibCart($user);
 
-        // Add addresses so we reach payment step
         CartAddress::factory()->create([
             'cart_id' => $cart->id,
             'type' => 'billing',
@@ -563,11 +562,11 @@ describe('finish', function () {
         CartSession::use($cart->fresh());
 
         livewire(ShippingAndPaymentPage::class)
-            ->set('shippingMethod', 'pickup')   // skip to billing_address step
-            ->set('currentStep', 4)             // manually set to payment step
+            ->set('shippingMethod', 'pickup')
+            ->set('currentStep', 4)
             ->set('paymentType', null)
             ->call('finish')
-            ->assertDispatched('uncompleted-steps');
+            ->assertHasErrors(['paymentType']);
     });
 
     it('dispatches uncompleted-steps when pickup shippingMethod has no matching ShippingMethod record', function () {
@@ -647,6 +646,89 @@ describe('finish', function () {
         $cart->refresh();
         expect($cart->meta)->toHaveKey('Tipo de pedido');
         expect($cart->meta['Tipo de pedido'])->toBe('Pedido librería');
+    });
+});
+
+// ─── saveShippingOption validation ───────────────────────────────────────────
+
+describe('saveShippingOption', function () {
+    it('fails validation when no shipping option is chosen', function () {
+        $user = createUser();
+        $this->actingAs($user);
+        $cart = createGeslibCart($user);
+
+        CartAddress::factory()->create([
+            'cart_id' => $cart->id,
+            'type' => 'shipping',
+            'country_id' => $this->country->id,
+            'contact_email' => 'test@example.com',
+        ]);
+
+        CartSession::use($cart->fresh());
+
+        livewire(ShippingAndPaymentPage::class)
+            ->set('chosenShipping', null)
+            ->call('saveShippingOption')
+            ->assertHasErrors(['chosenShipping']);
+    });
+
+    it('does not advance the step when shipping option validation fails', function () {
+        $user = createUser();
+        $this->actingAs($user);
+        $cart = createGeslibCart($user);
+
+        CartAddress::factory()->create([
+            'cart_id' => $cart->id,
+            'type' => 'shipping',
+            'country_id' => $this->country->id,
+            'contact_email' => 'test@example.com',
+        ]);
+
+        CartSession::use($cart->fresh());
+
+        // Shipping address exists but no option → currentStep should be shipping_option (2)
+        $component = livewire(ShippingAndPaymentPage::class);
+        expect($component->get('currentStep'))->toBe(2);
+
+        $component
+            ->set('chosenShipping', null)
+            ->call('saveShippingOption');
+
+        expect($component->get('currentStep'))->toBe(2);
+    });
+
+    it('passes validation and advances to billing address step when a valid option is chosen', function () {
+        $user = createUser();
+        $this->actingAs($user);
+        $cart = createGeslibCart($user);
+
+        CartAddress::factory()->create([
+            'cart_id' => $cart->id,
+            'type' => 'shipping',
+            'country_id' => $this->country->id,
+            'contact_email' => 'test@example.com',
+        ]);
+
+        CartSession::use($cart->fresh());
+
+        $mockPrice = Mockery::mock(\Lunar\DataTypes\Price::class)->shouldIgnoreMissing();
+        $mockPrice->allows('formatted')->andReturn('5,00 €');
+
+        $shippingOption = Mockery::mock(\Lunar\DataTypes\ShippingOption::class)->shouldIgnoreMissing();
+        $shippingOption->allows('getIdentifier')->andReturn('standard_delivery');
+        $shippingOption->allows('getName')->andReturn('Standard Delivery');
+        $shippingOption->allows('getPrice')->andReturn($mockPrice);
+        $shippingOption->collect = false;
+
+        $manifestMock = Mockery::mock(\Lunar\Base\ShippingManifestInterface::class)->shouldIgnoreMissing();
+        $manifestMock->allows('getOptions')->andReturn(collect([$shippingOption]));
+        app()->instance(\Lunar\Base\ShippingManifestInterface::class, $manifestMock);
+
+        livewire(ShippingAndPaymentPage::class)
+            ->set('chosenShipping', 'standard_delivery')
+            ->call('saveShippingOption')
+            ->assertHasNoErrors(['chosenShipping'])
+            ->assertSet('currentStep', 3); // billing_address
     });
 });
 

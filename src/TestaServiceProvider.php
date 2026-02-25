@@ -14,12 +14,14 @@ use Livewire\Component;
 use Livewire\Livewire;
 use Livewire\Mechanisms\ComponentRegistry;
 use Lunar\Admin\Filament\Resources\CustomerResource;
+use Lunar\Admin\Filament\Resources\OrderResource\Pages\ManageOrder;
 use Lunar\Admin\Filament\Resources\ProductResource;
 use Lunar\Admin\Support\Facades\LunarPanel;
 use Lunar\Facades\ModelManifest;
 use Lunar\Models\Order;
 use Spatie\StructureDiscoverer\Discover;
 use Symfony\Component\Finder\Finder;
+use Testa\Admin\Filament\Extension\ManageOrderExtension;
 use Testa\Admin\Filament\Extension\ProductResourceExtension;
 use Testa\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Testa\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
@@ -126,6 +128,7 @@ class TestaServiceProvider extends ServiceProvider
         LunarPanel::extensions([
             CustomerResource::class => CustomerResourceExtension::class,
             ProductResource::class => ProductResourceExtension::class,
+            ManageOrder::class => ManageOrderExtension::class,
         ]);
     }
 

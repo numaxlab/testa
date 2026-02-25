@@ -22,10 +22,13 @@
 
     <div class="grid gap-15 md:grid-cols-2">
         <div class="border-t border-primary">
-            <a wire:navigate class="block border-b border-primary py-2">
-                <i class="icon icon-doc mr-2" aria-hidden="true"></i>
-                {{ __('Descargar factura') }}
-            </a>
+            @if(filled($order->meta['invoice_path'] ?? null))
+                <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($order->meta['invoice_path']) }}"
+                   target="_blank" class="block border-b border-primary py-2">
+                    <i class="icon icon-doc mr-2" aria-hidden="true"></i>
+                    {{ __('Descargar factura') }}
+                </a>
+            @endif
             <div class="border-b border-black py-2">
                 <i class="icon icon-calendar mr-2" aria-hidden="true"></i>
                 {{ $order->created_at->format('d/m/Y') }}

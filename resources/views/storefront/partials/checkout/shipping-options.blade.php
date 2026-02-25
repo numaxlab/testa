@@ -33,7 +33,6 @@
 
                 <x-testa::loading-button
                         target="saveShippingOption"
-                        loadingText="{{ __('Guardando...') }}"
                         class="is-primary mt-10">
                     {{ __('Continuar') }}
                 </x-testa::loading-button>

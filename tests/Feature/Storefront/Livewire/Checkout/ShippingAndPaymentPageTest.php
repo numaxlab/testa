@@ -345,6 +345,8 @@ describe('saveAddress', function () {
         CartSession::use($cart);
 
         livewire(ShippingAndPaymentPage::class)
+            ->set('shipping.first_name', '')
+            ->set('shipping.last_name', '')
             ->call('saveAddress', 'shipping')
             ->assertHasErrors([
                 'shipping.first_name',
@@ -372,7 +374,9 @@ describe('saveAddress', function () {
             ->set('shipping.city', 'Madrid')
             ->set('shipping.line_one', 'Calle Test 1')
             ->set('shipping.contact_email', 'test@example.com')
-            // Billing fields left empty
+            // Clear billing name fields pre-filled by mount() from customer data
+            ->set('billing.first_name', '')
+            ->set('billing.last_name', '')
             ->call('saveAddress', 'billing')
             ->assertHasErrors([
                 'billing.first_name',
@@ -387,6 +391,7 @@ describe('saveAddress', function () {
         CartSession::use($cart);
 
         $result = livewire(ShippingAndPaymentPage::class)
+            ->set('billing.first_name', '')
             ->call('saveAddress', 'billing');
 
         $result->assertHasErrors(['billing.first_name']);

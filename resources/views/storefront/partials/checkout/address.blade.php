@@ -114,7 +114,7 @@
                             id="{{ $type }}.country_id"
                             label="{{ __('País') }}"
                     >
-                        <option value="">Selecciona un país</option>
+                        <option value="">{{ __('Selecciona un país') }}</option>
                         @foreach ($$type->countries as $country)
                             <option value="{{ $country->id }}" wire:key="{{ $type . '-country-' . $country->id }}">
                                 {{ $country->native }}
@@ -122,17 +122,21 @@
                         @endforeach
                     </x-numaxlab-atomic::atoms.select>
 
-                    <x-numaxlab-atomic::atoms.select
-                            wire:model="{{ $type }}.state"
-                            name="{{ $type }}.state"
-                            id="{{ $type }}.state"
-                            label="{{ __('Provincia') }}"
-                    >
-                        <option value="">{{ __('Selecciona una provincia') }}</option>
-                        @foreach($$type->states as $state)
-                            <option value="{{ $state->name }}">{{ $state->name }}</option>
-                        @endforeach
-                    </x-numaxlab-atomic::atoms.select>
+                    <div wire:key="{{ $type }}-state-{{ $$type->country_id }}">
+                        <x-numaxlab-atomic::atoms.select
+                                wire:model="{{ $type }}.state"
+                                name="{{ $type }}.state"
+                                id="{{ $type }}.state"
+                                label="{{ __('Provincia') }}"
+                        >
+                            <option value="">{{ __('Selecciona una provincia') }}</option>
+                            @foreach($$type->states as $state)
+                                <option value="{{ $state->name }}" @selected($$type->state === $state->name)>
+                                    {{ $state->name }}
+                                </option>
+                            @endforeach
+                        </x-numaxlab-atomic::atoms.select>
+                    </div>
 
                     <x-numaxlab-atomic::atoms.input
                             wire:model="{{ $type }}.city"
@@ -197,7 +201,6 @@
 
                     <x-testa::loading-button
                             target="saveAddress"
-                            loadingText="{{ __('Guardando...') }}"
                             class="is-primary"
                             wire:key="{{ $type }}-submit-button">
                         {{ __('Continuar') }}

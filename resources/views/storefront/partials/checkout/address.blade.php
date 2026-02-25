@@ -195,22 +195,13 @@
                         </x-numaxlab-atomic::atoms.forms.checkbox>
                     @endif
 
-                    <x-numaxlab-atomic::atoms.button
+                    <x-testa::loading-button
+                            target="saveAddress"
+                            loadingText="{{ __('Guardando...') }}"
                             class="is-primary"
-                            type="submit"
-                            wire:loading.attr="disabled"
-                            wire:target="saveAddress"
                             wire:key="{{ $type }}-submit-button">
-                        <span wire:loading.remove
-                              wire:target="saveAddress">
-                            {{ __('Continuar') }}
-                        </span>
-
-                        <span wire:loading
-                              wire:target="saveAddress">
-                            {{ __('Guardando...') }}
-                        </span>
-                    </x-numaxlab-atomic::atoms.button>
+                        {{ __('Continuar') }}
+                    </x-testa::loading-button>
                 </div>
             @elseif($currentStep > $step)
                 <dl class="grid grid-cols-1 gap-8 text-sm sm:grid-cols-2">

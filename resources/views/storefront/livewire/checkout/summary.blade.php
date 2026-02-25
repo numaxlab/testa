@@ -18,6 +18,8 @@
                         <x-numaxlab-atomic::atoms.forms.input
                                 wire:model.live="lines.{{ $key }}.quantity"
                                 wire:change="updateLines"
+                                wire:loading.attr="disabled"
+                                wire:target="updateLines"
                                 type="number"
                                 class="text-xs"
                         />
@@ -27,7 +29,9 @@
                         <button
                                 class="at-small text-primary"
                                 type="button"
-                                wire:click="removeLine('{{ $line['id'] }}')">
+                                wire:click="removeLine('{{ $line['id'] }}')"
+                                wire:loading.attr="disabled"
+                                wire:target="removeLine">
                             Eliminar
                         </button>
                     </x-slot:actions>
@@ -70,7 +74,7 @@
                     href="{{ route('testa.storefront.checkout.shipping-and-payment') }}"
                     wire:navigate
             >
-                {{ __('Finalizar pedido') }}
+                {{ __('Completar pedido') }}
             </a>
         </div>
     @endif

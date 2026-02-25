@@ -31,23 +31,12 @@
                     @endif
                 @endforeach
 
-                <x-numaxlab-atomic::atoms.button
-                        class="is-primary mt-10"
-                        type="submit"
-                        wire:loading.attr="disabled"
-                        wire:target="saveShippingOption">
-                        <span wire:loading.remove
-                              wire:target="saveShippingOption">
-                            {{ __('Continuar') }}
-                        </span>
-
-                    <span wire:loading
-                          wire:target="saveShippingOption">
-                            <span class="inline-flex items-center">
-                                {{ __('Guardando...') }}
-                            </span>
-                        </span>
-                </x-numaxlab-atomic::atoms.button>
+                <x-testa::loading-button
+                        target="saveShippingOption"
+                        loadingText="{{ __('Guardando...') }}"
+                        class="is-primary mt-10">
+                    {{ __('Continuar') }}
+                </x-testa::loading-button>
             @elseif ($this->shippingOption)
                 <dl class="flex flex-wrap max-w-xs text-sm">
                     <dt class="w-1/2 font-medium">

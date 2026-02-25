@@ -55,6 +55,8 @@
                                         <x-numaxlab-atomic::atoms.forms.input
                                                 wire:model.live="lines.{{ $index }}.quantity"
                                                 wire:change="updateLines"
+                                                wire:loading.attr="disabled"
+                                                wire:target="updateLines"
                                                 type="number"
                                                 class="text-xs mb-2"
                                         />
@@ -67,7 +69,9 @@
                                     <button
                                             class="at-small text-primary"
                                             type="button"
-                                            wire:click="removeLine('{{ $line['id'] }}')">
+                                            wire:click="removeLine('{{ $line['id'] }}')"
+                                            wire:loading.attr="disabled"
+                                            wire:target="removeLine">
                                         {{ __('Eliminar') }}
                                     </button>
                                 </div>

@@ -162,8 +162,8 @@
             {{ __('Es mi dirección principal de facturación') }}
         </x-numaxlab-atomic::atoms.forms.checkbox>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="save" class="is-primary w-full">
             {{ __('Guardar') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
     </form>
 </article>

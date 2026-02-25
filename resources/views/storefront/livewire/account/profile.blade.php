@@ -88,9 +88,9 @@
             </div>
         @endif
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="updateProfileInformation" class="is-primary w-full">
             {{ __('Guardar') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
 
         <x-testa::action-message class="me-3" on="profile-updated">
             {{ __('Guardado correctamente') }}
@@ -114,9 +114,9 @@
         </x-numaxlab-atomic::atoms.input>
 
         <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-            <x-numaxlab-atomic::atoms.button class="bg-danger text-white" type="submit">
+            <x-testa::loading-button target="deleteUser" class="bg-danger text-white">
                 {{ __('Eliminar cuenta') }}
-            </x-numaxlab-atomic::atoms.button>
+            </x-testa::loading-button>
         </div>
     </form>
 </article>

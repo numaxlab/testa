@@ -12,9 +12,9 @@
             @include('testa::storefront.partials.privacy-policy')
         </div>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full md:col-span-2">
+        <x-testa::loading-button target="register" class="is-primary w-full md:col-span-2">
             {{ __('Crear cuenta') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
 
         <p class="md:col-span-2">
             {{ __('Volver a') }}

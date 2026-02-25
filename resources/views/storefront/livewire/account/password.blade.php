@@ -48,9 +48,9 @@
             {{ __('Confirmar nueva contraseña') }}
         </x-numaxlab-atomic::atoms.input>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="updatePassword" class="is-primary w-full">
             {{ __('Guardar') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
 
         <x-testa::action-message class="me-3" on="password-updated">
             {{ __('Contraseña modificada correctamente.') }}

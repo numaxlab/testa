@@ -17,8 +17,8 @@
             {{ __('Password') }}
         </x-numaxlab-atomic::atoms.input>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="confirmPassword" class="is-primary w-full">
             {{ __('Confirm') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
     </form>
 </div>

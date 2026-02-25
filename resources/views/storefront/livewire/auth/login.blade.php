@@ -56,8 +56,8 @@
             </x-numaxlab-atomic::atoms.forms.checkbox>
         </div>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="login" class="is-primary w-full">
             {{ __('Entrar') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
     </form>
 </section>

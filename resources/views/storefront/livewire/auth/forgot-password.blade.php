@@ -24,9 +24,9 @@
             {{ __('Correo electrónico') }}
         </x-numaxlab-atomic::atoms.input>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="sendPasswordResetLink" class="is-primary w-full">
             {{ __('Recuperar contraseña') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
     </form>
 
     <p>

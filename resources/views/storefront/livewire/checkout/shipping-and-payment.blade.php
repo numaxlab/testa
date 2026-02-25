@@ -105,8 +105,8 @@
             {{ __('Completa todos los datos antes de proceder al pago') }}
         </x-testa::action-message>
 
-        <x-numaxlab-atomic::atoms.button type="submit" class="is-primary w-full">
+        <x-testa::loading-button target="finish" class="is-primary w-full">
             {{ __('Finalizar pedido') }}
-        </x-numaxlab-atomic::atoms.button>
+        </x-testa::loading-button>
     </form>
 </article>

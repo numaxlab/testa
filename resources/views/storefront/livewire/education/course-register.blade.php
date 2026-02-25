@@ -174,8 +174,8 @@
             @include('testa::storefront.partials.privacy-policy')
         </div>
 
-        <button class="at-button is-primary w-full" type="submit">
+        <x-testa::loading-button target="register" class="is-primary w-full">
             {{ __('Inscribirme') }}
-        </button>
+        </x-testa::loading-button>
     </form>
 </article>

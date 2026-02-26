@@ -45,6 +45,17 @@
         </div>
     </div>
 
+    @if ($currentStep >= $steps['payment'])
+        <div class="mt-7">
+            <x-numaxlab-atomic::atoms.forms.checkbox
+                    wire:model="isGift"
+                    id="isGift"
+                    name="is_gift">
+                {{ __('Es un regalo') }}
+            </x-numaxlab-atomic::atoms.forms.checkbox>
+        </div>
+    @endif
+
     <form wire:submit="finish">
         @include('testa::storefront.partials.checkout.cart-payment', [
             'step' => $steps['payment'],

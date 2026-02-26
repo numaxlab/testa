@@ -43,6 +43,8 @@ class ShippingAndPaymentPage extends Page
 
     public bool $wantsInvoice = false;
 
+    public bool $isGift = false;
+
     public array $steps = [
         'shipping_address' => 1,
         'shipping_option' => 2,
@@ -361,6 +363,7 @@ class ShippingAndPaymentPage extends Page
             'Tipo de pedido' => 'Pedido librería',
             'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
             'Solicita factura' => $this->wantsInvoice ? __('Sí') : __('No'),
+            'Es un regalo' => $this->isGift ? __('Sí') : __('No'),
         ];
 
         $this->cart->save();

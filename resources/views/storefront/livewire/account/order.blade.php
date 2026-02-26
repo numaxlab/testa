@@ -42,6 +42,12 @@
                 <i class="icon icon-shopping-bag mr-2" aria-hidden="true"></i>
                 {{ __('Total') }} {{ $order->total->formatted() }}
             </div>
+            @if(($order->meta['Es un regalo'] ?? null) === 'Sí')
+                <div class="border-b border-black py-2">
+                    <i class="icon icon-heart mr-2" aria-hidden="true"></i>
+                    {{ __('Es un regalo') }}
+                </div>
+            @endif
 
             <a wire:navigate class="at-button is-primary mt-10">
                 {{ __('Contacta con la tienda') }}

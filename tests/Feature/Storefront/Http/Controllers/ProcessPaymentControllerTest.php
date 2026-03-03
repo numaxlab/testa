@@ -8,7 +8,6 @@ use Lunar\Models\Country;
 use Lunar\Models\Currency;
 use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
-use Lunar\Models\Order;
 use Lunar\Models\Price;
 use Lunar\Models\Product;
 use Lunar\Models\ProductType;
@@ -18,10 +17,6 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
-use Testa\Contracts\Payment\PaymentGatewayAdapter;
-use Testa\Contracts\Payment\PaymentResult;
-use Testa\Contracts\Payment\PaymentResultType;
-use Testa\Payment\PaymentGatewayRegistry;
 
 beforeEach(function () {
     Schema::table('users', function ($table) {
@@ -62,6 +57,7 @@ beforeEach(function () {
         'last_name' => 'User',
         'email' => 'test@example.com',
         'password' => bcrypt('password'),
+        'email_verified_at' => now(),
     ]);
     $userModel::reguard();
 
@@ -120,14 +116,16 @@ describe('ProcessPaymentController', function () {
             'last_name' => 'User',
             'email' => 'other@example.com',
             'password' => bcrypt('password'),
+            'email_verified_at' => now(),
         ]);
         $otherUserModel::reguard();
 
         $cart = createCartWithBilling(
-            $this->user, $this->currency, $this->channel, $this->country, $this->variant
+            $this->user, $this->currency, $this->channel, $this->country, $this->variant,
         );
 
-        $this->actingAs($otherUser)
+        $this
+            ->actingAs($otherUser)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => $cart->id,
                 'fingerprint' => $cart->fingerprint(),
@@ -138,10 +136,11 @@ describe('ProcessPaymentController', function () {
 
     it('redirects with error when fingerprint does not match', function () {
         $cart = createCartWithBilling(
-            $this->user, $this->currency, $this->channel, $this->country, $this->variant
+            $this->user, $this->currency, $this->channel, $this->country, $this->variant,
         );
 
-        $this->actingAs($this->user)
+        $this
+            ->actingAs($this->user)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => $cart->id,
                 'fingerprint' => 'invalid-fingerprint',
@@ -155,10 +154,11 @@ describe('ProcessPaymentController', function () {
         config(['lunar.payments.types.unknown_type.driver' => 'nonexistent-driver']);
 
         $cart = createCartWithBilling(
-            $this->user, $this->currency, $this->channel, $this->country, $this->variant
+            $this->user, $this->currency, $this->channel, $this->country, $this->variant,
         );
 
-        $this->actingAs($this->user)
+        $this
+            ->actingAs($this->user)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => $cart->id,
                 'fingerprint' => $cart->fingerprint(),
@@ -169,7 +169,8 @@ describe('ProcessPaymentController', function () {
     });
 
     it('returns 404 when cart does not exist', function () {
-        $this->actingAs($this->user)
+        $this
+            ->actingAs($this->user)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => 99999,
                 'fingerprint' => 'irrelevant',
@@ -185,11 +186,12 @@ describe('ProcessPaymentController', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $this->get(route('testa.storefront.checkout.process-payment', [
-            'id' => $cart->id,
-            'fingerprint' => 'test',
-            'payment' => 'card',
-        ]))
+        $this
+            ->get(route('testa.storefront.checkout.process-payment', [
+                'id' => $cart->id,
+                'fingerprint' => 'test',
+                'payment' => 'card',
+            ]))
             ->assertRedirect();
     });
 });
@@ -198,10 +200,11 @@ describe('ProcessPaymentController route mapping', function () {
     it('redirects to correct checkout route on fingerprint mismatch for bookshop order', function () {
         $cart = createCartWithBilling(
             $this->user, $this->currency, $this->channel, $this->country, $this->variant,
-            ['Tipo de pedido' => 'Pedido librería']
+            ['Tipo de pedido' => 'Pedido librería'],
         );
 
-        $this->actingAs($this->user)
+        $this
+            ->actingAs($this->user)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => $cart->id,
                 'fingerprint' => 'wrong-fingerprint',
@@ -214,10 +217,11 @@ describe('ProcessPaymentController route mapping', function () {
     it('redirects to donation checkout route on fingerprint mismatch for donation order', function () {
         $cart = createCartWithBilling(
             $this->user, $this->currency, $this->channel, $this->country, $this->variant,
-            ['Tipo de pedido' => 'Donación']
+            ['Tipo de pedido' => 'Donación'],
         );
 
-        $this->actingAs($this->user)
+        $this
+            ->actingAs($this->user)
             ->get(route('testa.storefront.checkout.process-payment', [
                 'id' => $cart->id,
                 'fingerprint' => 'wrong-fingerprint',

@@ -3,8 +3,11 @@
 namespace Testa\Observers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Lunar\Models\Customer;
 use Lunar\Models\Order;
+use Testa\Mail\AdminOrderNotificationMail;
+use Testa\Mail\OrderConfirmationMail;
 use Testa\Models\Education\Course;
 use Testa\Models\Membership\Benefit;
 use Testa\Models\Membership\MembershipPlan;
@@ -21,6 +24,10 @@ class OrderObserver
                 $this->activateSubscriptionFor($order);
                 $this->activateCourseFor($order);
             });
+        }
+
+        if ($order->isDirty('status') && $order->status === 'payment-received') {
+            $this->sendOrderEmails($order);
         }
     }
 
@@ -119,6 +126,25 @@ class OrderObserver
             $order->updateQuietly([
                 'was_redeemed' => true,
             ]);
+        }
+    }
+
+    protected function sendOrderEmails(Order $order): void
+    {
+        if (! config('testa.notifications.order_emails_enabled', true)) {
+            return;
+        }
+
+        $customerEmail = $order->user?->email ?? $order->billingAddress?->contact_email;
+
+        if ($customerEmail) {
+            Mail::to($customerEmail)->queue(new OrderConfirmationMail($order));
+        }
+
+        $adminEmail = config('testa.notifications.admin_email');
+
+        if ($adminEmail) {
+            Mail::to($adminEmail)->queue(new AdminOrderNotificationMail($order));
         }
     }
 }

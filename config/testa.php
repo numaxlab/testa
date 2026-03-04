@@ -29,4 +29,17 @@ return [
     'payment_gateways' => [
         \Testa\Payment\Adapters\OfflinePaymentAdapter::class => [],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Configure email notifications sent when orders are placed.
+    |
+    */
+    'notifications' => [
+        'admin_email' => env('TESTA_ADMIN_EMAIL'),
+        'order_emails_enabled' => env('TESTA_ORDER_EMAILS_ENABLED', true),
+    ],
 ];

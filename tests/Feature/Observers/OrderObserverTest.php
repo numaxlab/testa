@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Lunar\Base\ValueObjects\Cart\TaxBreakdown;
 use Lunar\Models\Channel;
@@ -9,7 +10,6 @@ use Lunar\Models\Customer;
 use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
 use Lunar\Models\Order;
-use Lunar\Models\Price;
 use Lunar\Models\Product;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
@@ -20,13 +20,14 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
+use Testa\Mail\AdminOrderNotificationMail;
+use Testa\Mail\OrderConfirmationMail;
 use Testa\Models\Education\Course;
 use Testa\Models\Membership\Benefit;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
 use Testa\Models\Membership\Subscription;
 use Testa\Observers\CourseObserver;
-use Testa\Observers\MembershipTierObserver;
 
 beforeEach(function () {
     Schema::table('users', function ($table) {
@@ -418,5 +419,117 @@ describe('OrderObserver course activation', function () {
 
         $testaCustomer = \Testa\Models\Customer::find($this->customer->id);
         expect($testaCustomer->courses)->toHaveCount(0);
+    });
+});
+
+describe('OrderObserver email notifications', function () {
+    it('sends confirmation and admin emails when order status changes to payment-received', function () {
+        Mail::fake();
+
+        config(['testa.notifications.admin_email' => 'admin@example.com']);
+        config(['testa.notifications.order_emails_enabled' => true]);
+
+        $order = Order::factory()->create([
+            'user_id' => $this->user->id,
+            'status' => 'awaiting-payment',
+            'currency_code' => $this->currency->code,
+            'channel_id' => $this->channel->id,
+        ]);
+
+        $order->addresses()->create([
+            'type' => 'billing',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'contact_email' => 'customer@example.com',
+            'line_one' => 'Calle Test 1',
+            'city' => 'Madrid',
+            'postcode' => '28001',
+            'country_id' => $this->country->id,
+        ]);
+
+        $order->update(['status' => 'payment-received']);
+
+        Mail::assertQueued(OrderConfirmationMail::class, function ($mail) {
+            return $mail->hasTo('customer@example.com');
+        });
+
+        Mail::assertQueued(AdminOrderNotificationMail::class, function ($mail) {
+            return $mail->hasTo('admin@example.com');
+        });
+    });
+
+    it('sends customer email using user email when billing address has no contact_email', function () {
+        Mail::fake();
+
+        config(['testa.notifications.admin_email' => 'admin@example.com']);
+        config(['testa.notifications.order_emails_enabled' => true]);
+
+        $order = Order::factory()->create([
+            'user_id' => $this->user->id,
+            'status' => 'awaiting-payment',
+            'currency_code' => $this->currency->code,
+            'channel_id' => $this->channel->id,
+        ]);
+
+        $order->update(['status' => 'payment-received']);
+
+        Mail::assertQueued(OrderConfirmationMail::class, function ($mail) {
+            return $mail->hasTo('test@example.com');
+        });
+    });
+
+    it('does not send emails when order_emails_enabled is false', function () {
+        Mail::fake();
+
+        config(['testa.notifications.admin_email' => 'admin@example.com']);
+        config(['testa.notifications.order_emails_enabled' => false]);
+
+        $order = Order::factory()->create([
+            'user_id' => $this->user->id,
+            'status' => 'awaiting-payment',
+            'currency_code' => $this->currency->code,
+            'channel_id' => $this->channel->id,
+        ]);
+
+        $order->update(['status' => 'payment-received']);
+
+        Mail::assertNothingQueued();
+    });
+
+    it('does not send admin email when admin_email is not configured', function () {
+        Mail::fake();
+
+        config(['testa.notifications.admin_email' => null]);
+        config(['testa.notifications.order_emails_enabled' => true]);
+
+        $order = Order::factory()->create([
+            'user_id' => $this->user->id,
+            'status' => 'awaiting-payment',
+            'currency_code' => $this->currency->code,
+            'channel_id' => $this->channel->id,
+        ]);
+
+        $order->update(['status' => 'payment-received']);
+
+        Mail::assertNotQueued(AdminOrderNotificationMail::class);
+        Mail::assertQueued(OrderConfirmationMail::class);
+    });
+
+    it('does not send emails when status changes to dispatched (not payment-received)', function () {
+        Mail::fake();
+
+        config(['testa.notifications.admin_email' => 'admin@example.com']);
+        config(['testa.notifications.order_emails_enabled' => true]);
+
+        $order = Order::factory()->create([
+            'user_id' => $this->user->id,
+            'status' => 'awaiting-payment',
+            'currency_code' => $this->currency->code,
+            'channel_id' => $this->channel->id,
+        ]);
+
+        $order->update(['status' => 'dispatched']);
+
+        Mail::assertNothingQueued();
     });
 });

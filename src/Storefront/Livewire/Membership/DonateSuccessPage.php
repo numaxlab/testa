@@ -10,9 +10,10 @@ class DonateSuccessPage extends Page
 {
     public Order $order;
 
-    public function mount($fingerprint): void
+    public function mount($id, $fingerprint): void
     {
-        $this->order = Order::where('fingerprint', $fingerprint)
+        $this->order = Order::where('id', $id)
+            ->where('fingerprint', $fingerprint)
             ->whereNotNull('placed_at')
             ->firstOrFail();
     }

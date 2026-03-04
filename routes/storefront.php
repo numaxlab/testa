@@ -130,7 +130,7 @@ Route::prefix('/formacion')->group(function () {
     Route::get('/cursos/{slug}/inscripcion', CourseRegisterPage::class)
         ->name('testa.storefront.education.courses.register');
 
-    Route::get('/cursos/inscripcion/finalizada/{fingerprint}', CourseRegisterSuccessPage::class)
+    Route::get('/cursos/inscripcion/finalizada/{id}/{fingerprint}', CourseRegisterSuccessPage::class)
         ->name('testa.storefront.education.courses.register.success');
 
     Route::get('/cursos/{courseSlug}/sesiones/{moduleSlug}', ModulePage::class)
@@ -225,7 +225,7 @@ Route::prefix('/pedido')->group(function () {
         Route::get('/completar', ShippingAndPaymentPage::class)
             ->name('testa.storefront.checkout.shipping-and-payment');
 
-        Route::get('/finalizado/{fingerprint}', SuccessPage::class)
+        Route::get('/finalizado/{id}/{fingerprint}', SuccessPage::class)
             ->name('testa.storefront.checkout.success');
     });
 });
@@ -234,13 +234,13 @@ Route::prefix('/apoya-el-proyecto')->group(function () {
     Route::get('/hazte-socix', SignupPage::class)
         ->name('testa.storefront.membership.signup');
 
-    Route::get('/hazte-socix/finalizado/{fingerprint}', SignupSuccessPage::class)
+    Route::get('/hazte-socix/finalizado/{id}/{fingerprint}', SignupSuccessPage::class)
         ->name('testa.storefront.membership.signup.success');
 
     Route::get('/dona', DonatePage::class)
         ->name('testa.storefront.membership.donate');
 
-    Route::get('/dona/gracias/{fingerprint}', DonateSuccessPage::class)
+    Route::get('/dona/gracias/{id}/{fingerprint}', DonateSuccessPage::class)
         ->name('testa.storefront.membership.donate.success');
 });
 

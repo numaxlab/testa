@@ -114,7 +114,8 @@ class ProcessPaymentController
 
         $this->clearCart($cart);
 
-        return redirect()->route($this->getSuccessRouteName($order), $order->fingerprint);
+        return redirect()->route($this->getSuccessRouteName($order),
+            ['id' => $order->id, 'fingerprint' => $order->fingerprint]);
     }
 
     private function clearCart(Cart $cart): void

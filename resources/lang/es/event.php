@@ -44,6 +44,9 @@ return [
         'register_url' => [
             'label' => 'Enlace inscripción',
         ],
+        'register_tag' => [
+            'label' => 'Etiqueta inscripción',
+        ],
         'alert' => [
             'label' => 'Info',
         ],

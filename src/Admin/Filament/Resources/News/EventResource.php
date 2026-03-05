@@ -113,9 +113,15 @@ class EventResource extends BaseResource
                             ->label(__('testa::event.form.venue_id.label')),
                         Forms\Components\Textarea::make('alert')
                             ->label(__('testa::event.form.alert.label')),
-                        Forms\Components\TextInput::make('register_url')
-                            ->label(__('testa::event.form.register_url.label'))
-                            ->maxLength(255),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('register_url')
+                                    ->label(__('testa::event.form.register_url.label'))
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('register_tag')
+                                    ->label(__('testa::event.form.register_tag.label'))
+                                    ->maxLength(255),
+                            ]),
                         Forms\Components\FileUpload::make('image')
                             ->label(__('testa::event.form.image.label'))
                             ->image()

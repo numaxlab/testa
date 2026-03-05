@@ -49,7 +49,7 @@
 
         @if ($event->register_url)
             <a href="{{ $event->register_url }}" target="_blank" class="at-button is-primary mt-2 w-full">
-                {{ __('Inscríbete') }}
+                {{ $event->register_tag ?? __('Inscríbete') }}
             </a>
         @endif
     </x-slot>

@@ -61,7 +61,7 @@
 
                     @if ($event->register_url)
                         <a href="{{ $event->register_url }}" class="at-button is-primary mt-4">
-                            {{ __('Inscríbete') }}
+                            {{ $event->register_tag ?? __('Inscríbete') }}
                         </a>
                     @endif
                 </div>

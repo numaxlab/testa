@@ -56,6 +56,10 @@
                             @if ($event->alert)
                                 <span class="block mt-2">{{ $event->alert }}</span>
                             @endif
+
+                            @if ($event->organiser)
+                                <span class="block mt-2">{{ __('Organizado por:') }} {{ $event->organiser }}</span>
+                            @endif
                         </p>
                     </div>
 

@@ -50,6 +50,9 @@ return [
         'alert' => [
             'label' => 'Info',
         ],
+        'organiser' => [
+            'label' => 'Organizador',
+        ],
         'image' => [
             'label' => 'Imagen',
         ],

@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Content\Banner;
@@ -47,6 +48,7 @@ class BannerResource extends BaseResource
     {
         return [
             BannerResource\Pages\EditBanner::class,
+            BannerResource\Pages\ManageBannerMedia::class,
         ];
     }
 
@@ -57,6 +59,12 @@ class BannerResource extends BaseResource
                 Tables\Actions\EditAction::make(),
             ])
             ->columns([
+                SpatieMediaLibraryImageColumn::make('thumbnail')
+                    ->collection(config('lunar.media.collection'))
+                    ->conversion('small')
+                    ->limit(1)
+                    ->square()
+                    ->label(''),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('testa::banner.table.name.label'))
                     ->searchable(),
@@ -94,10 +102,6 @@ class BannerResource extends BaseResource
                                     ->label(__('testa::banner.form.button_text.label'))
                                     ->maxLength(255),
                             ]),
-                        Forms\Components\FileUpload::make('image')
-                            ->label(__('testa::slide.form.image.label'))
-                            ->image()
-                            ->imageEditor(),
                         Forms\Components\Select::make('type')
                             ->label(__('testa::banner.form.type.label'))
                             ->options([
@@ -133,6 +137,7 @@ class BannerResource extends BaseResource
             'index' => BannerResource\Pages\ListBanners::route('/'),
             'create' => BannerResource\Pages\CreateBanner::route('/create'),
             'edit' => BannerResource\Pages\EditBanner::route('/{record}/edit'),
+            'media' => BannerResource\Pages\ManageBannerMedia::route('/{record}/media'),
         ];
     }
 }

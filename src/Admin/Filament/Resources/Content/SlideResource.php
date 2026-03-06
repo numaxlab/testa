@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Content\Section;
@@ -46,6 +47,7 @@ class SlideResource extends BaseResource
     {
         return [
             SlideResource\Pages\EditSlide::class,
+            SlideResource\Pages\ManageSlideMedia::class,
         ];
     }
 
@@ -56,6 +58,12 @@ class SlideResource extends BaseResource
                 Tables\Actions\EditAction::make(),
             ])
             ->columns([
+                SpatieMediaLibraryImageColumn::make('thumbnail')
+                    ->collection(config('lunar.media.collection'))
+                    ->conversion('small')
+                    ->limit(1)
+                    ->square()
+                    ->label(''),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('testa::slide.table.name.label'))
                     ->searchable(),
@@ -108,10 +116,6 @@ class SlideResource extends BaseResource
                                     ->label(__('testa::banner.form.button_text.label'))
                                     ->maxLength(255),
                             ]),
-                        Forms\Components\FileUpload::make('image')
-                            ->label(__('testa::slide.form.image.label'))
-                            ->image()
-                            ->imageEditor(),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('testa::slide.form.is_published.label')),
                     ]),
@@ -125,6 +129,7 @@ class SlideResource extends BaseResource
             'index' => SlideResource\Pages\ListSlides::route('/'),
             'create' => SlideResource\Pages\CreateSlide::route('/create'),
             'edit' => SlideResource\Pages\EditSlide::route('/{record}/edit'),
+            'media' => SlideResource\Pages\ManageSlideMedia::route('/{record}/media'),
         ];
     }
 }

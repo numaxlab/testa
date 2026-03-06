@@ -33,6 +33,7 @@ class CoursePage extends Page
     {
         $banner = Banner::whereJsonContains('locations', Location::COURSE->value)
             ->where('is_published', true)
+            ->with('media')
             ->first();
 
         if ($banner) {

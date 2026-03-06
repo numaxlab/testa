@@ -37,9 +37,10 @@
                             x-transition:leave-end="opacity-0"
                             class="absolute inset-0 w-full h-full flex items-center justify-center bg-black text-white"
                     >
-                        @if ($slide->image)
+                        @if ($slide->hasMedia(config('lunar.media.collection')))
                             <div class="w-full lg:absolute lg:top-0 lg:bottom-0 lg:right-0 lg:w-4/7">
-                                <img src="{{ Storage::url($slide->image) }}" alt="" class="w-full h-full object-cover">
+                                <img src="{{ $slide->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}"
+                                     alt="" class="w-full h-full object-cover">
                             </div>
                         @endif
 

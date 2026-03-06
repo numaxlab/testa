@@ -16,6 +16,9 @@ class ArticlePage extends Page
             slug: $slug,
             type: (new Article)->getMorphClass(),
             firstOrFail: true,
+            eagerLoad: [
+                'element.media',
+            ],
         );
 
         $this->article = $this->url->element;

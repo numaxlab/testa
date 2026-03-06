@@ -21,6 +21,7 @@ class Subscription extends Component
     {
         $banner = Banner::whereJsonContains('locations', Location::USER_DASHBOARD_SUBSCRIPTIONS->value)
             ->where('is_published', true)
+            ->with('media')
             ->first();
 
         return view('testa::storefront.livewire.components.account.subscription', compact('banner'));

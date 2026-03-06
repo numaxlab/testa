@@ -15,6 +15,7 @@ use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Testa\Database\Factories\News\EventFactory;
+use Testa\Media\StandardMediaDefinitions;
 use Testa\Models\Attachment;
 use Testa\Models\EventDeliveryMethod;
 use Testa\Models\Venue;
@@ -27,11 +28,6 @@ class Event extends Model implements SpatieHasMedia
     use HasTranslations;
     use LogsActivity;
 
-    protected static function newFactory()
-    {
-        return EventFactory::new();
-    }
-
     public $translatable = [
         'name',
         'subtitle',
@@ -39,6 +35,11 @@ class Event extends Model implements SpatieHasMedia
         'alert',
     ];
     protected $guarded = [];
+
+    protected static function newFactory()
+    {
+        return EventFactory::new();
+    }
 
     public function eventType(): BelongsTo
     {
@@ -69,6 +70,16 @@ class Event extends Model implements SpatieHasMedia
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    protected function getDefinitionClass()
+    {
+        $conversionClasses = config('lunar.media.definitions', []);
+
+        return $conversionClasses['news-event']
+            ?? $conversionClasses[static::class]
+            ?? $conversionClasses[get_parent_class(static::class)]
+            ?? StandardMediaDefinitions::class;
     }
 
     protected function casts(): array

@@ -20,7 +20,6 @@ class EventFactory extends Factory
             'description' => $this->faker->paragraph(rand(3, 8)),
             'starts_at' => now()->addDays(7),
             'delivery_method' => EventDeliveryMethod::IN_PERSON->value,
-            'image' => $this->faker->imageUrl(),
             'is_published' => true,
         ];
     }

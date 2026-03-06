@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
@@ -47,6 +48,7 @@ class EventResource extends BaseResource
     {
         return [
             EventResource\Pages\EditEvent::class,
+            EventResource\Pages\ManageEventMedia::class,
             EventResource\Pages\ManageEventUrls::class,
             EventResource\Pages\ManageEventSpeakers::class,
             EventResource\Pages\ManageEventAttachments::class,
@@ -61,6 +63,12 @@ class EventResource extends BaseResource
                 Tables\Actions\EditAction::make(),
             ])
             ->columns([
+                SpatieMediaLibraryImageColumn::make('thumbnail')
+                    ->collection(config('lunar.media.collection'))
+                    ->conversion('small')
+                    ->limit(1)
+                    ->square()
+                    ->label(''),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('testa::event.table.name.label'))
                     ->searchable(),
@@ -125,10 +133,6 @@ class EventResource extends BaseResource
                                     ->label(__('testa::event.form.register_tag.label'))
                                     ->maxLength(255),
                             ]),
-                        Forms\Components\FileUpload::make('image')
-                            ->label(__('testa::event.form.image.label'))
-                            ->image()
-                            ->imageEditor(),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('testa::event.form.is_published.label')),
                     ]),
@@ -145,6 +149,7 @@ class EventResource extends BaseResource
             'urls' => EventResource\Pages\ManageEventUrls::route('/{record}/urls'),
             'speakers' => EventResource\Pages\ManageEventSpeakers::route('/{record}/speakers'),
             'attachments' => EventResource\Pages\ManageEventAttachments::route('/{record}/attachments'),
+            'media' => EventResource\Pages\ManageEventMedia::route('/{record}/media'),
             'products' => EventResource\Pages\ManageEventProducts::route('/{record}/products'),
         ];
     }

@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
@@ -46,6 +47,7 @@ class ArticleResource extends BaseResource
     {
         return [
             ArticleResource\Pages\EditArticle::class,
+            ArticleResource\Pages\ManageArticleMedia::class,
             ArticleResource\Pages\ManageArticleUrls::class,
             ArticleResource\Pages\ManageArticleProducts::class,
         ];
@@ -58,6 +60,12 @@ class ArticleResource extends BaseResource
                 Tables\Actions\EditAction::make(),
             ])
             ->columns([
+                SpatieMediaLibraryImageColumn::make('thumbnail')
+                    ->collection(config('lunar.media.collection'))
+                    ->conversion('small')
+                    ->limit(1)
+                    ->square()
+                    ->label(''),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('testa::article.table.name.label'))
                     ->searchable(),
@@ -83,10 +91,6 @@ class ArticleResource extends BaseResource
                         TiptapEditor::make('content')
                             ->label(__('testa::article.form.content.label'))
                             ->profile('default'),
-                        Forms\Components\FileUpload::make('image')
-                            ->label(__('testa::article.form.image.label'))
-                            ->image()
-                            ->imageEditor(),
                         Forms\Components\DateTimePicker::make('published_at')
                             ->label(__('testa::article.form.published_at.label'))
                             ->required(),
@@ -104,6 +108,7 @@ class ArticleResource extends BaseResource
             'create' => ArticleResource\Pages\CreateArticle::route('/create'),
             'edit' => ArticleResource\Pages\EditArticle::route('/{record}/edit'),
             'urls' => ArticleResource\Pages\ManageArticleUrls::route('/{record}/urls'),
+            'media' => ArticleResource\Pages\ManageArticleMedia::route('/{record}/media'),
             'products' => ArticleResource\Pages\ManageArticleProducts::route('/{record}/products'),
         ];
     }

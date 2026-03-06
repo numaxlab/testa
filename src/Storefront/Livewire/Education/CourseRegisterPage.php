@@ -85,6 +85,7 @@ class CourseRegisterPage extends Page
     {
         $banner = Banner::whereJsonContains('locations', Location::COURSE_REGISTER->value)
             ->where('is_published', true)
+            ->with('media')
             ->first();
 
         return view('testa::storefront.livewire.education.course-register', compact('banner'))

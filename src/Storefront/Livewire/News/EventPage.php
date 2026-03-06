@@ -19,6 +19,7 @@ class EventPage extends Page
             eagerLoad: [
                 'element.eventType',
                 'element.speakers',
+                'element.media',
             ],
         );
 

@@ -1,7 +1,7 @@
 <x-numaxlab-atomic::molecules.summary
         href="{{ route('testa.storefront.articles.show', $article->defaultUrl->slug) }}">
     <x-slot name="thumbnail">
-        <img src="{{ Storage::url($article->image) }}" alt="">
+        <img src="{{ $article->getFirstMediaUrl(config('lunar.media.collection'), 'medium') }}" alt="">
     </x-slot>
 
     <h2 class="at-heading is-3">

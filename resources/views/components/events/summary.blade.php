@@ -1,7 +1,7 @@
 <x-numaxlab-atomic::molecules.summary
         href="{{ route('testa.storefront.events.show', $event->defaultUrl->slug) }}">
     <x-slot name="thumbnail">
-        <img src="{{ Storage::url($event->image) }}" alt="">
+        <img src="{{ $event->getFirstMediaUrl(config('lunar.media.collection'), 'medium') }}" alt="">
 
         @if ($event->eventType)
             <span class="at-tag at-small absolute top-0 left-0 bg-primary border-primary text-white">{{ $event->eventType->name }}</span>

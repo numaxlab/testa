@@ -17,7 +17,7 @@
     </header>
 
     <div class="mx-auto lg:max-w-4xl">
-        <img src="{{ Storage::url($article->image) }}" alt="">
+        <img src="{{ $article->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
 
         <div class="prose max-w-full mt-10">
             {!! $article->content !!}

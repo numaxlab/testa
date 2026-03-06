@@ -1,7 +1,7 @@
 <article class="container mx-auto px-4">
     <div class="mt-6 lg:flex lg:gap-6">
         <figure class="mb-6 lg:w-4/12">
-            <img src="{{ Storage::url($event->image) }}" alt="">
+            <img src="{{ $event->getFirstMediaUrl(config('lunar.media.collection'), 'large') }}" alt="">
         </figure>
 
         <div class="lg:w-8/12">

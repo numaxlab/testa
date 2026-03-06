@@ -20,6 +20,7 @@ class HomePage extends Page
         $this->slides = Slide::where('section', Section::HOMEPAGE->value)
             ->where('is_published', true)
             ->orderBy('sort_position')
+            ->with('media')
             ->get();
 
         $this->tiers = Tier::where('section', Section::HOMEPAGE->value)

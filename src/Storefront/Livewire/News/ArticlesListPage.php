@@ -20,7 +20,7 @@ class ArticlesListPage extends Page
         $articles = Article::where('is_published', true)
             ->where('published_at', '<=', now())
             ->orderBy('published_at', 'desc')
-            ->with(['defaultUrl'])
+            ->with(['defaultUrl', 'media'])
             ->paginate(12);
 
         return view('testa::storefront.livewire.news.articles-list', compact('articles'))

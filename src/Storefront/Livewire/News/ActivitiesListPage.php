@@ -91,7 +91,7 @@ class ActivitiesListPage extends Page
         $eventIds = $combinedCollection->where('type', 'event')->pluck('id');
         $moduleIds = $combinedCollection->where('type', 'course-module')->pluck('id');
 
-        $loadedEvents = Event::with(['eventType', 'defaultUrl'])
+        $loadedEvents = Event::with(['eventType', 'defaultUrl', 'media'])
             ->whereIn('id', $eventIds)
             ->get()
             ->keyBy('id');

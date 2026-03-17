@@ -98,10 +98,12 @@
                     :course="$course"
             />
 
-            @if ($banner)
-                <div class="mt-10">
-                    <x-testa::banners.mini :banner="$banner"/>
-                </div>
+            @if ($banners->isNotEmpty())
+                @foreach ($banners as $banner)
+                    <div class="mt-10">
+                        <x-testa::banners.mini :banner="$banner"/>
+                    </div>
+                @endforeach
             @endif
         </div>
     </div>

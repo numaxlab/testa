@@ -31,16 +31,10 @@ class CoursePage extends Page
 
     public function render(): View
     {
-        $banner = Banner::whereJsonContains('locations', Location::COURSE->value)
+        $banners = Banner::whereJsonContains('locations', Location::COURSE->value)
             ->where('is_published', true)
             ->with('media')
-            ->first();
-
-        if ($banner) {
-            $banner->link = $this->course->purchasable ?
-                route('testa.storefront.education.courses.register', $this->course->defaultUrl->slug)
-                : null;
-        }
+            ->get();
 
         $userRegistered = false;
 
@@ -54,7 +48,7 @@ class CoursePage extends Page
 
         $media = $this->course->verticalImage;
 
-        return view('testa::storefront.livewire.education.course', compact('banner', 'userRegistered', 'media'))
+        return view('testa::storefront.livewire.education.course', compact('banners', 'userRegistered', 'media'))
             ->title($this->course->fullTitle);
     }
 }

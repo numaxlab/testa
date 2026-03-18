@@ -51,6 +51,9 @@
                             <time datetime="{{ $course->ends_at->format('Y-m-d') }}">{{ $course->ends_at->format('d/m/Y') }}</time>
                         </li>
                     </ul>
+                    <p class="border-b border-black py-2">
+                        {{ __('Modalidad:') }} {{ __('testa::coursemodule.form.delivery_method.options.'.$course->delivery_method->value) }}
+                    </p>
                     @if ($course->alert)
                         <div class="flex gap-2 border-b border-black py-2">
                             <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>

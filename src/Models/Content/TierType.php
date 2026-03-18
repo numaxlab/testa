@@ -11,6 +11,7 @@ enum TierType: string
     case RELATED_CONTENT_MEDIA = 'related_content_media';
     case EDITORIAL_LATEST = 'editorial_latest';
     case EDUCATION_UPCOMING = 'education_upcoming';
+    case MOOC = 'mooc';
     case EVENTS_UPCOMING = 'events_upcoming';
     case ARTICLES_LATEST = 'articles_latest';
 }

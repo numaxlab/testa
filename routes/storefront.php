@@ -52,6 +52,7 @@ use Testa\Storefront\Livewire\Membership\DonatePage;
 use Testa\Storefront\Livewire\Membership\DonateSuccessPage;
 use Testa\Storefront\Livewire\Membership\SignupPage;
 use Testa\Storefront\Livewire\Membership\SignupSuccessPage;
+use Testa\Storefront\Livewire\News\ActivitiesCalendarPage;
 use Testa\Storefront\Livewire\News\ActivitiesListPage;
 use Testa\Storefront\Livewire\News\ArticlePage;
 use Testa\Storefront\Livewire\News\ArticlesListPage;
@@ -163,6 +164,9 @@ Route::prefix('/actualidad')->group(function () {
 
     Route::get('/actividades', ActivitiesListPage::class)
         ->name('testa.storefront.activities.index');
+
+    Route::get('/actividades/calendario', ActivitiesCalendarPage::class)
+        ->name('testa.storefront.activities.calendar');
 
     Route::get('/actividades/eventos/{slug}', EventPage::class)
         ->name('testa.storefront.events.show');

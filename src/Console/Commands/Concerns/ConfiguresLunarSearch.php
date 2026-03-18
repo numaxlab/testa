@@ -35,9 +35,12 @@ trait ConfiguresLunarSearch
 
         // Add Testa models to the models array
         $testaModels = <<<'PHP'
-            \Testa\Models\Page::class,
-                    \Testa\Models\Course::class,
-                    \Testa\Models\Article::class,
+            NumaxLab\Lunar\Geslib\Models\Author::class,
+            Testa\Models\Education\Course::class,
+            Testa\Models\Education\CourseModule::class,
+            Testa\Models\News\Event::class,
+            Testa\Models\Media\Audio::class,
+            Testa\Models\Media\Video::class,
             PHP;
 
         // Find the models array and add Testa models

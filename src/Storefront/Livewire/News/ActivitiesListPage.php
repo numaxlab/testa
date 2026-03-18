@@ -37,8 +37,8 @@ class ActivitiesListPage extends Page
             ->where('is_published', true)
             ->where('starts_at', '>=', now())
             ->when($this->q, function ($query) {
-                $videosByQuery = Event::search($this->q)->get();
-                $query->whereIn('id', $videosByQuery->pluck('id'));
+                $eventsByQuery = Event::search($this->q)->get();
+                $query->whereIn('id', $eventsByQuery->pluck('id'));
             });
 
         $courseModulesQuery = CourseModule::query()
@@ -46,8 +46,8 @@ class ActivitiesListPage extends Page
             ->where('is_published', true)
             ->where('starts_at', '>=', now())
             ->when($this->q, function ($query) {
-                $videosByQuery = CourseModule::search($this->q)->get();
-                $query->whereIn('id', $videosByQuery->pluck('id'));
+                $courseModulesByQuery = CourseModule::search($this->q)->get();
+                $query->whereIn('id', $courseModulesByQuery->pluck('id'));
             });
 
         if ($this->t === 'c') {

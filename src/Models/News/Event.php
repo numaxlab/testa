@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Lunar\Base\Traits\HasMedia;
 use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
+use Lunar\Base\Traits\Searchable;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
@@ -26,6 +27,7 @@ class Event extends Model implements SpatieHasMedia
     use HasUrls;
     use HasMedia;
     use HasTranslations;
+    use Searchable;
     use LogsActivity;
 
     public $translatable = [

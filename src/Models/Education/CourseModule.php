@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Lunar\Base\Traits\HasUrls;
 use Lunar\Base\Traits\LogsActivity;
+use Lunar\Base\Traits\Searchable;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use Spatie\Translatable\HasTranslations;
@@ -22,12 +23,8 @@ class CourseModule extends Model
     use HasFactory;
     use HasUrls;
     use HasTranslations;
+    use Searchable;
     use LogsActivity;
-
-    protected static function newFactory()
-    {
-        return CourseModuleFactory::new();
-    }
 
     public $translatable = [
         'name',
@@ -36,6 +33,11 @@ class CourseModule extends Model
         'alert',
     ];
     protected $guarded = [];
+
+    protected static function newFactory()
+    {
+        return CourseModuleFactory::new();
+    }
 
     public function course(): BelongsTo
     {

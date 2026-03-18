@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Education\Course;
+use Testa\Models\EventDeliveryMethod;
 
 class CourseResource extends BaseResource
 {
@@ -123,6 +124,23 @@ class CourseResource extends BaseResource
                             ->label(__('testa::course.form.topic_id.label'))
                             ->required()
                             ->relationship('topic', 'name'),
+                        Forms\Components\Select::make('delivery_method')
+                            ->label(__('testa::coursemodule.form.delivery_method.label'))
+                            ->required()
+                            ->options([
+                                EventDeliveryMethod::IN_PERSON->value => __(
+                                    'testa::coursemodule.form.delivery_method.options.in_person',
+                                ),
+                                EventDeliveryMethod::ONLINE->value => __(
+                                    'testa::coursemodule.form.delivery_method.options.online',
+                                ),
+                                EventDeliveryMethod::HYBRID->value => __(
+                                    'testa::coursemodule.form.delivery_method.options.hybrid',
+                                ),
+                                EventDeliveryMethod::MOOC->value => __(
+                                    'testa::coursemodule.form.delivery_method.options.mooc',
+                                ),
+                            ]),
                         Forms\Components\Textarea::make('alert')
                             ->label(__('testa::event.form.alert.label')),
                         Forms\Components\Toggle::make('is_published')

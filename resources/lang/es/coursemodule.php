@@ -64,7 +64,8 @@ return [
             'options' => [
                 'in_person' => 'Presencial',
                 'online' => 'En línea',
-                'hybrid' => 'Híbrido',
+                'hybrid' => 'Presencial y online',
+                'mooc' => 'CEMA (Curso En línea Masivo y Abierto)',
             ],
         ],
         'venue_id' => [

@@ -52,13 +52,18 @@
 
                 <div class="md:w-1/3">
                     <x-numaxlab-atomic::atoms.forms.select
-                            wire:model="ty"
+                            wire:model="dm"
                             wire:change="search"
-                            name="ty"
-                            id="type"
-                            aria-label="{{ __('Filtrar por tipología') }}"
+                            name="dm"
+                            id="delivery-method"
+                            aria-label="{{ __('Filtrar por modalidad') }}"
                     >
-                        <option value="">{{ __('Todos las tipologías') }}</option>
+                        <option value="">{{ __('Todos las modalidades') }}</option>
+                        @foreach ($deliveryMethods as $key =>  $name)
+                            <option value="{{ $key }}" wire:key="delivery-method-{{ $key }}">
+                                {{ $name }}
+                            </option>
+                        @endforeach
                     </x-numaxlab-atomic::atoms.forms.select>
                 </div>
             </form>

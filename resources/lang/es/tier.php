@@ -55,6 +55,7 @@ return [
                 'related_content_media' => 'Audios y/o vídeos',
                 'editorial_latest' => 'Últimos productos Editorial',
                 'education_upcoming' => 'Próximos cursos',
+                'mooc' => 'Cursos CEMA',
                 'events_upcoming' => 'Próximos eventos (actividades + sesiones de cursos)',
                 'articles_latest' => 'Últimas noticias',
             ],

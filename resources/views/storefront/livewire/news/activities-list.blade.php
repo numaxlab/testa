@@ -2,7 +2,7 @@
     <header>
         <x-numaxlab-atomic::molecules.breadcrumb :label="__('Miga de pan')">
             <li>
-                <a href="{{ route('testa.storefront.news.homepage') }}">
+                <a href="{{ route('testa.storefront.news.homepage') }}" wire:navigate>
                     {{ __('Actualidad') }}
                 </a>
             </li>
@@ -10,6 +10,14 @@
 
         <h1 class="at-heading is-1">
             {{ __('Actividades') }}
+
+            <a
+                    href="{{ route('testa.storefront.activities.calendar') }}"
+                    wire:navigate
+                    class="at-small"
+            >
+                {{ __('Ver calendario') }}
+            </a>
         </h1>
 
         <form class="my-6 flex flex-col gap-3 md:flex-row md:gap-6" wire:submit.prevent="search">

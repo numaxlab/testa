@@ -19,6 +19,7 @@ use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Spatie\Translatable\HasTranslations;
 use Testa\Database\Factories\Education\CourseFactory;
 use Testa\Models\Attachment;
+use Testa\Models\EventDeliveryMethod;
 
 class Course extends Model implements SpatieHasMedia
 {
@@ -124,7 +125,7 @@ class Course extends Model implements SpatieHasMedia
         return [
             'starts_at' => 'date',
             'ends_at' => 'date',
+            'delivery_method' => EventDeliveryMethod::class,
         ];
     }
-
 }

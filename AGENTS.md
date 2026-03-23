@@ -40,12 +40,12 @@ running).
 
 ### Source Structure (`src/`)
 
-- **Models/** — 30 Eloquent models across domains: Education (Course, CourseModule, Topic), Content (Page, Banner,
+- **Models/** — Eloquent models across domains: Education (Course, CourseModule, Topic), Content (Page, Banner,
   Slide, Tier), Media (Audio, Video, Document), Membership (MembershipTier, MembershipPlan, Subscription, Benefit),
   News (Article, Event), Editorial (Review)
 - **Models/Product.php** extends `NumaxLab\Lunar\Geslib\Models\Product` (not Lunar's base Product directly)
 - **Models/Customer.php** extends `Lunar\Models\Customer`
-- **Admin/Filament/Resources/** — 22 Filament CRUD resources organized by domain (Content, Education, Media, Membership,
+- **Admin/Filament/Resources/** — Filament CRUD resources organized by domain (Content, Education, Media, Membership,
   News, Sales, Editorial)
 - **Admin/Filament/Extension/** — Extensions to Lunar's built-in Product and Customer Filament resources
 - **Storefront/Livewire/** — 90+ Livewire page components organized by domain: Account, Auth, Bookshop, Checkout,

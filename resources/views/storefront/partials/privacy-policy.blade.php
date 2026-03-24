@@ -10,9 +10,9 @@
 
     <x-numaxlab-atomic::atoms.forms.input-error :messages="$errors->get('privacy_policy')"/>
 
-    <p class="at-small mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rhoncus scelerisque luctus. Donec nec nisl eget
-        erat lobortis finibus. Maecenas mauris orci, volutpat sit amet tortor vel, bibendum sodales tortor. Nunc euismod
-        neque et augue feugiat aliquam. Quisque sit amet felis feugiat, semper enim at, iaculis mauris.
-    </p>
+    @if ($privacyPolicyText = app(\Testa\Settings\TextSettings::class)->getPrivacyPolicyText())
+        <div class="at-small mt-2 prose">
+            {!! $privacyPolicyText !!}
+        </div>
+    @endif
 </div>

@@ -6,6 +6,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Testa\Admin\Filament\Pages\ContactSettings;
 use Testa\Admin\Filament\Pages\PaymentSettings;
+use Testa\Admin\Filament\Pages\TextSettings;
 use Testa\Admin\Filament\Resources\Config\MenuItemResource;
 use Testa\Admin\Filament\Resources\Content\BannerResource;
 use Testa\Admin\Filament\Resources\Content\PageResource;
@@ -68,6 +69,7 @@ class TestaPlugin implements Plugin
         $panel->pages([
             ContactSettings::class,
             PaymentSettings::class,
+            TextSettings::class,
         ]);
     }
 

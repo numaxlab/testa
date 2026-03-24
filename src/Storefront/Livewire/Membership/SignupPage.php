@@ -17,6 +17,7 @@ use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
 use Testa\Settings\PaymentSettings;
+use Testa\Settings\TextSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 
@@ -25,6 +26,10 @@ class SignupPage extends Page
     public Collection $tiers;
 
     public Collection $plans;
+
+    public string $membershipIntro = '';
+
+    public string $membershipOptionsDescription = '';
 
     #[Url]
     public ?string $selectedTier = null;
@@ -56,6 +61,10 @@ class SignupPage extends Page
     {
         $this->tiers = MembershipTier::where('is_published', true)->get();
         $this->retrieveTierPlans();
+
+        $textSettings = app(TextSettings::class);
+        $this->membershipIntro = $textSettings->getMembershipIntro();
+        $this->membershipOptionsDescription = $textSettings->getMembershipOptionsDescription();
 
         $this->billing->init();
 

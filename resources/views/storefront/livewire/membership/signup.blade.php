@@ -3,11 +3,11 @@
 <article class="container mx-auto px-4 lg:max-w-4xl">
     <header>
         <h1 class="at-heading is-1">{{ __('Apoya el proyecto') }}</h1>
-        <p class="mt-3">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos, impedit? Corrupti voluptatibus
-            officia nulla dolore commodi voluptatum, quas doloremque modi molestiae non fuga dolores natus atque odit
-            consectetur porro minima. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos, impedit? Corrupti
-            voluptatibus officia nulla dolore commodi voluptatum, quas doloremque modi molestiae non fuga dolores natus
-            atque odit consectetur porro minima.</p>
+        @if ($membershipIntro)
+            <div class="mt-3 prose">
+                {!! $membershipIntro !!}
+            </div>
+        @endif
 
         <form wire:submit="signup" class="mt-10">
             <fieldset class="mb-8">
@@ -52,6 +52,12 @@
                     <legend class="at-heading is-2 float-left w-full">
                         {{ __('Opciones') }}
                     </legend>
+
+                    @if ($membershipOptionsDescription)
+                        <div class="mt-12 prose">
+                            {!! $membershipOptionsDescription !!}
+                        </div>
+                    @endif
 
                     <ul class="grid gap-8 md:grid-cols-2 mt-15 mb-5 clear-both">
                         @foreach ($plans as $plan)

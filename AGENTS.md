@@ -28,8 +28,8 @@ composer test
 ## Architecture
 
 This is a **Laravel package** (not a standalone app). It is installed into a host Laravel application via Composer.
-The host Laravel application is visitable in http://localhost/ (if the Laravel Sail development environment is
-running).
+The host Laravel application is visitable in http://localhost/. Artisan commands are available in the host app's
+context (../traficantes.net) with sail.
 
 ### Key Entry Points
 
@@ -38,21 +38,45 @@ running).
 - `routes/storefront.php` — All public-facing routes
 - `config/testa.php` — Package configuration (payment types, billing defaults, OG images)
 
-### Source Structure (`src/`)
+### Application layer
 
-- **Models/** — Eloquent models across domains: Education (Course, CourseModule, Topic), Content (Page, Banner,
-  Slide, Tier), Media (Audio, Video, Document), Membership (MembershipTier, MembershipPlan, Subscription, Benefit),
-  News (Article, Event), Editorial (Review)
-- **Models/Product.php** extends `NumaxLab\Lunar\Geslib\Models\Product` (not Lunar's base Product directly)
-- **Models/Customer.php** extends `Lunar\Models\Customer`
-- **Admin/Filament/Resources/** — Filament CRUD resources organized by domain (Content, Education, Media, Membership,
-  News, Sales, Editorial)
-- **Admin/Filament/Extension/** — Extensions to Lunar's built-in Product and Customer Filament resources
-- **Storefront/Livewire/** — 90+ Livewire page components organized by domain: Account, Auth, Bookshop, Checkout,
-  Education, Editorial, Media, Membership, News, plus reusable Components
-- **Storefront/Http/Controllers/** — ProcessPaymentController for payment handling
-- **Observers/** — OrderObserver, CourseObserver
-- **Pipelines/Order/Creation/** — TagOrder pipeline for order processing
+Business logic lives in `src/Storefront/UseCases/`. One class per operation, one public
+method (`execute`). Class names are verb-noun phrases: `SignupMember`,
+`PlaceOrder`, `CancelMembership`.
+
+Use Cases accept DTOs or Eloquent models as arguments. They never accept
+Livewire Form Objects or raw request arrays directly.
+
+### Data transfer
+
+DTOs live in `src/Storefront/Data/`. They are `final readonly` classes with a static
+`fromForm(FormObject $form): self` factory when a Livewire form is the source.
+
+### Queries
+
+Read-only data retrieval lives in `src/Storefront/Queries/`. No mutations. Methods return
+Collections, Paginators, or Eloquent models.
+
+### Livewire components
+
+Components are responsible for: validation, building DTOs from Form Objects,
+calling Use Cases, and redirecting or dispatching events.
+Components must NOT contain: Eloquent queries inline, business logic, or
+array-building for meta/payload structures.
+
+### What stays in models
+
+Relationships, scopes, casts, and accessors only.
+No business logic in models.
+
+### Testing expectations
+
+Every UseCase must have a corresponding unit test in `tests/Unit/Storefront/UseCases/`.
+Use Cases are tested without booting Livewire.
+
+### Filament
+
+Filament CRUD resources, extensions, pages and actions live in `src/Admin/Filament/`.
 
 ### Route Domains
 

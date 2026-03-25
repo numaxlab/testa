@@ -5,11 +5,11 @@ namespace Testa\Storefront\Livewire\Bookshop;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Attributes\Url;
-use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Collection;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
+use Testa\Storefront\Queries\ProductQueryBuilder;
 
 class SectionPage extends Page
 {
@@ -52,23 +52,7 @@ class SectionPage extends Page
 
     protected function buildBaseQuery(): Builder
     {
-        return Product::channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->status('published')
-            ->whereHas('productType', function ($query) {
-                $query->where('id', config('lunar.geslib.product_type_id'));
-            })
-            ->with([
-                'variant',
-                'variant.prices',
-                'variant.prices.priceable',
-                'variant.prices.priceable.taxClass',
-                'variant.prices.priceable.taxClass.taxRateAmounts',
-                'variant.prices.currency',
-                'media',
-                'defaultUrl',
-                'authors',
-            ])
+        return ProductQueryBuilder::build()
             ->withCount('media')
             ->orderByDesc('media_count');
     }

@@ -3,11 +3,10 @@
 namespace Testa\Storefront\Livewire\Editorial;
 
 use Illuminate\View\View;
-use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Collection;
-use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
+use Testa\Storefront\Queries\ProductQueryBuilder;
 
 class SpecialCollectionPage extends Page
 {
@@ -31,26 +30,10 @@ class SpecialCollectionPage extends Page
 
     public function render(): View
     {
-        $products = Product::channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->status('published')
-            ->whereHas('productType', function ($query) {
-                $query->where('id', config('lunar.geslib.product_type_id'));
-            })
+        $products = ProductQueryBuilder::build()
             ->whereHas('collections', function ($query) {
                 $query->where((new Collection)->getTable().'.id', $this->collection->id);
             })
-            ->with([
-                'variant',
-                'variant.prices',
-                'variant.prices.priceable',
-                'variant.prices.priceable.taxClass',
-                'variant.prices.priceable.taxClass.taxRateAmounts',
-                'variant.prices.currency',
-                'media',
-                'defaultUrl',
-                'authors',
-            ])
             ->paginate(18);
 
         return view('testa::storefront.livewire.editorial.special-collection', compact('products'))

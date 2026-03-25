@@ -7,8 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Product;
+use Testa\Storefront\Queries\ProductQueryBuilder;
 
 class ProductAssociations extends Component
 {
@@ -90,23 +89,7 @@ class ProductAssociations extends Component
 
     private function getBaseQuery(): Builder
     {
-        return Product::channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->status('published')
-            ->whereHas('productType', function ($query) {
-                $query->where('id', config('lunar.geslib.product_type_id'));
-            })
-            ->where('id', '!=', $this->product->id)
-            ->with([
-                'variant',
-                'variant.prices',
-                'variant.prices.priceable',
-                'variant.prices.priceable.taxClass',
-                'variant.prices.priceable.taxClass.taxRateAmounts',
-                'variant.prices.currency',
-                'media',
-                'defaultUrl',
-                'authors',
-            ]);
+        return ProductQueryBuilder::build()
+            ->where('id', '!=', $this->product->id);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
+use Testa\Storefront\Queries\Account\GetCustomerOrder;
 
 class OrderPage extends Page
 {
@@ -16,12 +17,9 @@ class OrderPage extends Page
 
     public function mount($reference): void
     {
-        $this->order = Auth::user()
-            ->latestCustomer()
-            ->orders()
-            ->where('reference', $reference)
-            ->whereNotIn('status', ['awaiting-payment', 'cancelled'])
-            ->firstOrFail();
+        $this->order = new GetCustomerOrder()->execute(
+            Auth::user()->latestCustomer(), $reference,
+        );
     }
 
     public function render(): View

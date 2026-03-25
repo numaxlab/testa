@@ -3,11 +3,14 @@
 namespace Testa\Storefront\Livewire\Account;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use NumaxLab\Lunar\Geslib\Storefront\Livewire\Actions\Logout;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Data\UpdateProfileData;
+use Testa\Storefront\UseCases\Account\DeleteUser;
+use Testa\Storefront\UseCases\Account\UpdateUserProfile;
 
 class ProfilePage extends Page
 {
@@ -61,24 +64,15 @@ class ProfilePage extends Page
             'company_name' => ['nullable', 'string', 'max:255'],
         ]);
 
-        DB::beginTransaction();
+        $data = new UpdateProfileData(
+            first_name: $validated['first_name'],
+            last_name: $validated['last_name'],
+            email: $validated['email'],
+            tax_identifier: $validated['tax_identifier'],
+            company_name: $validated['company_name'],
+        );
 
-        $user->fill($validated);
-
-        $user->latestCustomer()->update([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'tax_identifier' => $validated['tax_identifier'],
-            'company_name' => $validated['company_name'],
-        ]);
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        DB::commit();
+        new UpdateUserProfile()->execute($user, $user->latestCustomer(), $data);
 
         $this->dispatch('profile-updated', name: $user->name);
     }
@@ -104,7 +98,9 @@ class ProfilePage extends Page
             'password' => ['required', 'string', 'current_password'],
         ]);
 
-        tap(Auth::user(), $logout(...))->delete();
+        $user = Auth::user();
+        $logout();
+        new DeleteUser()->execute($user);
 
         $this->redirect('/', navigate: true);
     }

@@ -3,11 +3,11 @@
 namespace Testa\Storefront\Livewire\Account;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\UseCases\Account\UpdateUserPassword;
 
 class PasswordPage extends Page
 {
@@ -35,9 +35,7 @@ class PasswordPage extends Page
             throw $e;
         }
 
-        Auth::user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        new UpdateUserPassword()->execute(Auth::user(), $validated['password']);
 
         $this->reset('current_password', 'password', 'password_confirmation');
 

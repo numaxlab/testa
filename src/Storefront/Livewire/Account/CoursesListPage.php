@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
+use Testa\Storefront\Queries\Education\GetCustomerCourses;
 
 class CoursesListPage extends Page
 {
@@ -13,12 +14,7 @@ class CoursesListPage extends Page
 
     public function render(): View
     {
-        $courses = Auth::user()
-            ->latestCustomer()
-            ->courses()
-            ->where('is_published', true)
-            ->with(['horizontalImage', 'verticalImage'])
-            ->paginate(6);
+        $courses = new GetCustomerCourses()->execute(Auth::user()->latestCustomer());
 
         return view('testa::storefront.livewire.account.courses-list', compact('courses'));
     }

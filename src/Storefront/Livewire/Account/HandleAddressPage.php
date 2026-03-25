@@ -5,7 +5,11 @@ namespace Testa\Storefront\Livewire\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Data\AddressData;
 use Testa\Storefront\Livewire\Account\Forms\AddressForm;
+use Testa\Storefront\Queries\Account\GetCustomerAddress;
+use Testa\Storefront\UseCases\Account\CreateCustomerAddress;
+use Testa\Storefront\UseCases\Account\UpdateAddress;
 
 class HandleAddressPage extends Page
 {
@@ -24,7 +28,7 @@ class HandleAddressPage extends Page
         $this->form->loadCountries();
 
         if ($id !== null) {
-            $this->form->setAddress($customer->addresses()->findOrFail($id));
+            $this->form->setAddress(new GetCustomerAddress()->execute($customer, $id));
 
             if ($this->form->country_id !== null) {
                 $savedState = $this->form->state;
@@ -43,7 +47,14 @@ class HandleAddressPage extends Page
 
     public function save(): void
     {
-        $this->form->store(Auth::user()->latestCustomer()?->id);
+        $this->form->validate();
+        $data = AddressData::fromForm($this->form);
+
+        if ($this->form->address) {
+            new UpdateAddress()->execute($this->form->address, $data);
+        } else {
+            new CreateCustomerAddress()->execute(Auth::user()->latestCustomer(), $data);
+        }
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }

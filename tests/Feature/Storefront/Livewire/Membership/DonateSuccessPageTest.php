@@ -27,23 +27,24 @@ describe('mount', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $component = livewire(DonateSuccessPage::class, ['fingerprint' => 'donate-fingerprint-456']);
+        $component = livewire(DonateSuccessPage::class,
+            ['id' => $order->id, 'fingerprint' => 'donate-fingerprint-456']);
 
         expect($component->get('order.id'))->toBe($order->id);
     });
 
     it('throws ModelNotFoundException when fingerprint not found', function () {
-        livewire(DonateSuccessPage::class, ['fingerprint' => 'nonexistent-fingerprint']);
+        livewire(DonateSuccessPage::class, ['id' => 99999, 'fingerprint' => 'nonexistent-fingerprint']);
     })->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
     it('throws ModelNotFoundException when placed_at is null', function () {
-        Order::factory()->create([
+        $order = Order::factory()->create([
             'fingerprint' => 'unplaced-donate-fingerprint',
             'placed_at' => null,
             'currency_code' => $this->currency->code,
             'channel_id' => $this->channel->id,
         ]);
 
-        livewire(DonateSuccessPage::class, ['fingerprint' => 'unplaced-donate-fingerprint']);
+        livewire(DonateSuccessPage::class, ['id' => $order->id, 'fingerprint' => 'unplaced-donate-fingerprint']);
     })->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 });

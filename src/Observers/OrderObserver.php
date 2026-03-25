@@ -135,7 +135,7 @@ class OrderObserver
             return;
         }
 
-        $customerEmail = $order->user?->email ?? $order->billingAddress?->contact_email;
+        $customerEmail = $order->billingAddress?->contact_email ?? $order->user?->email;
 
         if ($customerEmail) {
             Mail::to($customerEmail)->queue(new OrderConfirmationMail($order));

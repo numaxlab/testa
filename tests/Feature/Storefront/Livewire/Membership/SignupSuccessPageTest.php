@@ -27,23 +27,24 @@ describe('mount', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $component = livewire(SignupSuccessPage::class, ['fingerprint' => 'signup-fingerprint-123']);
+        $component = livewire(SignupSuccessPage::class,
+            ['id' => $order->id, 'fingerprint' => 'signup-fingerprint-123']);
 
         expect($component->get('order.id'))->toBe($order->id);
     });
 
     it('throws ModelNotFoundException when fingerprint not found', function () {
-        livewire(SignupSuccessPage::class, ['fingerprint' => 'nonexistent-fingerprint']);
+        livewire(SignupSuccessPage::class, ['id' => 99999, 'fingerprint' => 'nonexistent-fingerprint']);
     })->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
     it('throws ModelNotFoundException when placed_at is null', function () {
-        Order::factory()->create([
+        $order = Order::factory()->create([
             'fingerprint' => 'unplaced-fingerprint',
             'placed_at' => null,
             'currency_code' => $this->currency->code,
             'channel_id' => $this->channel->id,
         ]);
 
-        livewire(SignupSuccessPage::class, ['fingerprint' => 'unplaced-fingerprint']);
+        livewire(SignupSuccessPage::class, ['id' => $order->id, 'fingerprint' => 'unplaced-fingerprint']);
     })->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 });

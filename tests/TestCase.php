@@ -14,6 +14,8 @@ use Filament\Notifications\NotificationsServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Kalnoy\Nestedset\NestedSetServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Lunar\Admin\LunarPanelProvider;
@@ -38,6 +40,25 @@ class TestCase extends OrchestraTestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
+
+        Schema::create('settings', function ($table) {
+            $table->id();
+            $table->string('group');
+            $table->string('name');
+            $table->boolean('locked')->default(false);
+            $table->json('payload');
+            $table->timestamps();
+            $table->unique(['group', 'name']);
+        });
+
+        foreach (['membership_intro', 'membership_options_description', 'privacy_policy_text'] as $name) {
+            DB::table('settings')->insert([
+                'group' => 'text',
+                'name' => $name,
+                'locked' => false,
+                'payload' => json_encode(['en' => '']),
+            ]);
+        }
     }
 
     protected function getPackageProviders($app)

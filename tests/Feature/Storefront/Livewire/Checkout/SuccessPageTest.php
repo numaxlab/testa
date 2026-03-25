@@ -26,13 +26,13 @@ describe('mount', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $component = livewire(SuccessPage::class, ['fingerprint' => 'test-fingerprint-abc']);
+        $component = livewire(SuccessPage::class, ['id' => $order->id, 'fingerprint' => 'test-fingerprint-abc']);
 
         expect($component->get('order')->id)->toBe($order->id);
     });
 
     it('throws ModelNotFoundException when fingerprint not found', function () {
-        livewire(SuccessPage::class, ['fingerprint' => 'nonexistent-fingerprint']);
+        livewire(SuccessPage::class, ['id' => 99999, 'fingerprint' => 'nonexistent-fingerprint']);
     })->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
     it('has order property set with correct data after mount', function () {
@@ -43,7 +43,7 @@ describe('mount', function () {
             'status' => 'payment-received',
         ]);
 
-        $component = livewire(SuccessPage::class, ['fingerprint' => 'order-fingerprint-xyz']);
+        $component = livewire(SuccessPage::class, ['id' => $order->id, 'fingerprint' => 'order-fingerprint-xyz']);
 
         expect($component->get('order.status'))->toBe('payment-received');
     });

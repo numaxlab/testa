@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Content\Tier;
+use Testa\Storefront\Queries\Content\GetTierCourses;
 
 class Courses extends Component
 {
@@ -15,15 +16,7 @@ class Courses extends Component
 
     public function mount(): void
     {
-        $this->courses = $this->tier
-            ->courses()
-            ->with([
-                'media',
-                'defaultUrl',
-                'topic',
-            ])
-            ->orderBy('starts_at', 'asc')
-            ->get();
+        $this->courses = new GetTierCourses()->execute($this->tier);
     }
 
     public function render(): View

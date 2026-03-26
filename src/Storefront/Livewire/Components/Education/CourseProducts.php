@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Education\Course;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Education\GetCourseProducts;
 
 class CourseProducts extends Component
 {
@@ -16,13 +16,7 @@ class CourseProducts extends Component
 
     public function mount(): void
     {
-        $this->products = ProductQueryBuilder::fromRelation($this->course->products())->get();
-
-        $this->course->modules->each(function ($module) {
-            $this->products = $this->products->merge(
-                ProductQueryBuilder::fromRelation($module->products())->get(),
-            );
-        });
+        $this->products = new GetCourseProducts()->execute($this->course);
     }
 
     public function render(): View

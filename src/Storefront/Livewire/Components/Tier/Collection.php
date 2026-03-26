@@ -5,11 +5,10 @@ namespace Testa\Storefront\Livewire\Components\Tier;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Component;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Collection as LunarCollection;
 use NumaxLab\Lunar\Geslib\Handle;
 use Testa\Models\Content\Tier;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Content\GetTierCollectionProducts;
+use Testa\Storefront\Queries\Content\GetTierItineraries;
 
 class Collection extends Component
 {
@@ -22,25 +21,12 @@ class Collection extends Component
     {
         if ($this->tier->collections->first()->group->handle === Handle::COLLECTION_GROUP_ITINERARIES) {
             $this->isItineraries = true;
-
-            $this->itineraries = LunarCollection::whereIn('id', $this->tier->collections->pluck('id')->toArray())
-                ->channel(StorefrontSession::getChannel())
-                ->customerGroup(StorefrontSession::getCustomerGroups())
-                ->orderBy('_lft', 'ASC')
-                ->get();
+            $this->itineraries = new GetTierItineraries()->execute($this->tier);
 
             return;
         }
 
-        $this->products = ProductQueryBuilder::build()
-            ->whereHas('collections', function ($query) {
-                $query->whereIn(
-                    (new LunarCollection)->getTable().'.id',
-                    $this->tier->collections->pluck('id')->toArray(),
-                );
-            })
-            ->take(12)
-            ->get();
+        $this->products = new GetTierCollectionProducts()->execute($this->tier);
     }
 
     public function placeholder(): View

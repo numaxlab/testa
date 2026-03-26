@@ -15,11 +15,12 @@ use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Membership\MembershipPlan;
-use Testa\Models\Membership\MembershipTier;
 use Testa\Settings\PaymentSettings;
 use Testa\Settings\TextSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
+use Testa\Storefront\Queries\Membership\GetMembershipPlansByTier;
+use Testa\Storefront\Queries\Membership\GetPublishedMembershipTiers;
 
 class SignupPage extends Page
 {
@@ -59,7 +60,7 @@ class SignupPage extends Page
 
     public function mount(): void
     {
-        $this->tiers = MembershipTier::where('is_published', true)->get();
+        $this->tiers = new GetPublishedMembershipTiers()->execute();
         $this->retrieveTierPlans();
 
         $textSettings = app(TextSettings::class);
@@ -89,10 +90,7 @@ class SignupPage extends Page
             $this->plans = collect();
         }
 
-        $this->plans = MembershipPlan::where('membership_tier_id', $this->selectedTier)
-            ->with(['variant'])
-            ->where('is_published', true)
-            ->get();
+        $this->plans = new GetMembershipPlansByTier()->execute($this->selectedTier);
     }
 
     public function updated($field, $value): void

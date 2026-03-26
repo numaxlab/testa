@@ -6,9 +6,9 @@ use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Models\Education\Course;
-use Testa\Models\Education\Topic;
 use Testa\Models\EventDeliveryMethod;
+use Testa\Storefront\Queries\Education\GetCourses;
+use Testa\Storefront\Queries\Education\GetPublishedTopics;
 
 class CoursesListPage extends Page
 {
@@ -40,38 +40,9 @@ class CoursesListPage extends Page
             ),
         ];
 
-        $topics = Topic::where('is_published', true)
-            ->with([
-                'media',
-                'defaultUrl',
-            ])
-            ->get();
+        $topics = new GetPublishedTopics()->execute();
 
-        $queryBuilder = Course::where('is_published', true)
-            ->with([
-                'horizontalImage',
-                'verticalImage',
-                'defaultUrl',
-                'topic',
-            ])
-            ->orderBy('ends_at', 'desc')
-            ->when($this->dm, function ($query) {
-                $query->where('delivery_method', $this->dm);
-            });
-
-        if ($this->q) {
-            $coursesByQuery = Course::search($this->q)->take(PHP_INT_MAX)->get();
-
-            $queryBuilder->whereIn('id', $coursesByQuery->pluck('id'));
-        }
-
-        if ($this->t) {
-            $queryBuilder->whereHas('topic', function ($query) {
-                $query->where('id', $this->t);
-            });
-        }
-
-        $courses = $queryBuilder->paginate(12);
+        $courses = new GetCourses()->execute($this->q, $this->t, $this->dm);
 
         return view(
             'testa::storefront.livewire.education.courses-list',

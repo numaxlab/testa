@@ -5,9 +5,10 @@ namespace Testa\Storefront\Livewire\Education;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Models\Content\Banner;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
+use Testa\Storefront\Queries\Content\GetBannersByLocation;
+use Testa\Storefront\Queries\Education\CheckCustomerCourseEnrolment;
 
 class CoursePage extends Page
 {
@@ -31,19 +32,13 @@ class CoursePage extends Page
 
     public function render(): View
     {
-        $banners = Banner::whereJsonContains('locations', Location::COURSE->value)
-            ->where('is_published', true)
-            ->with('media')
-            ->get();
+        $banners = new GetBannersByLocation()->execute(Location::COURSE);
 
         $userRegistered = false;
 
         if (Auth::check()) {
             $customer = Auth::user()->latestCustomer();
-
-            if ($customer->courses->contains($this->course)) {
-                $userRegistered = true;
-            }
+            $userRegistered = new CheckCustomerCourseEnrolment()->execute($customer, $this->course);
         }
 
         $media = $this->course->verticalImage;

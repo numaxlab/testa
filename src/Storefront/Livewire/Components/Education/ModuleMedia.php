@@ -6,8 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Livewire\Component;
-use Testa\Models\Attachment;
 use Testa\Models\Education\CourseModule;
+use Testa\Storefront\Queries\Education\GetModuleAttachments;
 
 class ModuleMedia extends Component
 {
@@ -17,14 +17,9 @@ class ModuleMedia extends Component
 
     public function mount(): void
     {
-        $this->attachments = Attachment::where('attachable_type', (new CourseModule)->getMorphClass())
-            ->where('attachable_id', $this->module->id)
-            ->whereHas('media', fn ($query) => $query->where('is_published', true))
-            ->with('media')
-            ->get()
-            ->filter(function ($attachment) {
-                return Gate::allows('view', $attachment->media);
-            });
+        $this->attachments = new GetModuleAttachments()
+            ->execute($this->module)
+            ->filter(fn($attachment) => Gate::allows('view', $attachment->media));
     }
 
     public function render(): View

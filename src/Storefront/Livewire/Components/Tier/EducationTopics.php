@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Content\Tier;
+use Testa\Storefront\Queries\Content\GetTierEducationTopics;
 
 class EducationTopics extends Component
 {
@@ -15,13 +16,7 @@ class EducationTopics extends Component
 
     public function mount(): void
     {
-        $this->topics = $this->tier
-            ->educationTopics()
-            ->with([
-                'media',
-                'defaultUrl',
-            ])
-            ->get();
+        $this->topics = new GetTierEducationTopics()->execute($this->tier);
     }
 
     public function render(): View

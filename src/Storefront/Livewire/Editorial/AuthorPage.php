@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Editorial\GetAuthorProducts;
 
 class AuthorPage extends Page
 {
@@ -27,11 +27,7 @@ class AuthorPage extends Page
 
     public function render(): View
     {
-        $products = ProductQueryBuilder::build()
-            ->whereHas('authors', function ($query) {
-                $query->where((new Author())->getTable().'.id', $this->author->id);
-            })
-            ->paginate(18);
+        $products = new GetAuthorProducts()->execute($this->author, 18);
 
         return view('testa::storefront.livewire.editorial.author', compact('products'))
             ->title($this->author->name);

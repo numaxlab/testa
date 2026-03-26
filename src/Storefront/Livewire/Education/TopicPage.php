@@ -5,8 +5,8 @@ namespace Testa\Storefront\Livewire\Education;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Models\Education\Course;
 use Testa\Models\Education\Topic;
+use Testa\Storefront\Queries\Education\GetTopicCourses;
 
 class TopicPage extends Page
 {
@@ -27,16 +27,7 @@ class TopicPage extends Page
 
         $this->topic = $this->url->element;
 
-        $this->courses = Course::where('is_published', true)
-            ->where('topic_id', $this->topic->id)
-            ->with([
-                'media',
-                'defaultUrl',
-                'topic',
-            ])
-            ->orderBy('ends_at', 'desc')
-            ->limit(6)
-            ->get();
+        $this->courses = new GetTopicCourses()->execute($this->topic);
     }
 
     public function render(): View

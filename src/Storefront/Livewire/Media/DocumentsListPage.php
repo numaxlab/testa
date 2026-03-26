@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Models\Media\Document;
+use Testa\Storefront\Queries\Media\GetPublishedDocuments;
 
 class DocumentsListPage extends Page
 {
@@ -23,8 +23,7 @@ class DocumentsListPage extends Page
 
     public function render(): View
     {
-        $documents = Document::where('is_published', true)
-            ->paginate(16);
+        $documents = new GetPublishedDocuments()->execute();
 
         return view('testa::storefront.livewire.media.documents-list', compact('documents'))
             ->title(__('Documentos'));

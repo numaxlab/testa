@@ -6,9 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Livewire\Component;
-use Testa\Models\Attachment;
 use Testa\Models\Education\Course;
-use Testa\Models\Education\CourseModule;
+use Testa\Storefront\Queries\Education\GetCourseAttachments;
 
 class CourseMedia extends Component
 {
@@ -18,22 +17,9 @@ class CourseMedia extends Component
 
     public function mount(): void
     {
-        $this->attachments = Attachment::where(function ($query) {
-            $query->where(function ($query) {
-                $query
-                    ->where('attachable_type', (new Course)->getMorphClass())
-                    ->where('attachable_id', $this->course->id);
-            })->orWhere(function ($query) {
-                $query
-                    ->where('attachable_type', (new CourseModule)->getMorphClass())
-                    ->whereIn('attachable_id', $this->course->modules->pluck('id'));
-            });
-        })->whereHas('media', fn ($query) => $query->where('is_published', true))
-            ->with('media')
-            ->get()
-            ->filter(function ($attachment) {
-                return Gate::allows('view', $attachment->media);
-            });;
+        $this->attachments = new GetCourseAttachments()
+            ->execute($this->course)
+            ->filter(fn($attachment) => Gate::allows('view', $attachment->media));
     }
 
     public function render(): View

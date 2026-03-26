@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Content\Tier;
-use Testa\Models\Education\Course;
+use Testa\Storefront\Queries\Education\GetUpcomingCourses;
 
 class EducationUpcoming extends Component
 {
@@ -16,16 +16,7 @@ class EducationUpcoming extends Component
 
     public function mount(): void
     {
-        $this->courses = Course::where('is_published', true)
-            ->where('ends_at', '>=', now())
-            ->with([
-                'media',
-                'defaultUrl',
-                'topic',
-            ])
-            ->orderBy('starts_at', 'asc')
-            ->limit(4)
-            ->get();
+        $this->courses = new GetUpcomingCourses()->execute();
     }
 
     public function render(): View

@@ -7,8 +7,8 @@ use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Content\Section;
-use Testa\Models\Content\Tier;
-use Testa\Models\Education\Topic;
+use Testa\Storefront\Queries\Content\GetTiersBySection;
+use Testa\Storefront\Queries\Education\GetPublishedTopics;
 
 class HomePage extends Page
 {
@@ -25,20 +25,12 @@ class HomePage extends Page
 
     public function mount(): void
     {
-        $this->tiers = Tier::where('section', Section::MEDIA->value)
-            ->where('is_published', true)
-            ->orderBy('sort_position')
-            ->get();
+        $this->tiers = new GetTiersBySection()->execute(Section::MEDIA);
     }
 
     public function render(): View
     {
-        $topics = Topic::where('is_published', true)
-            ->with([
-                'media',
-                'defaultUrl',
-            ])
-            ->get();
+        $topics = new GetPublishedTopics()->execute();
 
         return view('testa::storefront.livewire.media.homepage', compact('topics'))
             ->title(__('Mediateca'));

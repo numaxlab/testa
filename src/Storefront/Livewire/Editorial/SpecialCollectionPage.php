@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Lunar\Models\Collection;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Editorial\GetCollectionProducts;
 
 class SpecialCollectionPage extends Page
 {
@@ -30,11 +30,7 @@ class SpecialCollectionPage extends Page
 
     public function render(): View
     {
-        $products = ProductQueryBuilder::build()
-            ->whereHas('collections', function ($query) {
-                $query->where((new Collection)->getTable().'.id', $this->collection->id);
-            })
-            ->paginate(18);
+        $products = new GetCollectionProducts()->execute($this->collection);
 
         return view('testa::storefront.livewire.editorial.special-collection', compact('products'))
             ->title($this->collection->translateAttribute('name'));

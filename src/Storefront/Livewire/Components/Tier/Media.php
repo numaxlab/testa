@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Content\Tier;
-use Testa\Models\Media\Visibility;
+use Testa\Storefront\Queries\Content\GetTierMedia;
 
 class Media extends Component
 {
@@ -16,17 +16,7 @@ class Media extends Component
 
     public function mount(): void
     {
-        $this->attachments = $this->tier
-            ->attachments()
-            ->whereHas('media', function ($query) {
-                $query
-                    ->where('is_published', true)
-                    ->where('visibility', Visibility::PUBLIC->value);
-            })
-            ->with([
-                'media',
-            ])
-            ->get();
+        $this->attachments = new GetTierMedia()->execute($this->tier);
     }
 
     public function render(): View

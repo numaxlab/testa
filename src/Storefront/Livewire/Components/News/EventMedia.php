@@ -5,9 +5,8 @@ namespace Testa\Storefront\Livewire\Components\News;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
-use Testa\Models\Attachment;
-use Testa\Models\Media\Visibility;
 use Testa\Models\News\Event;
+use Testa\Storefront\Queries\News\GetEventAttachments;
 
 class EventMedia extends Component
 {
@@ -17,14 +16,7 @@ class EventMedia extends Component
 
     public function mount(): void
     {
-        $this->attachments = Attachment::where('attachable_type', (new Event)->getMorphClass())
-            ->where('attachable_id', $this->event->id)
-            ->whereHas(
-                'media',
-                fn ($query) => $query->where('is_published', true)->where('visibility', Visibility::PUBLIC->value),
-            )
-            ->with('media')
-            ->get();
+        $this->attachments = new GetEventAttachments()->execute($this->event);
     }
 
     public function render(): View

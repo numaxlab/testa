@@ -6,8 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Content\Section;
-use Testa\Models\Content\Slide;
-use Testa\Models\Content\Tier;
+use Testa\Storefront\Queries\Content\GetSlidesBySection;
+use Testa\Storefront\Queries\Content\GetTiersBySection;
 
 class HomePage extends Page
 {
@@ -17,16 +17,8 @@ class HomePage extends Page
 
     public function mount(): void
     {
-        $this->slides = Slide::where('section', Section::EDITORIAL->value)
-            ->where('is_published', true)
-            ->orderBy('sort_position')
-            ->with('media')
-            ->get();
-
-        $this->tiers = Tier::where('section', Section::EDITORIAL->value)
-            ->where('is_published', true)
-            ->orderBy('sort_position')
-            ->get();
+        $this->slides = new GetSlidesBySection()->execute(Section::EDITORIAL);
+        $this->tiers = new GetTiersBySection()->execute(Section::EDITORIAL);
     }
 
     public function render(): View

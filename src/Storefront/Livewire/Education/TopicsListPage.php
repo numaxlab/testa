@@ -5,7 +5,7 @@ namespace Testa\Storefront\Livewire\Education;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Models\Education\Topic;
+use Testa\Storefront\Queries\Education\GetPublishedTopics;
 
 class TopicsListPage extends Page
 {
@@ -13,12 +13,7 @@ class TopicsListPage extends Page
 
     public function mount(): void
     {
-        $this->topics = Topic::where('is_published', true)
-            ->with([
-                'media',
-                'defaultUrl',
-            ])
-            ->get();
+        $this->topics = new GetPublishedTopics()->execute();
     }
 
     public function render(): View

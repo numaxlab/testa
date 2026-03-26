@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Models\News\Article;
+use Testa\Storefront\Queries\News\GetPublishedArticles;
 
 class ArticlesListPage extends Page
 {
@@ -17,11 +17,7 @@ class ArticlesListPage extends Page
 
     public function render(): View
     {
-        $articles = Article::where('is_published', true)
-            ->where('published_at', '<=', now())
-            ->orderBy('published_at', 'desc')
-            ->with(['defaultUrl', 'media'])
-            ->paginate(12);
+        $articles = new GetPublishedArticles()->execute();
 
         return view('testa::storefront.livewire.news.articles-list', compact('articles'))
             ->title(__('Noticias'));

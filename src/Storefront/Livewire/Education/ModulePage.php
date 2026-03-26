@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Education\CourseModule;
+use Testa\Storefront\Queries\Education\CheckCustomerCourseEnrolment;
 
 class ModulePage extends Page
 {
@@ -33,10 +34,7 @@ class ModulePage extends Page
 
         if (Auth::check()) {
             $customer = Auth::user()->latestCustomer();
-
-            if ($customer->courses->contains($this->module->course)) {
-                $userRegistered = true;
-            }
+            $userRegistered = new CheckCustomerCourseEnrolment()->execute($customer, $this->module->course);
         }
 
         $media = $this->module->course->verticalImage;

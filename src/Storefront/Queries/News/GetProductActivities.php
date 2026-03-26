@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Lunar\Models\Contracts\Product;
 use Testa\Models\Education\CourseModule;
 use Testa\Models\News\Event;
-use Testa\Storefront\Livewire\News\ActivitiesListPage;
 
 final class GetProductActivities
 {
@@ -25,7 +24,7 @@ final class GetProductActivities
             ->where('is_published', true)
             ->whereHas('products', fn($query) => $query->where('product_id', $product->id));
 
-        return ActivitiesListPage::eagerLoadResults(
+        return new EagerLoadActivities()->execute(
             $eventsQuery
                 ->union($courseModulesQuery)
                 ->orderBy('starts_at', 'desc')

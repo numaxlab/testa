@@ -13,13 +13,14 @@ use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Country;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Models\Content\Banner;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
 use Testa\Settings\ContactSettings;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
+use Testa\Storefront\Queries\Content\GetBannerByLocation;
+use Testa\Storefront\Queries\Education\CheckCustomerCourseEnrolment;
 
 class CourseRegisterPage extends Page
 {
@@ -56,7 +57,7 @@ class CourseRegisterPage extends Page
         if (Auth::check()) {
             $customer = Auth::user()->latestCustomer();
 
-            if ($customer->courses->contains($this->course)) {
+            if (new CheckCustomerCourseEnrolment()->execute($customer, $this->course)) {
                 redirect()->route('testa.storefront.education.courses.show', $slug);
                 return;
             }
@@ -83,10 +84,7 @@ class CourseRegisterPage extends Page
 
     public function render(): View
     {
-        $banner = Banner::whereJsonContains('locations', Location::COURSE_REGISTER->value)
-            ->where('is_published', true)
-            ->with('media')
-            ->first();
+        $banner = new GetBannerByLocation()->execute(Location::COURSE_REGISTER);
 
         return view('testa::storefront.livewire.education.course-register', compact('banner'))
             ->title(__('Inscripción en: ').$this->course->fullTitle);

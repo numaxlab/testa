@@ -4,18 +4,13 @@ namespace Testa\Storefront\Livewire\Components\Media;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use Testa\Models\Media\Document;
-use Testa\Models\Media\Visibility;
+use Testa\Storefront\Queries\Media\GetLatestPublicDocuments;
 
 class LatestDocuments extends Component
 {
     public function render(): View
     {
-        $documents = Document::where('is_published', true)
-            ->where('visibility', Visibility::PUBLIC->value)
-            ->latest()
-            ->take(6)
-            ->get();
+        $documents = new GetLatestPublicDocuments()->execute();
 
         return view('testa::storefront.livewire.components.media.latest-documents', compact('documents'));
     }

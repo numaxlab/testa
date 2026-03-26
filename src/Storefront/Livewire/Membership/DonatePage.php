@@ -17,6 +17,7 @@ use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\ContactSettings;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Auth\RegisterPage;
+use Testa\Storefront\Queries\Membership\GetDonationProduct;
 
 class DonatePage extends Page
 {
@@ -45,13 +46,7 @@ class DonatePage extends Page
 
     public function mount(): void
     {
-        $this->product = Product::whereHas('variants', function ($query) {
-            $query->where('sku', self::DONATION_PRODUCT_SKU);
-        })->with([
-            'variants.basePrices.currency',
-            'variants.basePrices.priceable',
-            'variants.values.option',
-        ])->firstOrFail();
+        $this->product = new GetDonationProduct()->execute();
 
         $this->paymentTypes = app(PaymentSettings::class)->donation;
     }

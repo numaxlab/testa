@@ -13,7 +13,7 @@ use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
-use Lunar\Models\ShippingMethod;
+use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Data\CheckoutAddressData;

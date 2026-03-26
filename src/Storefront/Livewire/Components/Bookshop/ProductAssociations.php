@@ -11,6 +11,8 @@ use Testa\Storefront\Queries\Bookshop\GetProductAssociations;
 
 class ProductAssociations extends Component
 {
+    const LIMIT = 6;
+
     public Product $product;
 
     public bool $isEditorialProduct = false;

@@ -88,6 +88,8 @@ class SignupPage extends Page
     {
         if ($this->selectedTier === null) {
             $this->plans = collect();
+
+            return;
         }
 
         $this->plans = new GetMembershipPlansByTier()->execute($this->selectedTier);

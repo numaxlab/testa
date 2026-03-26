@@ -4,8 +4,9 @@ namespace Testa\Storefront\Livewire\Checkout;
 
 use Illuminate\View\View;
 use Lunar\Models\Order;
-use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Queries\Checkout\GetOrderById;
+use Testa\Storefront\Queries\Checkout\GetShippingMethodDescription;
 
 class SuccessPage extends Page
 {
@@ -15,14 +16,11 @@ class SuccessPage extends Page
 
     public function mount($id, $fingerprint): void
     {
-        $this->order = Order::where('id', $id)
-            ->where('fingerprint', $fingerprint)
-            ->with(['shippingAddress'])
-            ->firstOrFail();
+        $this->order = new GetOrderById()->execute($id, $fingerprint);
 
         $identifier = $this->order->shipping_breakdown->items->first()?->identifier;
         if ($identifier) {
-            $this->shippingDescription = ShippingMethod::where('code', $identifier)->value('description');
+            $this->shippingDescription = new GetShippingMethodDescription()->execute($identifier);
         }
     }
 

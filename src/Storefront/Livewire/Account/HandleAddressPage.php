@@ -9,7 +9,7 @@ use Testa\Storefront\Data\AddressData;
 use Testa\Storefront\Livewire\Account\Forms\AddressForm;
 use Testa\Storefront\Queries\Account\GetCustomerAddress;
 use Testa\Storefront\UseCases\Account\CreateCustomerAddress;
-use Testa\Storefront\UseCases\Account\UpdateAddress;
+use Testa\Storefront\UseCases\Account\UpdateCustomerAddress;
 
 class HandleAddressPage extends Page
 {
@@ -50,10 +50,12 @@ class HandleAddressPage extends Page
         $this->form->validate();
         $data = AddressData::fromForm($this->form);
 
+        $customer = Auth::user()->latestCustomer();
+
         if ($this->form->address) {
-            new UpdateAddress()->execute($this->form->address, $data);
+            new UpdateCustomerAddress()->execute($customer, $this->form->address, $data);
         } else {
-            new CreateCustomerAddress()->execute(Auth::user()->latestCustomer(), $data);
+            new CreateCustomerAddress()->execute($customer, $data);
         }
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);

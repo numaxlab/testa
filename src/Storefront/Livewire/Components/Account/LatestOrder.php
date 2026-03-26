@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Models\Order;
+use Testa\Storefront\Queries\Account\GetCustomerLatestOrders;
 
 class LatestOrder extends Component
 {
@@ -15,14 +16,7 @@ class LatestOrder extends Component
 
     public function mount(): void
     {
-        $latestOrders = Auth::user()
-            ->latestCustomer()
-            ->orders()
-            ->where('is_geslib', true)
-            ->whereNotIn('status', ['awaiting-payment', 'cancelled'])
-            ->latest()
-            ->take(2)
-            ->get();
+        $latestOrders = new GetCustomerLatestOrders()->execute(Auth::user()->latestCustomer());
 
         if ($latestOrders->isNotEmpty()) {
             $this->order = $latestOrders->first();

@@ -2,10 +2,13 @@
 
 namespace Testa\Storefront\Livewire\Components\Account;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Component;
+use Testa\Storefront\Queries\Account\GetCustomerAddress;
+use Testa\Storefront\Queries\Account\GetCustomerAddresses;
+use Testa\Storefront\UseCases\Account\DeleteCustomerAddress;
 
 class Addresses extends Component
 {
@@ -13,15 +16,16 @@ class Addresses extends Component
 
     public function mount(): void
     {
-        $this->addresses = Auth::user()?->latestCustomer()->addresses;
+        $customer = Auth::user()?->latestCustomer();
+        $this->addresses = new GetCustomerAddresses()->execute($customer);
     }
 
     public function deleteAddress(int $id): void
     {
         $customer = Auth::user()?->latestCustomer();
-        $address = $customer->addresses()->findOrFail($id);
-        $address->delete();
-        $this->addresses = $customer->addresses()->get();
+        $address = new GetCustomerAddress()->execute($customer, $id);
+        new DeleteCustomerAddress()->execute($customer, $address);
+        $this->addresses = new GetCustomerAddresses()->execute($customer);
     }
 
     public function render(): View

@@ -2,12 +2,9 @@
 
 namespace Testa\Storefront\Livewire\Components\Bookshop;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Component;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Collection;
-use NumaxLab\Lunar\Geslib\Handle;
+use Testa\Storefront\Queries\Bookshop\SearchTaxonomies;
 
 class TaxonomySelect extends Component
 {
@@ -38,14 +35,7 @@ class TaxonomySelect extends Component
 
     public function render(): View
     {
-        $options = Collection::search($this->search)
-            ->query(function (Builder $query) {
-                $query
-                    ->whereHas('group', function ($query) {
-                        $query->where('handle', Handle::COLLECTION_GROUP_TAXONOMIES);
-                    })->channel(StorefrontSession::getChannel())
-                    ->customerGroup(StorefrontSession::getCustomerGroups());
-            })->get();
+        $options = new SearchTaxonomies()->execute($this->search);
 
         return view('testa::storefront.livewire.components.bookshop.taxonomy-select', [
             'options' => $options,

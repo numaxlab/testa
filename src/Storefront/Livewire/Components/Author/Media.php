@@ -6,9 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use NumaxLab\Lunar\Geslib\Models\Author;
-use Testa\Models\Attachment;
-use Testa\Models\Education\CourseModule;
-use Testa\Models\Media\Visibility;
+use Testa\Storefront\Queries\Editorial\GetAuthorCourseModules;
+use Testa\Storefront\Queries\Education\GetPublicAttachmentsForModules;
 
 class Media extends Component
 {
@@ -18,18 +17,9 @@ class Media extends Component
 
     public function mount(): void
     {
-        $authorCourseModules = CourseModule::whereHas('instructors', function ($query) {
-            $query->where((new Author)->getTable().'.id', $this->author->id);
-        })->where('is_published', true)->get();
+        $modules = new GetAuthorCourseModules()->execute($this->author);
 
-        $this->attachments = Attachment::where('attachable_type', (new CourseModule)->getMorphClass())
-            ->whereIn('attachable_id', $authorCourseModules->pluck('id'))
-            ->whereHas(
-                'media',
-                fn ($query) => $query->where('is_published', true)->where('visibility', Visibility::PUBLIC->value),
-            )
-            ->with('media')
-            ->get();
+        $this->attachments = new GetPublicAttachmentsForModules()->execute($modules);
     }
 
     public function render(): View

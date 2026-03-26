@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use NumaxLab\Lunar\Geslib\Models\Author;
-use Testa\Models\Education\CourseModule;
+use Testa\Storefront\Queries\Editorial\GetAuthorCourseModules;
 
 class Events extends Component
 {
@@ -16,13 +16,9 @@ class Events extends Component
 
     public function mount(): void
     {
-        $authorCourseModules = CourseModule::whereHas('instructors', function ($query) {
-            $query->where((new Author)->getTable().'.id', $this->author->id);
-        })->where('is_published', true)->get();
-
         // Events query and merge ordered by date...
 
-        $this->events = $authorCourseModules;
+        $this->events = new GetAuthorCourseModules()->execute($this->author);
     }
 
     public function render(): View

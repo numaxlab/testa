@@ -5,8 +5,9 @@ namespace Testa\Storefront\Livewire\Components\Account;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
-use Testa\Models\Content\Banner;
 use Testa\Models\Content\Location;
+use Testa\Storefront\Queries\Account\GetCustomerActiveSubscriptions;
+use Testa\Storefront\Queries\Content\GetBannerByLocation;
 
 class Subscription extends Component
 {
@@ -14,15 +15,12 @@ class Subscription extends Component
 
     public function mount(): void
     {
-        $this->subscriptions = auth()->user()->latestCustomer()->activeSubscriptions;
+        $this->subscriptions = new GetCustomerActiveSubscriptions()->execute(auth()->user()->latestCustomer());
     }
 
     public function render(): View
     {
-        $banner = Banner::whereJsonContains('locations', Location::USER_DASHBOARD_SUBSCRIPTIONS->value)
-            ->where('is_published', true)
-            ->with('media')
-            ->first();
+        $banner = new GetBannerByLocation()->execute(Location::USER_DASHBOARD_SUBSCRIPTIONS);
 
         return view('testa::storefront.livewire.components.account.subscription', compact('banner'));
     }

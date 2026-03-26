@@ -13,11 +13,14 @@ use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
-use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\PaymentSettings;
+use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 use Testa\Storefront\Livewire\Concerns\FiltersGeslibProducts;
+use Testa\Storefront\Queries\Checkout\GetPickupShippingMethods;
+use Testa\Storefront\UseCases\Account\CreateCustomerAddress;
+use Testa\Storefront\UseCases\Checkout\SaveCouponCode;
 
 class ShippingAndPaymentPage extends Page
 {
@@ -186,7 +189,7 @@ class ShippingAndPaymentPage extends Page
             'billing.customer_address_id' => $this->billing->loadAddress($value),
             'shipping.country_id' => $this->shipping->loadStates($value),
             'billing.country_id' => $this->billing->loadStates($value),
-            'couponCode' => $this->saveCouponCode($value),
+            'couponCode' => new SaveCouponCode()->execute($this->cart, $value),
             default => null,
         };
     }
@@ -204,13 +207,6 @@ class ShippingAndPaymentPage extends Page
         $this->cart->shippingBreakdown = null;
         $this->cart->refresh()->recalculate();
         $this->determineCheckoutStep();
-    }
-
-    private function saveCouponCode(?string $value): void
-    {
-        $this->cart->coupon_code = $value;
-        $this->cart->save();
-        $this->cart->calculate();
     }
 
     public function hydrate(): void
@@ -266,11 +262,13 @@ class ShippingAndPaymentPage extends Page
             }
         }
 
-        if ($type === 'shipping' && $this->shipping->saveToUser) {
-            $this->shipping->store();
+        $customer = Auth::user()?->latestCustomer();
+
+        if ($customer && $type === 'shipping' && $this->shipping->saveToUser) {
+            new CreateCustomerAddress()->execute($customer, CheckoutAddressData::fromForm($this->shipping));
         }
-        if ($type === 'billing' && $this->billing->saveToUser) {
-            $this->billing->store();
+        if ($customer && $type === 'billing' && $this->billing->saveToUser) {
+            new CreateCustomerAddress()->execute($customer, CheckoutAddressData::fromForm($this->billing));
         }
 
         $this->determineCheckoutStep();
@@ -278,7 +276,7 @@ class ShippingAndPaymentPage extends Page
 
     public function getPickupOptionsProperty(): Collection
     {
-        return ShippingMethod::where('driver', 'collection')->get();
+        return new GetPickupShippingMethods()->execute();
     }
 
     public function getShippingOptionsProperty(): Collection

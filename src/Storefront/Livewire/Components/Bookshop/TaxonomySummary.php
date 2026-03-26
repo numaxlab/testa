@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Lunar\Models\Collection as LunarCollection;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Bookshop\GetTaxonomyProducts;
 
 class TaxonomySummary extends Component
 {
@@ -15,15 +15,7 @@ class TaxonomySummary extends Component
 
     public function mount(): void
     {
-        $this->products = ProductQueryBuilder::build()
-            ->whereHas('collections', function ($query) {
-                $query->whereIn(
-                    (new LunarCollection)->getTable().'.id',
-                    array_merge([$this->collection->id], $this->collection->descendants->pluck('id')->toArray()),
-                );
-            })
-            ->take(6)
-            ->get();
+        $this->products = new GetTaxonomyProducts()->execute($this->collection);
     }
 
     public function placeholder(): View

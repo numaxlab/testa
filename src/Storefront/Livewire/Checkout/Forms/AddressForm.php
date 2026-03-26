@@ -6,10 +6,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
-use Lunar\Models\Address;
-use Lunar\Models\Country;
 use Lunar\Models\Customer;
-use Lunar\Models\State;
+use Testa\Storefront\Queries\GetCountries;
+use Testa\Storefront\Queries\GetStatesByCountry;
 
 class AddressForm extends Form
 {
@@ -79,7 +78,7 @@ class AddressForm extends Form
 
     public function loadCountries(): void
     {
-        $this->countries = Country::orderBy('native')->get();
+        $this->countries = new GetCountries()->execute();
         $this->states = collect();
     }
 
@@ -114,18 +113,7 @@ class AddressForm extends Form
         if ($countryId === null) {
             $this->states = collect();
         } else {
-            $this->states = State::where('country_id', $countryId)
-                ->orderBy('name')
-                ->get();
+            $this->states = new GetStatesByCountry()->execute($countryId);
         }
-    }
-
-    public function store(): void
-    {
-        $validated = $this->validate();
-
-        $validated['customer_id'] = Auth::user()->latestCustomer()?->id;
-
-        Address::create($validated);
     }
 }

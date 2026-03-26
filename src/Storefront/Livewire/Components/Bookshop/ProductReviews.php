@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Models\Contracts\Product;
-use Testa\Models\Editorial\Review;
+use Testa\Storefront\Queries\Bookshop\GetProductReviews;
 
 class ProductReviews extends Component
 {
@@ -16,7 +16,7 @@ class ProductReviews extends Component
 
     public function mount(): void
     {
-        $this->reviews = Review::where('product_id', $this->product->id)->get();
+        $this->reviews = new GetProductReviews()->execute($this->product);
     }
 
     public function render(): View

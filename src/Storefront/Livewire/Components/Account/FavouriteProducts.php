@@ -2,10 +2,12 @@
 
 namespace Testa\Storefront\Livewire\Components\Account;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Component;
+use Testa\Storefront\Queries\Account\GetUserLatestFavouriteProducts;
+use Testa\Storefront\UseCases\Account\RemoveFavouriteProduct;
 
 class FavouriteProducts extends Component
 {
@@ -13,19 +15,14 @@ class FavouriteProducts extends Component
 
     public function mount(): void
     {
-        $this->retrieveFavouriteProducts();
-    }
-
-    private function retrieveFavouriteProducts(): void
-    {
-        $this->latestFavouriteProducts = Auth::user()->favourites()->take(3)->get();
+        $this->latestFavouriteProducts = new GetUserLatestFavouriteProducts()->execute(Auth::user());
     }
 
     public function removeFromFavourites($productId): void
     {
-        Auth::user()->favourites()->detach($productId);
+        new RemoveFavouriteProduct()->execute(Auth::user(), $productId);
 
-        $this->retrieveFavouriteProducts();
+        $this->latestFavouriteProducts = new GetUserLatestFavouriteProducts()->execute(Auth::user());
     }
 
     public function render(): View

@@ -4,10 +4,8 @@ namespace Testa\Storefront\Livewire\Bookshop;
 
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Collection as LunarCollection;
-use NumaxLab\Lunar\Geslib\Handle;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Queries\Bookshop\GetItineraries;
 
 class ItinerariesListPage extends Page
 {
@@ -15,12 +13,7 @@ class ItinerariesListPage extends Page
 
     public function mount(): void
     {
-        $this->itineraries = LunarCollection::whereHas('group', function ($query) {
-            $query->where('handle', Handle::COLLECTION_GROUP_ITINERARIES);
-        })->channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->orderBy('_lft', 'ASC')
-            ->get();
+        $this->itineraries = new GetItineraries()->execute();
     }
 
     public function render(): View

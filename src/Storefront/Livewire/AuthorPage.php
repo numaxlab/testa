@@ -6,8 +6,8 @@ use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Models\Author;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Models\Education\CourseModule;
-use Testa\Storefront\Queries\ProductQueryBuilder;
+use Testa\Storefront\Queries\Editorial\GetAuthorProducts;
+use Testa\Storefront\Queries\Education\CheckAuthorHasMedia;
 
 class AuthorPage extends Page
 {
@@ -28,15 +28,8 @@ class AuthorPage extends Page
 
     public function render(): View
     {
-        $products = ProductQueryBuilder::build()
-            ->whereHas('authors', function ($query) {
-                $query->where((new Author)->getTable().'.id', $this->author->id);
-            })
-            ->paginate(12);
-
-        $hasMedia = CourseModule::whereHas('instructors', function ($query) {
-            $query->where((new Author)->getTable().'.id', $this->author->id);
-        })->where('is_published', true)->exists();
+        $products = new GetAuthorProducts()->execute($this->author);
+        $hasMedia = new CheckAuthorHasMedia()->execute($this->author);
 
         return view('testa::storefront.livewire.author', compact('products', 'hasMedia'))
             ->title($this->author->name);

@@ -8,18 +8,6 @@ use Lunar\Models\Product;
 
 final class ProductQueryBuilder
 {
-    private const array STOREFRONT_EAGER_LOADS = [
-        'variant',
-        'variant.prices',
-        'variant.prices.priceable',
-        'variant.prices.priceable.taxClass',
-        'variant.prices.priceable.taxClass.taxRateAmounts',
-        'variant.prices.currency',
-        'media',
-        'defaultUrl',
-        'authors',
-    ];
-
     public static function build(): Builder
     {
         return self::applyScopes(Product::query());
@@ -32,7 +20,17 @@ final class ProductQueryBuilder
             ->customerGroup(StorefrontSession::getCustomerGroups())
             ->status('published')
             ->whereHas('productType', fn(Builder $q) => $q->where('id', config('lunar.geslib.product_type_id')))
-            ->with(self::STOREFRONT_EAGER_LOADS);
+            ->with([
+                'variant',
+                'variant.prices',
+                'variant.prices.priceable',
+                'variant.prices.priceable.taxClass',
+                'variant.prices.priceable.taxClass.taxRateAmounts',
+                'variant.prices.currency',
+                'media',
+                'defaultUrl',
+                'authors',
+            ]);
     }
 
     public static function fromRelation(Builder $query): Builder

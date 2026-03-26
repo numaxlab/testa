@@ -2,21 +2,17 @@
 
 namespace Testa\Storefront\Livewire\Bookshop;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Collection as LunarCollection;
-use Lunar\Models\Product;
-use Meilisearch\Endpoints\Indexes;
-use NumaxLab\Lunar\Geslib\InterCommands\LanguageCommand;
-use NumaxLab\Lunar\Geslib\InterCommands\StatusCommand;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
+use Testa\Storefront\Queries\Bookshop\GetLanguageCollections;
+use Testa\Storefront\Queries\Bookshop\GetStatusCollections;
+use Testa\Storefront\Queries\Bookshop\SearchProducts;
 
 class SearchPage extends Page
 {
@@ -55,16 +51,8 @@ class SearchPage extends Page
             return;
         }
 
-        $this->languages = LunarCollection::whereHas('group', function ($query) {
-            $query->where('handle', LanguageCommand::HANDLE);
-        })->channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->get();
-        $this->statuses = LunarCollection::whereHas('group', function ($query) {
-            $query->where('handle', StatusCommand::HANDLE);
-        })->channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->get();
+        $this->languages = new GetLanguageCollections()->execute();
+        $this->statuses = new GetStatusCollections()->execute();
     }
 
     #[On('taxonomy-selected')]
@@ -90,50 +78,12 @@ class SearchPage extends Page
     #[Computed]
     public function results(): LengthAwarePaginator
     {
-        $filters = $this->buildFilters();
-
-        return Product::search(
+        return new SearchProducts()->execute(
             trim($this->q),
-            function (Indexes $search, string $query, array $options) use ($filters) {
-                if (! empty($filters)) {
-                    $options['filter'] = $filters;
-                }
-
-                return $search->search($query, $options);
-            })
-            ->query(fn(Builder $query) => $query->with([
-                'variant',
-                'variant.taxClass',
-                'defaultUrl',
-                'urls',
-                'thumbnail',
-                'authors',
-                'prices',
-            ]))
-            ->paginate(18);
-    }
-
-    private function buildFilters(): string
-    {
-        $filters = [];
-
-        if ($this->taxonId) {
-            $filters[] = "taxonomies.id IN [$this->taxonId]";
-        }
-
-        if ($this->languageId) {
-            $filters[] = "languages.id IN [$this->languageId]";
-        }
-
-        if ($this->priceRange) {
-            [$min, $max] = explode('-', $this->priceRange);
-            $filters[] = "price >= $min AND price <= $max";
-        }
-
-        if ($this->availabilityId) {
-            $filters[] = "geslib_status.id = $this->availabilityId";
-        }
-
-        return implode(' AND ', $filters);
+            $this->taxonId,
+            $this->languageId,
+            $this->priceRange,
+            $this->availabilityId,
+        );
     }
 }

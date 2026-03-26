@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Contracts\Collection;
+use Lunar\Models\Contracts\Product;
 use Lunar\Models\Price;
-use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Storefront\Queries\Account\CheckUserHasFavourite;
+use Testa\Storefront\Queries\Bookshop\GetProductBySlug;
+use Testa\Storefront\UseCases\Account\AddFavouriteProduct;
+use Testa\Storefront\UseCases\Account\RemoveFavouriteProduct;
 
 class ProductPage extends Page
 {
@@ -20,30 +24,7 @@ class ProductPage extends Page
 
     public function mount(string $slug): void
     {
-        $this->product = Product::channel(StorefrontSession::getChannel())
-            ->customerGroup(StorefrontSession::getCustomerGroups())
-            ->status('published')
-            ->whereHas('productType', function ($query) {
-                $query->where('id', config('lunar.geslib.product_type_id'));
-            })
-            ->whereHas('urls', function ($query) use ($slug) {
-                $query->where('slug', $slug);
-            })
-            ->with([
-                'variant',
-                'variant.prices',
-                'variant.prices.priceable',
-                'variant.prices.priceable.taxClass',
-                'variant.prices.priceable.taxClass.taxRateAmounts',
-                'variant.prices.currency',
-                'media',
-                'taxonomies',
-                'taxonomies.ancestors',
-                'editorialCollections',
-                'languages',
-                'statuses',
-            ])
-            ->firstOrFail();
+        $this->product = new GetProductBySlug()->execute($slug);
 
         if ($this->product->getSectionTaxonomy()) {
             $this->section = $this->product->getSectionTaxonomy();
@@ -58,9 +39,7 @@ class ProductPage extends Page
         if (! Auth::check()) {
             $this->isUserFavourite = false;
         } else {
-            $user = Auth::user();
-
-            $this->isUserFavourite = $user->favourites->contains($this->product->id);
+            $this->isUserFavourite = new CheckUserHasFavourite()->execute(Auth::user(), $this->product->id);
         }
     }
 
@@ -73,11 +52,11 @@ class ProductPage extends Page
 
         $user = Auth::user();
 
-        if ($user->favourites->contains($this->product->id)) {
-            $user->favourites()->detach($this->product->id);
+        if (new CheckUserHasFavourite()->execute($user, $this->product->id)) {
+            new RemoveFavouriteProduct()->execute($user, $this->product->id);
             $this->isUserFavourite = false;
         } else {
-            $user->favourites()->attach($this->product->id);
+            new AddFavouriteProduct()->execute($user, $this->product->id);
             $this->isUserFavourite = true;
         }
     }

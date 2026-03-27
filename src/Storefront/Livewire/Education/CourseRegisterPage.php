@@ -4,23 +4,21 @@ namespace Testa\Storefront\Livewire\Education;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Cart;
-use Lunar\Models\CartAddress;
-use Lunar\Models\Country;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
-use Testa\Settings\ContactSettings;
 use Testa\Settings\PaymentSettings;
-use Testa\Storefront\Livewire\Auth\RegisterPage;
+use Testa\Storefront\Data\CheckoutAddressData;
+use Testa\Storefront\Data\CourseRegistrationData;
+use Testa\Storefront\Data\RegisterUserData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 use Testa\Storefront\Queries\Content\GetBannerByLocation;
 use Testa\Storefront\Queries\Education\CheckCustomerCourseEnrolment;
+use Testa\Storefront\UseCases\Account\RegisterUser;
+use Testa\Storefront\UseCases\Education\RegisterForCourse;
 
 class CourseRegisterPage extends Page
 {
@@ -100,7 +98,7 @@ class CourseRegisterPage extends Page
         return redirect()->route('login');
     }
 
-    public function register(ContactSettings $contactSettings): Redirector|RedirectResponse
+    public function register(): Redirector|RedirectResponse
     {
         $rules = [];
 
@@ -138,49 +136,24 @@ class CourseRegisterPage extends Page
         );
 
         if (! Auth::check()) {
-            $user = RegisterPage::createUser(
-                Arr::only($validated, ['first_name', 'last_name', 'email', 'password']),
-            );
-        } else {
-            $user = Auth::user();
+            new RegisterUser()->execute(new RegisterUserData(
+                first_name: $validated['first_name'],
+                last_name: $validated['last_name'],
+                email: $validated['email'],
+                password: $validated['password'],
+            ));
         }
 
-        $cart = Cart::create([
-            'user_id' => $user->id,
-            'customer_id' => $user->latestCustomer()?->id,
-            'currency_id' => StorefrontSession::getCurrency()->id,
-            'channel_id' => StorefrontSession::getChannel()->id,
-            'meta' => [
-                'Factura' => $this->invoice ? 'Si' : 'No',
-                'Tipo de pedido' => 'Curso',
-                'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
-            ],
-        ]);
-
-        foreach ($this->course->purchasable->variants as $variant) {
-            if ($variant->id == $this->selectedVariant) {
-                $cart->add($variant);
-                break;
-            }
-        }
-
-        $billing = new CartAddress();
-
-        if ($this->invoice) {
-            $billing->fill($this->billing->all());
-        } else {
-            $billing->first_name = $user->latestCustomer()->first_name;
-            $primaryAddress = $contactSettings->getPrimaryAddress();
-            $billing->country_id = Country::where('iso2', $primaryAddress['country_iso2'])
-                ->firstOrFail()->id;
-            $billing->city = $primaryAddress['city'];
-            $billing->postcode = $primaryAddress['postcode'];
-            $billing->line_one = $primaryAddress['line_one'];
-        }
-
-        $cart->setBillingAddress($billing);
-
-        $cart->calculate();
+        $cart = new RegisterForCourse()->execute(
+            Auth::user(),
+            $this->course,
+            new CourseRegistrationData(
+                selectedVariantId: $this->selectedVariant,
+                paymentType: $this->paymentType,
+                invoice: $this->invoice,
+                billingAddress: $this->invoice ? CheckoutAddressData::fromForm($this->billing) : null,
+            ),
+        );
 
         return redirect()
             ->route(

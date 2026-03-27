@@ -10,17 +10,17 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 use Intervention\Validation\Rules\Iban;
 use Livewire\Attributes\Url;
-use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Cart;
-use Lunar\Models\CartAddress;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Models\Membership\MembershipPlan;
 use Testa\Settings\PaymentSettings;
 use Testa\Settings\TextSettings;
-use Testa\Storefront\Livewire\Auth\RegisterPage;
+use Testa\Storefront\Data\CheckoutAddressData;
+use Testa\Storefront\Data\MembershipSignupData;
+use Testa\Storefront\Data\RegisterUserData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 use Testa\Storefront\Queries\Membership\GetMembershipPlansByTier;
 use Testa\Storefront\Queries\Membership\GetPublishedMembershipTiers;
+use Testa\Storefront\UseCases\Account\RegisterUser;
+use Testa\Storefront\UseCases\Membership\SignupMembership;
 
 class SignupPage extends Page
 {
@@ -138,7 +138,7 @@ class SignupPage extends Page
         ];
 
         if ($isGuest) {
-            $registrationRules = [
+            $baseRules = array_merge($baseRules, [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'email' => [
@@ -150,57 +150,36 @@ class SignupPage extends Page
                     'unique:'.config('auth.providers.users.model'),
                 ],
                 'password' => ['required', 'string', 'confirmed', Password::defaults()],
-            ];
-
-            $baseRules = array_merge($baseRules, $registrationRules);
+            ]);
         }
 
         $this->validate(array_merge($baseRules, $rules));
 
         if ($isGuest) {
-            RegisterPage::createUser([
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'password' => $this->password,
-            ]);
+            new RegisterUser()->execute(new RegisterUserData(
+                first_name: $this->first_name,
+                last_name: $this->last_name,
+                email: $this->email,
+                password: $this->password,
+            ));
 
             $this->billing->first_name = $this->first_name;
             $this->billing->last_name = $this->last_name;
             $this->billing->contact_email = $this->email;
         }
 
-        $user = Auth::user();
-
-        $membershipPlan = MembershipPlan::find($this->selectedPlan);
-
-        $meta = [
-            'Tipo de pedido' => 'Subscripción socias',
-            'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
-            'DNI/NIF' => $this->id_number,
-        ];
-
-        if ($this->paymentType === 'direct-debit') {
-            $meta['Titular de la cuenta'] = $this->directDebitOwnerName;
-            $meta['Banco'] = $this->directDebitBankName;
-            $meta['IBAN'] = $this->directDebitIban;
-        }
-
-        $cart = Cart::create([
-            'user_id' => $user->id,
-            'customer_id' => $user->latestCustomer()?->id,
-            'currency_id' => StorefrontSession::getCurrency()->id,
-            'channel_id' => StorefrontSession::getChannel()->id,
-            'meta' => $meta,
-        ]);
-
-        $cart->add($membershipPlan->variant);
-
-        $billing = new CartAddress();
-        $billing->fill($this->billing->all());
-        $cart->setBillingAddress($billing);
-
-        $cart->calculate();
+        $cart = new SignupMembership()->execute(
+            Auth::user(),
+            new MembershipSignupData(
+                membershipPlanId: $this->selectedPlan,
+                paymentType: $this->paymentType,
+                idNumber: $this->id_number,
+                directDebitOwnerName: $this->directDebitOwnerName,
+                directDebitBankName: $this->directDebitBankName,
+                directDebitIban: $this->directDebitIban,
+                billingAddress: CheckoutAddressData::fromForm($this->billing),
+            ),
+        );
 
         return redirect()
             ->route(

@@ -9,15 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 use Lunar\Facades\StorefrontSession;
-use Lunar\Models\Cart;
-use Lunar\Models\CartAddress;
-use Lunar\Models\Country;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Settings\ContactSettings;
 use Testa\Settings\PaymentSettings;
-use Testa\Storefront\Livewire\Auth\RegisterPage;
+use Testa\Storefront\Data\DonationData;
+use Testa\Storefront\Data\RegisterUserData;
 use Testa\Storefront\Queries\Membership\GetDonationProduct;
+use Testa\Storefront\UseCases\Account\RegisterUser;
+use Testa\Storefront\UseCases\Membership\PlaceDonation;
 
 class DonatePage extends Page
 {
@@ -71,7 +70,7 @@ class DonatePage extends Page
             ->title(__('Donación'));
     }
 
-    public function donate(ContactSettings $contactSettings)
+    public function donate()
     {
         $isGuest = ! Auth::check();
 
@@ -103,49 +102,25 @@ class DonatePage extends Page
         $this->validate($rules);
 
         if ($isGuest) {
-            RegisterPage::createUser([
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'password' => $this->password,
-            ]);
+            new RegisterUser()->execute(new RegisterUserData(
+                first_name: $this->first_name,
+                last_name: $this->last_name,
+                email: $this->email,
+                password: $this->password,
+            ));
         }
 
-        $user = Auth::user();
-
-        $cart = Cart::create([
-            'user_id' => $user->id,
-            'customer_id' => $user->latestCustomer()?->id,
-            'currency_id' => StorefrontSession::getCurrency()->id,
-            'channel_id' => StorefrontSession::getChannel()->id,
-            'meta' => [
-                'Tipo de pedido' => 'Donación',
-                'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
-                'DNI/NIF' => $this->id_number,
-                'Comentarios' => $this->comments,
-            ],
-        ]);
-
-        if ($this->selectedQuantity === 'free') {
-            $variant = $this->product->variants->firstWhere('sku', self::DONATION_PRODUCT_SKU);
-            $unitPriceInCents = (int) ($this->freeQuantityValue * 100);
-            $cart->add($variant, 1, ['unit_price' => $unitPriceInCents]);
-        } else {
-            $variant = $this->product->variants->find($this->selectedQuantity);
-            $cart->add($variant);
-        }
-
-        $billing = new CartAddress();
-        $billing->first_name = $user->latestCustomer()->first_name;
-        $primaryAddress = $contactSettings->getPrimaryAddress();
-        $billing->country_id = Country::where('iso2', $primaryAddress['country_iso2'])
-            ->firstOrFail()->id;
-        $billing->city = $primaryAddress['city'];
-        $billing->postcode = $primaryAddress['postcode'];
-        $billing->line_one = $primaryAddress['line_one'];
-        $cart->setBillingAddress($billing);
-
-        $cart->calculate();
+        $cart = new PlaceDonation()->execute(
+            Auth::user(),
+            $this->product,
+            new DonationData(
+                selectedQuantity: $this->selectedQuantity,
+                freeQuantityValue: $this->freeQuantityValue ?? null,
+                paymentType: $this->paymentType,
+                idNumber: $this->id_number,
+                comments: $this->comments,
+            ),
+        );
 
         return redirect()
             ->route(

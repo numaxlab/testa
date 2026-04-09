@@ -27,7 +27,7 @@
             </span>
         </button>
     @else
-        <x-testa::loading-button target="addToCart" class="is-primary w-full">
+        <x-testa::loading-button target="addToCart" wire:click="addToCart" class="is-primary w-full">
             {{ __('Comprar') }}
         </x-testa::loading-button>
     @endif

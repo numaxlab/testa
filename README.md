@@ -87,6 +87,13 @@ The package service provider will be auto-discovered by Laravel.
 
 ## Configuration
 
+First check the `lunar-geslib` [documentation](https://github.com/numaxlab/lunar-geslib?tab=readme-ov-file) and review
+the installation and configuration steps. As noted there, a queue configuration is important for being able to import
+Geslib data.
+
+The configuration file for this package will be available at `config/testa.php`. Review all items and adjust the values
+to fit your specific setup.
+
 ## Testing
 
 The package uses Pest for testing. You can run the tests using the following command:

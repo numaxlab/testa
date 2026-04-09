@@ -1,65 +1,65 @@
 {
-    "name": "numaxlab/testa",
-    "type": "library",
-    "version": "1.0.0-beta.9",
-    "license": "MIT",
-    "require": {
-        "php": "^8.4",
-        "ext-bcmath": "*",
-        "awcodes/filament-tiptap-editor": "^3.5",
-        "intervention/validation": "^4.6",
-        "numaxlab/lunar-geslib": "*",
-        "spatie/laravel-translatable": "^6.0",
-        "filament/spatie-laravel-translatable-plugin": "^3.3",
-        "lunarphp/table-rate-shipping": "^1.0",
-        "meilisearch/meilisearch-php": "^1.15",
-        "lunarphp/meilisearch": "^1.1",
-        "filament/spatie-laravel-settings-plugin": "^3.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^11.5",
-        "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-laravel": "^3.2",
-        "pestphp/pest-plugin-livewire": "3.x-dev",
-        "orchestra/testbench": "^10.4"
-    },
-    "autoload": {
-        "psr-4": {
-            "Testa\\": "src/",
-            "Testa\\Database\\Factories\\": "database/factories/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Testa\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Testa\\TestaServiceProvider"
-            ]
-        }
-    },
-    "authors": [
-        {
-            "name": "Adrián Pardellas Blunier",
-            "email": "adrian@numax.org"
-        },
-        {
-            "name": "X. Carlos Hidalgo",
-            "email": "carlos@numax.org"
-        }
-    ],
-    "scripts": {
-        "test": "vendor/bin/pest --parallel"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
-        }
+  "name": "numaxlab/testa",
+  "type": "library",
+  "version": "1.0.0-beta.10",
+  "license": "MIT",
+  "require": {
+    "php": "^8.4",
+    "ext-bcmath": "*",
+    "awcodes/filament-tiptap-editor": "^3.5",
+    "intervention/validation": "^4.6",
+    "numaxlab/lunar-geslib": "*",
+    "spatie/laravel-translatable": "^6.0",
+    "filament/spatie-laravel-translatable-plugin": "^3.3",
+    "lunarphp/table-rate-shipping": "^1.0",
+    "meilisearch/meilisearch-php": "^1.15",
+    "lunarphp/meilisearch": "^1.1",
+    "filament/spatie-laravel-settings-plugin": "^3.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5",
+    "pestphp/pest": "^3.8",
+    "pestphp/pest-plugin-laravel": "^3.2",
+    "pestphp/pest-plugin-livewire": "3.x-dev",
+    "orchestra/testbench": "^10.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Testa\\": "src/",
+      "Testa\\Database\\Factories\\": "database/factories/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Testa\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Testa\\TestaServiceProvider"
+      ]
+    }
+  },
+  "authors": [
+    {
+      "name": "Adrián Pardellas Blunier",
+      "email": "adrian@numax.org"
+    },
+    {
+      "name": "X. Carlos Hidalgo",
+      "email": "carlos@numax.org"
+    }
+  ],
+  "scripts": {
+    "test": "vendor/bin/pest --parallel"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true
+    }
+  }
 }

@@ -13,14 +13,16 @@ use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
-use Lunar\Shipping\Models\ShippingMethod;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use RuntimeException;
 use Testa\Settings\PaymentSettings;
+use Testa\Storefront\Data\CartCheckoutData;
 use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 use Testa\Storefront\Livewire\Concerns\FiltersGeslibProducts;
 use Testa\Storefront\Queries\Checkout\GetPickupShippingMethods;
 use Testa\Storefront\UseCases\Account\CreateCustomerAddress;
+use Testa\Storefront\UseCases\Checkout\PrepareCartForCheckout;
 use Testa\Storefront\UseCases\Checkout\SaveCouponCode;
 
 class ShippingAndPaymentPage extends Page
@@ -62,7 +64,7 @@ class ShippingAndPaymentPage extends Page
     {
         $this->cart = CartSession::current();
 
-        if (! $this->cart || $this->cart->lines->isEmpty()) {
+        if (!$this->cart || $this->cart->lines->isEmpty()) {
             $this->redirect('/');
 
             return;
@@ -80,7 +82,7 @@ class ShippingAndPaymentPage extends Page
 
         $this->paymentTypes = app(PaymentSettings::class)->store;
 
-        if (! Auth::user()?->latestCustomer()?->canBuyOnCredit()) {
+        if (!Auth::user()?->latestCustomer()?->canBuyOnCredit()) {
             $this->paymentTypes = array_values(array_filter(
                 $this->paymentTypes,
                 fn($type) => $type !== 'credit',
@@ -107,39 +109,39 @@ class ShippingAndPaymentPage extends Page
             }
         }
 
-        if (! $this->shipping->contact_email) {
+        if (!$this->shipping->contact_email) {
             $this->shipping->contact_email = $this->cart->user->email;
         }
-        if (! $this->billing->contact_email) {
+        if (!$this->billing->contact_email) {
             $this->billing->contact_email = $this->cart->user->email;
         }
 
         $customer = $this->cart->user?->latestCustomer();
 
         if ($customer) {
-            if (! $this->shipping->first_name) {
+            if (!$this->shipping->first_name) {
                 $this->shipping->first_name = $customer->first_name ?? '';
             }
-            if (! $this->shipping->last_name) {
+            if (!$this->shipping->last_name) {
                 $this->shipping->last_name = $customer->last_name ?? '';
             }
-            if (! $this->shipping->company_name) {
+            if (!$this->shipping->company_name) {
                 $this->shipping->company_name = $customer->company_name;
             }
-            if (! $this->shipping->tax_identifier) {
+            if (!$this->shipping->tax_identifier) {
                 $this->shipping->tax_identifier = $customer->tax_identifier;
             }
 
-            if (! $this->billing->first_name) {
+            if (!$this->billing->first_name) {
                 $this->billing->first_name = $customer->first_name ?? '';
             }
-            if (! $this->billing->last_name) {
+            if (!$this->billing->last_name) {
                 $this->billing->last_name = $customer->last_name ?? '';
             }
-            if (! $this->billing->company_name) {
+            if (!$this->billing->company_name) {
                 $this->billing->company_name = $customer->company_name;
             }
-            if (! $this->billing->tax_identifier) {
+            if (!$this->billing->tax_identifier) {
                 $this->billing->tax_identifier = $customer->tax_identifier;
             }
         }
@@ -164,13 +166,13 @@ class ShippingAndPaymentPage extends Page
 
         $this->currentStep = $this->steps['shipping_address'];
 
-        if (! $shippingAddress) {
+        if (!$shippingAddress) {
             return;
         }
 
         $this->currentStep = $this->steps['shipping_option'];
 
-        if (! $this->shippingOption) {
+        if (!$this->shippingOption) {
             return;
         }
 
@@ -289,7 +291,7 @@ class ShippingAndPaymentPage extends Page
     {
         $shippingAddress = $this->cart->shippingAddress;
 
-        if (! $shippingAddress) {
+        if (!$shippingAddress) {
             return null;
         }
 
@@ -334,40 +336,21 @@ class ShippingAndPaymentPage extends Page
 
         $this->validate(['paymentType' => 'required']);
 
-        if ($this->shippingMethod !== 'send') {
-            $this->cart->setShippingAddress($this->cart->billingAddress);
+        try {
+            new PrepareCartForCheckout()->execute(
+                $this->cart,
+                new CartCheckoutData(
+                    paymentType: $this->paymentType,
+                    shippingMethod: $this->shippingMethod,
+                    wantsInvoice: $this->wantsInvoice,
+                    isGift: $this->isGift,
+                ),
+            );
+        } catch (RuntimeException) {
+            $this->dispatch('uncompleted-steps');
 
-            $shippingMethod = ShippingMethod::find($this->shippingMethod);
-
-            if (! $shippingMethod) {
-                $this->dispatch('uncompleted-steps');
-
-                return null;
-            }
-
-            $shippingRate = $shippingMethod->shippingRates->first();
-
-            if (! $shippingRate) {
-                $this->dispatch('uncompleted-steps');
-
-                return null;
-            }
-
-            $shippingOption = $shippingRate->getShippingOption($this->cart);
-
-            $this->cart->setShippingOption($shippingOption);
+            return null;
         }
-
-        $this->cart->meta = [
-            'Tipo de pedido' => 'Pedido librería',
-            'Método de pago' => __("testa::global.payment_types.{$this->paymentType}.title"),
-            'Solicita factura' => $this->wantsInvoice ? __('Sí') : __('No'),
-            'Es un regalo' => $this->isGift ? __('Sí') : __('No'),
-        ];
-
-        $this->cart->save();
-
-        $this->cart->calculate();
 
         $fingerprint = $this->cart->fingerprint();
 

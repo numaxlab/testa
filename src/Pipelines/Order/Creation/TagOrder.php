@@ -6,9 +6,7 @@ use Closure;
 use Illuminate\Support\Str;
 use Lunar\Models\Contracts\Order as OrderContract;
 use Lunar\Models\Tag;
-use Testa\Observers\CourseObserver;
-use Testa\Observers\MembershipTierObserver;
-use Testa\Storefront\Livewire\Membership\DonatePage;
+use Testa\Storefront\Queries\Membership\GetDonationProduct;
 
 class TagOrder
 {
@@ -20,20 +18,20 @@ class TagOrder
             if ($line->purchasable_type === 'product_variant') {
                 $productTypeId = $line->purchasable->product->product_type_id;
 
-                if ($productTypeId === MembershipTierObserver::PRODUCT_TYPE_ID) {
+                if ($productTypeId === config('testa.product_types.membership_tier_id')) {
                     $tag = Tag::firstOrCreate([
                         'value' => 'Subscripción socias',
                     ]);
                     break;
                 }
 
-                if (Str::contains($line->purchasable->sku, DonatePage::DONATION_PRODUCT_SKU)) {
+                if (Str::contains($line->purchasable->sku, GetDonationProduct::DONATION_SKU)) {
                     $tag = Tag::firstOrCreate([
                         'value' => 'Donación',
                     ]);
                 }
 
-                if ($productTypeId === CourseObserver::PRODUCT_TYPE_ID) {
+                if ($productTypeId === config('testa.product_types.course_id')) {
                     $tag = Tag::firstOrCreate([
                         'value' => 'Inscripción cursos',
                     ]);
@@ -41,7 +39,7 @@ class TagOrder
             }
         }
 
-        if (! $tag) {
+        if (!$tag) {
             $tag = Tag::firstOrCreate([
                 'value' => 'Pedido librería',
             ]);

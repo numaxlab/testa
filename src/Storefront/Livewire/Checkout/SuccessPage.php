@@ -2,6 +2,7 @@
 
 namespace Testa\Storefront\Livewire\Checkout;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
@@ -17,6 +18,10 @@ class SuccessPage extends Page
     public function mount($id, $fingerprint): void
     {
         $this->order = new GetOrderById()->execute($id, $fingerprint);
+
+        if (Auth::id() !== $this->order->user_id) {
+            abort(403);
+        }
 
         $identifier = $this->order->shipping_breakdown->items->first()?->identifier;
         if ($identifier) {

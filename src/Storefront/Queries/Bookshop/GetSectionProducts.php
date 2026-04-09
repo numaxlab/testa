@@ -12,10 +12,11 @@ final class GetSectionProducts
 {
     public function execute(
         Collection $section,
-        string $q = '',
-        string $t = '',
-        int $perPage = 18,
-    ): LengthAwarePaginator {
+        string     $q = '',
+        string     $t = '',
+        int        $perPage = 18,
+    ): LengthAwarePaginator
+    {
         $query = ProductQueryBuilder::build()
             ->withCount('media')
             ->orderByDesc('media_count');
@@ -28,7 +29,7 @@ final class GetSectionProducts
 
     private function applySearchFilter(Builder $query, string $q): void
     {
-        if (! $q) {
+        if (!$q) {
             return;
         }
 
@@ -46,17 +47,20 @@ final class GetSectionProducts
     private function applyCollectionFilter(Builder $query, Collection $section, string $t): void
     {
         if ($t) {
-            $t = (int) $t;
+            $t = (int)$t;
+            $collection = Collection::findOrFail($t);
+            $collectionTable = (new Collection)->getTable();
 
-            $query->whereHas('collections', function (Builder $q) use ($t) {
-                $collection = Collection::findOrFail($t);
-
-                if ($collection->getDescendantCount() > 0) {
-                    $q->whereIn((new Collection)->getTable().'.id', $collection->descendants->pluck('id'));
-                } else {
-                    $q->where((new Collection)->getTable().'.id', $t);
-                }
-            });
+            if ($collection->getDescendantCount() > 0) {
+                $descendantIds = $collection->descendants->pluck('id');
+                $query->whereHas('collections', function (Builder $q) use ($collectionTable, $descendantIds) {
+                    $q->whereIn($collectionTable . '.id', $descendantIds);
+                });
+            } else {
+                $query->whereHas('collections', function (Builder $q) use ($collectionTable, $t) {
+                    $q->where($collectionTable . '.id', $t);
+                });
+            }
 
             return;
         }
@@ -64,7 +68,7 @@ final class GetSectionProducts
         $descendantIds = $section->descendants->pluck('id');
 
         $query->whereHas('collections', function (Builder $q) use ($descendantIds) {
-            $q->whereIn((new Collection)->getTable().'.id', $descendantIds);
+            $q->whereIn((new Collection)->getTable() . '.id', $descendantIds);
         });
     }
 }

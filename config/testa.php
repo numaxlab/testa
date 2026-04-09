@@ -42,4 +42,18 @@ return [
         'admin_email' => env('TESTA_ADMIN_EMAIL'),
         'order_emails_enabled' => env('TESTA_ORDER_EMAILS_ENABLED', true),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product Type IDs
+    |--------------------------------------------------------------------------
+    |
+    | LunarPHP product type IDs for each domain. These are set during package
+    | installation and may differ between environments. Override via env vars.
+    |
+    */
+    'product_types' => [
+        'course_id' => env('TESTA_COURSE_PRODUCT_TYPE_ID', 3),
+        'membership_tier_id' => env('TESTA_MEMBERSHIP_TIER_PRODUCT_TYPE_ID', 4),
+    ],
 ];

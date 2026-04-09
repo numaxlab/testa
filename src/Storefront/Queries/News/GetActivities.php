@@ -14,15 +14,15 @@ final class GetActivities
     public function execute(
         string $q = '',
         string $t = '',
-        int $perPage = 12,
-    ): LengthAwarePaginator {
+        int    $perPage = 12,
+    ): LengthAwarePaginator
+    {
         $eventsQuery = Event::query()
             ->select([...$this->columns, DB::raw("'event' as type")])
             ->where('is_published', true)
             ->where('starts_at', '>=', now())
             ->when($q, function ($query) use ($q) {
-                $eventsByQuery = Event::search($q)->get();
-                $query->whereIn('id', $eventsByQuery->pluck('id'));
+                $query->whereIn('id', Event::search($q)->keys());
             });
 
         $courseModulesQuery = CourseModule::query()
@@ -30,15 +30,14 @@ final class GetActivities
             ->where('is_published', true)
             ->where('starts_at', '>=', now())
             ->when($q, function ($query) use ($q) {
-                $courseModulesByQuery = CourseModule::search($q)->get();
-                $query->whereIn('id', $courseModulesByQuery->pluck('id'));
+                $query->whereIn('id', CourseModule::search($q)->keys());
             });
 
         if ($t === 'c') {
             $activities = $courseModulesQuery
                 ->orderBy('starts_at', 'asc')
                 ->paginate($perPage);
-        } elseif (! empty($t)) {
+        } elseif (!empty($t)) {
             $activities = $eventsQuery
                 ->where('event_type_id', $t)
                 ->orderBy('starts_at', 'asc')

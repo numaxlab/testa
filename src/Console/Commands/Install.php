@@ -27,7 +27,7 @@ use Testa\Console\Commands\Concerns\ConfiguresUserModel;
 use Testa\Console\Commands\Concerns\InstallsNpmPackages;
 use Testa\Handle;
 use Testa\Observers\CourseObserver;
-use Testa\Storefront\Livewire\Membership\DonatePage;
+use Testa\Storefront\Queries\Membership\GetDonationProduct;
 
 class Install extends Command
 {
@@ -57,7 +57,7 @@ class Install extends Command
         $this->installNpmPackages();
         $this->configureFrontendAssets();
 
-        if (! $this->option('skip-data')) {
+        if (!$this->option('skip-data')) {
             $this->setupDatabaseData();
         } else {
             $this->components->info('Skipping database setup.');
@@ -317,9 +317,9 @@ class Install extends Command
         $currency = Currency::where('default', true)->firstOrFail();
 
         foreach ($quantityValues as $key => $value) {
-            $sku = DonatePage::DONATION_PRODUCT_SKU;
+            $sku = GetDonationProduct::DONATION_SKU;
             if ($key > 0) {
-                $sku .= '-'.$key;
+                $sku .= '-' . $key;
             }
 
             $variant = ProductVariant::create([

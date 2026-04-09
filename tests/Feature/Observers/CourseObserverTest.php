@@ -46,7 +46,7 @@ describe('CourseObserver created', function () {
 
         $product = Product::find($course->purchasable_id);
         expect($product)->not->toBeNull();
-        expect($product->product_type_id)->toBe(CourseObserver::PRODUCT_TYPE_ID);
+        expect($product->product_type_id)->toBe(config('testa.product_types.course_id'));
         expect($product->status)->toBe('published');
     });
 
@@ -70,7 +70,7 @@ describe('CourseObserver created', function () {
         foreach ($variants as $variant) {
             expect($variant->shippable)->toBeFalsy();
             expect($variant->purchasable)->toBe('always');
-            expect($variant->sku)->toStartWith('course-'.$course->id.'-');
+            expect($variant->sku)->toStartWith('course-' . $course->id . '-');
             expect($variant->prices)->toHaveCount(1);
             expect($variant->prices->first()->price->value)->toBe(0);
         }
@@ -155,6 +155,6 @@ describe('CourseObserver deleted', function () {
 
         // CourseObserver::deleted has a bug: it calls $product->variants()->prices()->delete()
         // which is invalid because prices() is not available on a HasMany relation builder.
-        expect(fn () => $course->delete())->toThrow(BadMethodCallException::class);
+        expect(fn() => $course->delete())->toThrow(BadMethodCallException::class);
     });
 });

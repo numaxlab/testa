@@ -13,8 +13,6 @@ use Testa\Models\Education\Course;
 
 class CourseObserver
 {
-    public const int PRODUCT_TYPE_ID = 3;
-
     private const string DEFAULT_STATUS = 'published';
 
     public const string RATE_PRODUCT_OPTION_HANDLE = 'education-rate';
@@ -29,48 +27,46 @@ class CourseObserver
         $taxClass = TaxClass::where('default', true)->firstOrFail();
         $currency = Currency::where('default', true)->firstOrFail();
 
-        DB::beginTransaction();
+        DB::transaction(function () use ($course, $taxClass, $currency) {
+            $product = self::createProductFromCourse($course);
 
-        $product = self::createProductFromCourse($course);
+            $productOption = ProductOption::where('handle', self::RATE_PRODUCT_OPTION_HANDLE)
+                ->with('values')
+                ->firstOrFail();
 
-        $productOption = ProductOption::where('handle', self::RATE_PRODUCT_OPTION_HANDLE)
-            ->with('values')
-            ->firstOrFail();
+            $product->productOptions()->attach($productOption, ['position' => 1]);
 
-        $product->productOptions()->attach($productOption, ['position' => 1]);
+            foreach ($productOption->values as $optionValue) {
+                $variant = ProductVariant::create([
+                    'product_id' => $product->id,
+                    'tax_class_id' => $taxClass->id,
+                    'sku' => 'course-' . $course->id . '-' . $optionValue->id,
+                    'shippable' => false,
+                    'stock' => 0,
+                    'unit_quantity' => 1,
+                    'min_quantity' => 1,
+                    'quantity_increment' => 1,
+                    'backorder' => 0,
+                    'purchasable' => 'always',
+                ]);
 
-        foreach ($productOption->values as $optionValue) {
-            $variant = ProductVariant::create([
-                'product_id' => $product->id,
-                'tax_class_id' => $taxClass->id,
-                'sku' => 'course-'.$course->id.'-'.$optionValue->id,
-                'shippable' => false,
-                'stock' => 0,
-                'unit_quantity' => 1,
-                'min_quantity' => 1,
-                'quantity_increment' => 1,
-                'backorder' => 0,
-                'purchasable' => 'always',
-            ]);
+                $variant->values()->attach($optionValue);
 
-            $variant->values()->attach($optionValue);
-
-            $variant->prices()->create([
-                'price' => 0,
-                'compare_price' => 0,
-                'currency_id' => $currency->id,
-                'min_quantity' => 1,
-                'customer_group_id' => null,
-            ]);
-        }
-
-        DB::commit();
+                $variant->prices()->create([
+                    'price' => 0,
+                    'compare_price' => 0,
+                    'currency_id' => $currency->id,
+                    'min_quantity' => 1,
+                    'customer_group_id' => null,
+                ]);
+            }
+        });
     }
 
     public static function createProductFromCourse(Course $course): Product
     {
         $product = Product::create([
-            'product_type_id' => self::PRODUCT_TYPE_ID,
+            'product_type_id' => config('testa.product_types.course_id'),
             'status' => self::DEFAULT_STATUS,
             'attribute_data' => [
                 'name' => new Text($course->name),
@@ -87,7 +83,7 @@ class CourseObserver
     {
         $product = $course->purchasable;
 
-        if (! $product) {
+        if (!$product) {
             $this->createProduct($course);
             return;
         }

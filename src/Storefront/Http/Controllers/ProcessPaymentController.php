@@ -36,7 +36,9 @@ class ProcessPaymentController
 
     public function __construct(
         private readonly PaymentGatewayRegistry $gatewayRegistry,
-    ) {}
+    )
+    {
+    }
 
     public function __invoke(Request $request, $id)
     {
@@ -51,14 +53,14 @@ class ProcessPaymentController
                 ->withErrors(['fingerprint' => __('El carrito ha sido modificado. Por favor, revisa tu pedido.')]);
         }
 
-        if (Auth::user()->id != $cart->user_id) {
+        if (Auth::user()->id !== $cart->user_id) {
             return abort(403);
         }
 
         return DB::transaction(function () use ($cart, $request) {
             $order = $cart->draftOrder()->first();
 
-            if (! $order) {
+            if (!$order) {
                 $order = $cart->createOrder();
             }
 
@@ -96,7 +98,9 @@ class ProcessPaymentController
                 PaymentResultType::Redirect => $result->paymentDriver->redirect(),
                 PaymentResultType::Success => $this->handleSuccess($cart, $result->orderId),
                 PaymentResultType::Pending => $this->handleSuccess($cart, $result->orderId),
-                PaymentResultType::Failure => abort(401),
+                PaymentResultType::Failure => redirect()
+                    ->route($this->guessCheckoutRouteNameFromCart($cart))
+                    ->withErrors(['payment' => __('El pago no ha podido completarse. Por favor, inténtalo de nuevo.')]),
             };
         });
     }

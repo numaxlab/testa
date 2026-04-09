@@ -21,7 +21,7 @@ class MembershipPlanObserver
         $tier = $plan->tier;
         $product = $tier->purchasable;
 
-        if (! $product) {
+        if (!$product) {
             return;
         }
 
@@ -35,48 +35,46 @@ class MembershipPlanObserver
 
         $productOption = $product->productOptions->first();
 
-        DB::beginTransaction();
+        DB::transaction(function () use ($plan, $product, $productOption, $taxClass, $currency, $language) {
+            $optionValue = $productOption->values()->create([
+                'name' => [
+                    $language->code => $plan->name,
+                ],
+                'position' => $productOption->values->count() + 1,
+            ]);
 
-        $optionValue = $productOption->values()->create([
-            'name' => [
-                $language->code => $plan->name,
-            ],
-            'position' => $productOption->values->count() + 1,
-        ]);
+            $variant = ProductVariant::create([
+                'product_id' => $product->id,
+                'tax_class_id' => $taxClass?->id,
+                'sku' => 'membership-' . $product->id . '-' . $optionValue->id,
+                'shippable' => false,
+                'stock' => 0,
+                'unit_quantity' => 1,
+                'min_quantity' => 1,
+                'quantity_increment' => 1,
+                'backorder' => 0,
+                'purchasable' => 'always',
+            ]);
 
-        $variant = ProductVariant::create([
-            'product_id' => $product->id,
-            'tax_class_id' => $taxClass?->id,
-            'sku' => 'membership-'.$product->id.'-'.$optionValue->id,
-            'shippable' => false,
-            'stock' => 0,
-            'unit_quantity' => 1,
-            'min_quantity' => 1,
-            'quantity_increment' => 1,
-            'backorder' => 0,
-            'purchasable' => 'always',
-        ]);
+            $variant->values()->attach($optionValue);
 
-        $variant->values()->attach($optionValue);
+            $variant->prices()->create([
+                'price' => 0,
+                'compare_price' => 0,
+                'currency_id' => $currency->id,
+                'min_quantity' => 1,
+                'customer_group_id' => null,
+            ]);
 
-        $variant->prices()->create([
-            'price' => 0,
-            'compare_price' => 0,
-            'currency_id' => $currency->id,
-            'min_quantity' => 1,
-            'customer_group_id' => null,
-        ]);
-
-        $plan->updateQuietly(['variant_id' => $variant->id]);
-
-        DB::commit();
+            $plan->updateQuietly(['variant_id' => $variant->id]);
+        });
     }
 
     public function updated(MembershipPlan $plan): void
     {
         $variant = $plan->variant;
 
-        if (! $variant) {
+        if (!$variant) {
             $this->createVariant($plan);
 
             return;
@@ -93,7 +91,7 @@ class MembershipPlanObserver
     {
         $variant = $plan->variant;
 
-        if (! $variant) {
+        if (!$variant) {
             return;
         }
 

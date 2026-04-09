@@ -9,6 +9,6 @@ final class CheckCustomerCourseEnrolment
 {
     public function execute(Customer $customer, Course $course): bool
     {
-        return $customer->courses->contains($course);
+        return $customer->courses()->where('id', $course->id)->exists();
     }
 }

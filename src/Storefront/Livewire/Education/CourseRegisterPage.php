@@ -56,7 +56,7 @@ class CourseRegisterPage extends Page
             $customer = Auth::user()->latestCustomer();
 
             if (new CheckCustomerCourseEnrolment()->execute($customer, $this->course)) {
-                redirect()->route('testa.storefront.education.courses.show', $slug);
+                $this->redirect(route('testa.storefront.education.courses.show', $slug));
                 return;
             }
         }
@@ -85,7 +85,7 @@ class CourseRegisterPage extends Page
         $banner = new GetBannerByLocation()->execute(Location::COURSE_REGISTER);
 
         return view('testa::storefront.livewire.education.course-register', compact('banner'))
-            ->title(__('Inscripción en: ').$this->course->fullTitle);
+            ->title(__('Inscripción en: ') . $this->course->fullTitle);
     }
 
     public function redirectToLogin(): Redirector|RedirectResponse
@@ -102,7 +102,7 @@ class CourseRegisterPage extends Page
     {
         $rules = [];
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             $rules = array_merge($rules, [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
@@ -112,7 +112,7 @@ class CourseRegisterPage extends Page
                     'lowercase',
                     'email',
                     'max:255',
-                    'unique:'.config('auth.providers.users.model'),
+                    'unique:' . config('auth.providers.users.model'),
                 ],
                 'password' => ['required', 'string', 'confirmed', Password::defaults()],
             ]);
@@ -135,13 +135,14 @@ class CourseRegisterPage extends Page
             ),
         );
 
-        if (! Auth::check()) {
-            new RegisterUser()->execute(new RegisterUserData(
+        if (!Auth::check()) {
+            $user = new RegisterUser()->execute(new RegisterUserData(
                 first_name: $validated['first_name'],
                 last_name: $validated['last_name'],
                 email: $validated['email'],
                 password: $validated['password'],
             ));
+            Auth::login($user);
         }
 
         $cart = new RegisterForCourse()->execute(

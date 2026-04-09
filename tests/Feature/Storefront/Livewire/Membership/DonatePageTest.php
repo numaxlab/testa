@@ -19,7 +19,7 @@ use Lunar\Models\TaxZoneCountry;
 use Testa\Settings\ContactSettings;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Membership\DonatePage;
-
+use Testa\Storefront\Queries\Membership\GetDonationProduct;
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -66,7 +66,7 @@ beforeEach(function () {
     $this->baseDonationVariant = ProductVariant::factory()->create([
         'product_id' => $this->donationProduct->id,
         'tax_class_id' => $this->taxClass->id,
-        'sku' => DonatePage::DONATION_PRODUCT_SKU,
+        'sku' => GetDonationProduct::DONATION_SKU,
     ]);
     Price::factory()->create([
         'priceable_type' => ProductVariant::morphName(),

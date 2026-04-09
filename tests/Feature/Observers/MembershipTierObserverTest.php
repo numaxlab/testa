@@ -3,10 +3,8 @@
 use Lunar\Models\Currency;
 use Lunar\Models\Language;
 use Lunar\Models\Product;
-use Lunar\Models\ProductVariant;
 use Lunar\Models\TaxClass;
 use Testa\Models\Membership\MembershipTier;
-use Testa\Observers\MembershipTierObserver;
 
 beforeEach(function () {
     $this->language = Language::factory()->create(['default' => true]);
@@ -26,7 +24,7 @@ describe('MembershipTierObserver created', function () {
 
         $product = Product::find($tier->purchasable_id);
         expect($product)->not->toBeNull();
-        expect($product->product_type_id)->toBe(MembershipTierObserver::PRODUCT_TYPE_ID);
+        expect($product->product_type_id)->toBe(config('testa.product_types.membership_tier_id'));
         expect($product->status)->toBe('published');
     });
 

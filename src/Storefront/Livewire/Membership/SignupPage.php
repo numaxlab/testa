@@ -112,7 +112,7 @@ class SignupPage extends Page
 
     public function signup(): RedirectResponse|Redirector
     {
-        $isGuest = ! Auth::check();
+        $isGuest = !Auth::check();
 
         $rules = collect($this->billing->getRules())
             ->mapWithKeys(fn($value, $key) => ["billing.$key" => $value])
@@ -147,7 +147,7 @@ class SignupPage extends Page
                     'lowercase',
                     'email',
                     'max:255',
-                    'unique:'.config('auth.providers.users.model'),
+                    'unique:' . config('auth.providers.users.model'),
                 ],
                 'password' => ['required', 'string', 'confirmed', Password::defaults()],
             ]);
@@ -156,12 +156,13 @@ class SignupPage extends Page
         $this->validate(array_merge($baseRules, $rules));
 
         if ($isGuest) {
-            new RegisterUser()->execute(new RegisterUserData(
+            $user = new RegisterUser()->execute(new RegisterUserData(
                 first_name: $this->first_name,
                 last_name: $this->last_name,
                 email: $this->email,
                 password: $this->password,
             ));
+            Auth::login($user);
 
             $this->billing->first_name = $this->first_name;
             $this->billing->last_name = $this->last_name;

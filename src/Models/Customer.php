@@ -12,15 +12,9 @@ class Customer extends \Lunar\Models\Customer
 {
     public function canBuyOnCredit(): bool
     {
-        foreach ($this->activeSubscriptions as $activeSubscription) {
-            foreach ($activeSubscription->plan->benefits as $benefit) {
-                if ($benefit->code === Benefit::CREDIT_PAYMENT_TYPE) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->activeSubscriptions()
+            ->whereHas('plan.benefits', fn($q) => $q->where('code', Benefit::CREDIT_PAYMENT_TYPE))
+            ->exists();
     }
 
     public function activeSubscriptions(): HasMany
@@ -41,7 +35,7 @@ class Customer extends \Lunar\Models\Customer
     {
         return $this->belongsToMany(
             Course::class,
-            'course_'.config('lunar.database.table_prefix').'customer',
+            'course_' . config('lunar.database.table_prefix') . 'customer',
         )->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 }

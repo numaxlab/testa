@@ -10,8 +10,6 @@ use Testa\Models\Membership\MembershipTier;
 
 class MembershipTierObserver
 {
-    public const int PRODUCT_TYPE_ID = 4;
-
     private const string DEFAULT_STATUS = 'published';
 
     public function created(MembershipTier $tier): void
@@ -21,41 +19,39 @@ class MembershipTierObserver
 
     private function createProduct(MembershipTier $tier): void
     {
-        DB::beginTransaction();
+        DB::transaction(function () use ($tier) {
+            $product = Product::create([
+                'product_type_id' => config('testa.product_types.membership_tier_id'),
+                'status' => self::DEFAULT_STATUS,
+                'attribute_data' => [
+                    'name' => new Text($tier->name),
+                ],
+            ]);
 
-        $product = Product::create([
-            'product_type_id' => self::PRODUCT_TYPE_ID,
-            'status' => self::DEFAULT_STATUS,
-            'attribute_data' => [
-                'name' => new Text($tier->name),
-            ],
-        ]);
+            $productOption = ProductOption::create([
+                'handle' => 'membership-tier-' . $product->id . '-plans',
+                'name' => [
+                    'es' => 'Opciones de ' . $tier->name,
+                ],
+                'label' => [
+                    'es' => 'Opciones de ' . $tier->name,
+                ],
+                'shared' => false,
+            ]);
 
-        $productOption = ProductOption::create([
-            'handle' => 'membership-tier-'.$product->id.'-plans',
-            'name' => [
-                'es' => 'Opciones de '.$tier->name,
-            ],
-            'label' => [
-                'es' => 'Opciones de '.$tier->name,
-            ],
-            'shared' => false,
-        ]);
+            $product->productOptions()->attach($productOption->id, [
+                'position' => 1,
+            ]);
 
-        $product->productOptions()->attach($productOption->id, [
-            'position' => 1,
-        ]);
-
-        $tier->updateQuietly(['purchasable_id' => $product->id]);
-
-        DB::commit();
+            $tier->updateQuietly(['purchasable_id' => $product->id]);
+        });
     }
 
     public function updated(MembershipTier $tier): void
     {
         $product = $tier->purchasable;
 
-        if (! $product) {
+        if (!$product) {
             $this->createProduct($tier);
 
             return;
@@ -74,7 +70,7 @@ class MembershipTierObserver
     {
         $product = $tier->purchasable;
 
-        if (! $product) {
+        if (!$product) {
             return;
         }
 

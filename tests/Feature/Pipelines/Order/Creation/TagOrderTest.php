@@ -16,10 +16,8 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
-use Testa\Observers\CourseObserver;
-use Testa\Observers\MembershipTierObserver;
 use Testa\Pipelines\Order\Creation\TagOrder;
-use Testa\Storefront\Livewire\Membership\DonatePage;
+use Testa\Storefront\Queries\Membership\GetDonationProduct;
 
 beforeEach(function () {
     $this->language = Language::factory()->create(['default' => true]);
@@ -47,7 +45,7 @@ beforeEach(function () {
 describe('TagOrder pipeline', function () {
     it('tags order as membership subscription when line has membership product type', function () {
         $product = Product::factory()->create([
-            'product_type_id' => MembershipTierObserver::PRODUCT_TYPE_ID,
+            'product_type_id' => config('testa.product_types.membership_tier_id'),
         ]);
         $variant = ProductVariant::factory()->create([
             'product_id' => $product->id,
@@ -93,7 +91,7 @@ describe('TagOrder pipeline', function () {
         $variant = ProductVariant::factory()->create([
             'product_id' => $product->id,
             'tax_class_id' => $this->taxClass->id,
-            'sku' => DonatePage::DONATION_PRODUCT_SKU,
+            'sku' => GetDonationProduct::DONATION_SKU,
         ]);
 
         $order = Order::factory()->create([
@@ -116,14 +114,14 @@ describe('TagOrder pipeline', function () {
             'total' => 1000,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         expect($order->tags->pluck('value'))->toContain('Donación');
     });
 
     it('tags order as course enrollment when line has course product type', function () {
         $product = Product::factory()->create([
-            'product_type_id' => CourseObserver::PRODUCT_TYPE_ID,
+            'product_type_id' => config('testa.product_types.course_id'),
         ]);
         $variant = ProductVariant::factory()->create([
             'product_id' => $product->id,
@@ -151,7 +149,7 @@ describe('TagOrder pipeline', function () {
             'total' => 3000,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         expect($order->tags->pluck('value'))->toContain('Inscripción cursos');
     });
@@ -187,7 +185,7 @@ describe('TagOrder pipeline', function () {
             'total' => 2000,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         expect($order->tags->pluck('value'))->toContain('Pedido librería');
     });
@@ -198,14 +196,14 @@ describe('TagOrder pipeline', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         expect($order->tags->pluck('value'))->toContain('Pedido librería');
     });
 
     it('membership tag takes priority over other tags', function () {
         $membershipProduct = Product::factory()->create([
-            'product_type_id' => MembershipTierObserver::PRODUCT_TYPE_ID,
+            'product_type_id' => config('testa.product_types.membership_tier_id'),
         ]);
         $membershipVariant = ProductVariant::factory()->create([
             'product_id' => $membershipProduct->id,
@@ -214,7 +212,7 @@ describe('TagOrder pipeline', function () {
         ]);
 
         $courseProduct = Product::factory()->create([
-            'product_type_id' => CourseObserver::PRODUCT_TYPE_ID,
+            'product_type_id' => config('testa.product_types.course_id'),
         ]);
         $courseVariant = ProductVariant::factory()->create([
             'product_id' => $courseProduct->id,
@@ -261,7 +259,7 @@ describe('TagOrder pipeline', function () {
             'total' => 5000,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         // Only one tag should be attached, and it should be membership (breaks on membership)
         expect($order->tags)->toHaveCount(1);
@@ -300,7 +298,7 @@ describe('TagOrder pipeline', function () {
             'total' => 1000,
         ]);
 
-        $this->pipeline->handle($order, fn ($order) => $order);
+        $this->pipeline->handle($order, fn($order) => $order);
 
         expect(Tag::where('value', 'Pedido librería')->count())->toBe(1);
     });
@@ -311,7 +309,7 @@ describe('TagOrder pipeline', function () {
             'channel_id' => $this->channel->id,
         ]);
 
-        $result = $this->pipeline->handle($order, fn ($order) => 'next-called');
+        $result = $this->pipeline->handle($order, fn($order) => 'next-called');
 
         expect($result)->toBe('next-called');
     });

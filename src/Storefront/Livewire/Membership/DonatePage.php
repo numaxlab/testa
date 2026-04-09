@@ -20,8 +20,6 @@ use Testa\Storefront\UseCases\Membership\PlaceDonation;
 
 class DonatePage extends Page
 {
-    public const string DONATION_PRODUCT_SKU = 'donation';
-
     public Product $product;
 
     public array $paymentTypes = [];
@@ -72,7 +70,7 @@ class DonatePage extends Page
 
     public function donate()
     {
-        $isGuest = ! Auth::check();
+        $isGuest = !Auth::check();
 
         $rules = [
             'selectedQuantity' => ['required'],
@@ -93,7 +91,7 @@ class DonatePage extends Page
                     'lowercase',
                     'email',
                     'max:255',
-                    'unique:'.config('auth.providers.users.model'),
+                    'unique:' . config('auth.providers.users.model'),
                 ],
                 'password' => ['required', 'string', 'confirmed', Password::defaults()],
             ]);
@@ -102,12 +100,13 @@ class DonatePage extends Page
         $this->validate($rules);
 
         if ($isGuest) {
-            new RegisterUser()->execute(new RegisterUserData(
+            $user = new RegisterUser()->execute(new RegisterUserData(
                 first_name: $this->first_name,
                 last_name: $this->last_name,
                 email: $this->email,
                 password: $this->password,
             ));
+            Auth::login($user);
         }
 
         $cart = new PlaceDonation()->execute(

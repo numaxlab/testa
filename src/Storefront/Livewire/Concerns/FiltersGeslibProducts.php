@@ -7,24 +7,23 @@ use Lunar\Facades\CartSession;
 
 trait FiltersGeslibProducts
 {
-    private const int GESLIB_PRODUCT_TYPE_ID = 1;
-
     protected function removeNonGeslibItems(): void
     {
         $cart = CartSession::current();
 
-        if (! $cart) {
+        if (!$cart) {
             return;
         }
 
+        $geslibProductTypeId = config('lunar.geslib.product_type_id');
         $cartLines = $cart->lines()->with('purchasable.product')->get();
 
-        $invalidLineIds = $cartLines->filter(function ($line) {
+        $invalidLineIds = $cartLines->filter(function ($line) use ($geslibProductTypeId) {
             if ($line->purchasable_type !== 'product_variant') {
                 return true;
             }
 
-            return ! $line->purchasable || $line->purchasable->product?->product_type_id !== self::GESLIB_PRODUCT_TYPE_ID;
+            return !$line->purchasable || $line->purchasable->product?->product_type_id !== $geslibProductTypeId;
         })->pluck('id');
 
         foreach ($invalidLineIds as $lineId) {
@@ -34,9 +33,11 @@ trait FiltersGeslibProducts
 
     protected function filterGeslibLines(Collection $lines): Collection
     {
-        return $lines->filter(function ($line) {
+        $geslibProductTypeId = config('lunar.geslib.product_type_id');
+
+        return $lines->filter(function ($line) use ($geslibProductTypeId) {
             return $line->purchasable_type === 'product_variant'
-                && $line->purchasable?->product?->product_type_id === self::GESLIB_PRODUCT_TYPE_ID;
+                && $line->purchasable?->product?->product_type_id === $geslibProductTypeId;
         });
     }
 }

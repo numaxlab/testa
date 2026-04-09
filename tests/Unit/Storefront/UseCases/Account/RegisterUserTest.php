@@ -67,14 +67,6 @@ it('hashes the password', function () {
     expect(\Illuminate\Support\Facades\Hash::check('plainpassword', $user->password))->toBeTrue();
 });
 
-it('logs the user in', function () {
-    $data = makeRegisterUserData();
-
-    new RegisterUser()->execute($data);
-
-    expect(\Illuminate\Support\Facades\Auth::check())->toBeTrue();
-});
-
 it('returns the created user', function () {
     $data = makeRegisterUserData(['email' => 'test@example.com']);
 

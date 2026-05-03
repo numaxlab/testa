@@ -21,7 +21,7 @@
             </a>
         @endif
 
-        @if ($product->brand->translateAttribute('in-house') === true)
+        @if ($product->brand?->translateAttribute('in-house') === true)
             <a class="at-button border-primary text-primary">
                 {{ __('Haz una donación') }}
             </a>

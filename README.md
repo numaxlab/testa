@@ -51,11 +51,14 @@ and [NUMAX](https://numax.org).
 
 ## Installation
 
+> **Note:** Testa is currently in beta. To install a beta release, set `minimum-stability` to `beta` (or `dev` with
+> `prefer-stable: true`) in your host app's `composer.json`.
+
 After following the official Laravel [installation instructions](https://laravel.com/docs/installation) to create a
 new project, you can install this package via Composer:
 
 ```bash
-composer require numaxlab/testa
+composer require numaxlab/testa:^1.0@beta
 ```
 
 The package service provider will be auto-discovered by Laravel.

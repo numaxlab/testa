@@ -1,4 +1,5 @@
-@import '../fonts/icomoon/style.css';
+/* icomoon import moved to app.css (local copy with absolute paths to avoid Vite vendor path resolution bug) */
+/* @import '../fonts/icomoon/style.css'; */
 
 @theme {
     --font-titles: var(--font-sans);

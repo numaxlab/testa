@@ -19,15 +19,16 @@ final class SearchProducts
     ): LengthAwarePaginator {
         $filters = $this->buildFilters($taxonId, $languageId, $priceRange, $availabilityId);
 
-        return Product::search(
-            $term,
-            function (Indexes $search, string $query, array $options) use ($filters) {
-                if (! empty($filters)) {
-                    $options['filter'] = $filters;
-                }
+        $callback = null;
+        if (! empty($filters) && config('scout.driver') === 'meilisearch') {
+            $callback = function (Indexes $search, string $query, array $options) use ($filters) {
+                $options['filter'] = $filters;
 
                 return $search->search($query, $options);
-            })
+            };
+        }
+
+        return Product::search($term, $callback)
             ->query(fn(Builder $query) => $query->with([
                 'variant',
                 'variant.taxClass',

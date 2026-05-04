@@ -19,7 +19,7 @@ class SearchPage extends Page
     use WithPagination;
 
     #[Url]
-    public ?string $q;
+    public ?string $q = null;
 
     public ?string $taxonId = '';
 

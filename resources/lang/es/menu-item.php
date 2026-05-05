@@ -67,6 +67,7 @@ return [
                 'testa_storefront_media_documents_index' => 'Mediateca / Lista de documentos',
                 'testa_storefront_news_homepage' => 'Actualidad / Portada',
                 'testa_storefront_activities_index' => 'Actualidad / Lista de actividades',
+                'testa_storefront_activities_calendar' => 'Actualidad / Calendario de actividades',
                 'testa_storefront_articles_index' => 'Actualidad / Lista de noticias',
                 'testa_storefront_checkout_summary' => 'Carrito / Resumen',
                 'testa_storefront_checkout_shipping-and-payment' => 'Carrito / Envío y pago',

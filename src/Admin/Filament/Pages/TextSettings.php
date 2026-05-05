@@ -38,8 +38,7 @@ class TextSettings extends SettingsPage
                 Forms\Components\Section::make(__('Socias'))
                     ->schema([
                         Forms\Components\Tabs::make()
-                            ->tabs(collect($locales)->map(fn($locale)
-                                => Forms\Components\Tabs\Tab::make(strtoupper($locale))
+                            ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\RichEditor::make("membership_intro.{$locale}")
                                         ->label(__('Texto introductorio de la página de asociación'))
@@ -53,11 +52,23 @@ class TextSettings extends SettingsPage
                             )->toArray(),
                             )->columnSpanFull(),
                     ]),
+                Forms\Components\Section::make(__('Itinerarios'))
+                    ->schema([
+                        Forms\Components\Tabs::make()
+                            ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
+                                ->schema([
+                                    Forms\Components\RichEditor::make("itineraries_intro.{$locale}")
+                                        ->label(__('Texto introductorio de la página de itinerarios'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                ]),
+                            )->toArray(),
+                            )->columnSpanFull(),
+                    ]),
                 Forms\Components\Section::make(__('Política de privacidad'))
                     ->schema([
                         Forms\Components\Tabs::make()
-                            ->tabs(collect($locales)->map(fn($locale)
-                                => Forms\Components\Tabs\Tab::make(strtoupper($locale))
+                            ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\RichEditor::make("privacy_policy_text.{$locale}")
                                         ->label(__('Texto descriptivo'))

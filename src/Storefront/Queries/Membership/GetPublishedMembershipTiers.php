@@ -9,6 +9,6 @@ final class GetPublishedMembershipTiers
 {
     public function execute(): Collection
     {
-        return MembershipTier::where('is_published', true)->get();
+        return MembershipTier::where('is_published', true)->orderBy('sort_position')->get();
     }
 }

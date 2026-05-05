@@ -12,6 +12,7 @@ final class GetMembershipPlansByTier
         return MembershipPlan::where('membership_tier_id', $tierId)
             ->with(['variant'])
             ->where('is_published', true)
+            ->orderBy('sort_position')
             ->get();
     }
 }

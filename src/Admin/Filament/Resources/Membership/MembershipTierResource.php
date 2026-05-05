@@ -59,6 +59,8 @@ class MembershipTierResource extends BaseResource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
+            ->reorderable('sort_position')
+            ->defaultSort('sort_position')
             ->searchable();
     }
 

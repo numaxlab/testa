@@ -12,6 +12,8 @@ class TextSettings extends Settings
 
     public array $privacy_policy_text;
 
+    public array $itineraries_intro;
+
     public static function group(): string
     {
         return 'text';
@@ -35,6 +37,13 @@ class TextSettings extends Settings
     {
         return $this->privacy_policy_text[app()->getLocale()]
             ?? $this->privacy_policy_text[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getItinerariesIntro(): string
+    {
+        return $this->itineraries_intro[app()->getLocale()]
+            ?? $this->itineraries_intro[config('app.fallback_locale')]
             ?? '';
     }
 }

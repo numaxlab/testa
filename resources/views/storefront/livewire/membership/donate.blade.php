@@ -4,6 +4,12 @@
     <header>
         <h1 class="at-heading is-1">{{ __('Donación') }}</h1>
 
+        @if ($donateIntro)
+            <div class="mt-3 prose">
+                {!! $donateIntro !!}
+            </div>
+        @endif
+
         <form wire:submit="donate" class="mt-10">
             <fieldset class="mb-8">
                 <legend class="at-heading is-2 float-left w-full">

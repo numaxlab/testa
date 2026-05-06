@@ -14,6 +14,8 @@ class TextSettings extends Settings
 
     public array $itineraries_intro;
 
+    public array $donate_intro;
+
     public static function group(): string
     {
         return 'text';
@@ -44,6 +46,13 @@ class TextSettings extends Settings
     {
         return $this->itineraries_intro[app()->getLocale()]
             ?? $this->itineraries_intro[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getDonateIntro(): string
+    {
+        return $this->donate_intro[app()->getLocale()]
+            ?? $this->donate_intro[config('app.fallback_locale')]
             ?? '';
     }
 }

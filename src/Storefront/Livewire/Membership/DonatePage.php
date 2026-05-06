@@ -12,6 +12,7 @@ use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Product;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Settings\PaymentSettings;
+use Testa\Settings\TextSettings;
 use Testa\Storefront\Data\DonationData;
 use Testa\Storefront\Data\RegisterUserData;
 use Testa\Storefront\Queries\Membership\GetDonationProduct;
@@ -41,11 +42,15 @@ class DonatePage extends Page
     public string $password = '';
     public string $password_confirmation = '';
 
+    public string $donateIntro = '';
+
     public function mount(): void
     {
         $this->product = new GetDonationProduct()->execute();
 
         $this->paymentTypes = app(PaymentSettings::class)->donation;
+
+        $this->donateIntro = app(TextSettings::class)->getDonateIntro();
     }
 
     public function getQuantitiesProperty(): Collection

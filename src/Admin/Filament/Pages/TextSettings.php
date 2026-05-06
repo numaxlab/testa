@@ -35,7 +35,7 @@ class TextSettings extends SettingsPage
 
         return $form
             ->schema([
-                Forms\Components\Section::make(__('Socias'))
+                Forms\Components\Section::make(__('Apoya el proyecto'))
                     ->schema([
                         Forms\Components\Tabs::make()
                             ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
@@ -46,6 +46,10 @@ class TextSettings extends SettingsPage
                                         ->columnSpanFull(),
                                     Forms\Components\RichEditor::make("membership_options_description.{$locale}")
                                         ->label(__('Descripción de las opciones de cuota'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                    Forms\Components\RichEditor::make("donate_intro.{$locale}")
+                                        ->label(__('Texto introductorio de la página de donación'))
                                         ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                                         ->columnSpanFull(),
                                 ]),
@@ -71,7 +75,7 @@ class TextSettings extends SettingsPage
                             ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\RichEditor::make("privacy_policy_text.{$locale}")
-                                        ->label(__('Texto descriptivo'))
+                                        ->label(__('Resumen en formularios'))
                                         ->toolbarButtons(['bold', 'italic', 'link'])
                                         ->columnSpanFull(),
                                 ]),

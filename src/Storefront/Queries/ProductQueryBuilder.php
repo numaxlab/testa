@@ -3,6 +3,7 @@
 namespace Testa\Storefront\Queries;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Lunar\Facades\StorefrontSession;
 use Lunar\Models\Product;
 
@@ -13,7 +14,7 @@ final class ProductQueryBuilder
         return self::applyScopes(Product::query());
     }
 
-    private static function applyScopes(Builder $query): Builder
+    private static function applyScopes(Builder|Relation $query): Builder|Relation
     {
         return $query
             ->channel(StorefrontSession::getChannel())
@@ -33,7 +34,7 @@ final class ProductQueryBuilder
             ]);
     }
 
-    public static function fromRelation(Builder $query): Builder
+    public static function fromRelation(Builder|Relation $query): Builder|Relation
     {
         return self::applyScopes($query);
     }

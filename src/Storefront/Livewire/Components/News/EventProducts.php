@@ -16,7 +16,7 @@ class EventProducts extends Component
 
     public function mount(): void
     {
-        $this->products = ProductQueryBuilder::fromRelation($this->event->products())->get();
+        $this->products = ProductQueryBuilder::fromRelation($this->event->products()->getQuery())->get();
     }
 
     public function render(): View

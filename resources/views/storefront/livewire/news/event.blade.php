@@ -46,7 +46,7 @@
                     </ul>
                     <div class="flex gap-2 border-b border-black py-2">
                         <i class="icon icon-info text-2xl w-5 text-center mr-2" aria-hidden="true"></i>
-                        <p class="at-small">
+                        <div class="at-small">
                             {{ __('testa::coursemodule.form.delivery_method.options.'.$event->delivery_method->value) }}
                             @if ($event->venue)
                                 <br>
@@ -54,13 +54,13 @@
                             @endif
 
                             @if ($event->alert)
-                                <span class="block mt-2">{{ $event->alert }}</span>
+                                <div class="mt-2">{!! $event->alert !!}</div>
                             @endif
 
                             @if ($event->organiser)
                                 <span class="block mt-2">{{ __('Organizado por:') }} {{ $event->organiser }}</span>
                             @endif
-                        </p>
+                        </div>
                     </div>
 
                     @if ($event->register_url)

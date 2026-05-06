@@ -119,7 +119,7 @@ class EventResource extends BaseResource
                             ->relationship('venue', 'name')
                             ->required()
                             ->label(__('testa::event.form.venue_id.label')),
-                        Forms\Components\Textarea::make('alert')
+                        Forms\Components\RichEditor::make('alert')
                             ->label(__('testa::event.form.alert.label')),
                         Forms\Components\TextInput::make('organiser')
                             ->label(__('testa::event.form.organiser.label'))

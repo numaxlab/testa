@@ -54,7 +54,7 @@ class ManageArticleProducts extends BaseManageRelatedRecords
             ])->actions([
                 DetachAction::make()
                     ->action(function (Model $record, Table $table) {
-                        $relationship = Relation::noConstraints(fn () => $table->getRelationship());
+                        $relationship = Relation::noConstraints(fn() => $table->getRelationship());
 
                         $relationship->detach($record);
 
@@ -77,20 +77,26 @@ class ManageArticleProducts extends BaseManageRelatedRecords
                             ->searchable()
                             ->getSearchResultsUsing(
                                 static function (Forms\Components\Select $component, string $search): array {
-                                    return Product::search($search)
-                                        ->get()
-                                        ->mapWithKeys(
-                                            fn (ProductContract $record): array
-                                                => [
-                                                $record->getKey() => $record->translateAttribute('name'),
-                                            ],
-                                        )
-                                        ->all();
+                                    $products = Product::search($search)->get();
+                                    $products->load(['variants', 'authors']);
+
+                                    return $products->mapWithKeys(function (ProductContract $record): array {
+                                        $gtin = $record->variants->first()?->gtin;
+                                        $authors = $record->authors?->pluck('name')->implode(', ');
+
+                                        $label = collect([
+                                            $record->translateAttribute('name'),
+                                            $gtin ?: null,
+                                            $authors ?: null,
+                                        ])->filter()->implode(' — ');
+
+                                        return [$record->getKey() => $label];
+                                    })->all();
                                 },
                             ),
                     ])
                     ->action(function (array $arguments, array $data, Form $form, Table $table) {
-                        $relationship = Relation::noConstraints(fn () => $table->getRelationship());
+                        $relationship = Relation::noConstraints(fn() => $table->getRelationship());
 
                         $product = Product::find($data['recordId']);
 

@@ -33,10 +33,10 @@
         </ul>
 
         @if ($event->alert)
-            <p class="border-b py-2 text-sm">
-                <i class="icon icon-info text-2xl mr-2" aria-hidden="true"></i>
-                {{ $event->alert }}
-            </p>
+            <div class="border-b py-2 text-sm flex gap-2">
+                <i class="icon icon-info text-2xl" aria-hidden="true"></i>
+                <div>{!! $event->alert !!}</div>
+            </div>
         @endif
 
         <a

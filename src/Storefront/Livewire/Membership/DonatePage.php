@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 use Lunar\Facades\StorefrontSession;
@@ -33,6 +34,10 @@ class DonatePage extends Page
 
     public ?string $privacy_policy;
 
+    public string $directDebitOwnerName = '';
+    public string $directDebitBankName = '';
+    public string $directDebitIban = '';
+
     public string $id_number = '';
     public string $comments = '';
 
@@ -42,15 +47,23 @@ class DonatePage extends Page
     public string $password = '';
     public string $password_confirmation = '';
 
-    public string $donateIntro = '';
-
     public function mount(): void
     {
         $this->product = new GetDonationProduct()->execute();
 
         $this->paymentTypes = app(PaymentSettings::class)->donation;
 
-        $this->donateIntro = app(TextSettings::class)->getDonateIntro();
+        $this->paymentType = $this->paymentTypes[0] ?? null;
+
+        $quantities = $this->quantities;
+        if ($quantities->isNotEmpty()) {
+            $middleIndex = (int)floor($quantities->count() / 2);
+            $this->selectedQuantity = (string)$quantities[$middleIndex]['id'];
+        }
+
+        if (Auth::check()) {
+            $this->id_number = Auth::user()->latestCustomer()?->tax_identifier ?? '';
+        }
     }
 
     public function getQuantitiesProperty(): Collection
@@ -69,8 +82,14 @@ class DonatePage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.membership.donate')
-            ->title(__('Donación'));
+        return view('testa::storefront.livewire.membership.donate', [
+            'donateIntro' => app(TextSettings::class)->getDonateIntro(),
+        ])->title(__('Donación'));
+    }
+
+    public function updatedSelectedQuantity(): void
+    {
+        $this->resetValidation('selectedQuantity');
     }
 
     public function donate()
@@ -85,6 +104,12 @@ class DonatePage extends Page
             'id_number' => ['nullable', 'string', 'max:20'],
             'comments' => ['nullable', 'string', 'max:500'],
         ];
+
+        if ($this->paymentType === 'direct-debit') {
+            $rules['directDebitOwnerName'] = ['required', 'string', 'max:255'];
+            $rules['directDebitBankName'] = ['required', 'string', 'max:255'];
+            $rules['directDebitIban'] = ['required', 'string', 'max:34', 'regex:/^[A-Z]{2}\d{2}[A-Z0-9]{4,30}$/'];
+        }
 
         if ($isGuest) {
             $rules = array_merge($rules, [
@@ -102,29 +127,46 @@ class DonatePage extends Page
             ]);
         }
 
-        $this->validate($rules);
+        $this->validate($rules, [
+            'directDebitIban.regex' => __('El IBAN introducido no tiene un formato válido.'),
+        ], [
+            'email' => 'correo electrónico',
+            'password' => 'contraseña',
+        ]);
+
+        $guestData = $isGuest ? new RegisterUserData(
+            first_name: $this->first_name,
+            last_name: $this->last_name,
+            email: $this->email,
+            password: $this->password,
+        ) : null;
+
+        [$donationUser, $cart] = DB::transaction(function () use ($isGuest, $guestData) {
+            $user = $isGuest
+                ? new RegisterUser()->execute($guestData)
+                : Auth::user();
+
+            $cart = new PlaceDonation()->execute(
+                $user,
+                $this->product,
+                new DonationData(
+                    selectedQuantity: $this->selectedQuantity,
+                    freeQuantityValue: $this->freeQuantityValue ?? null,
+                    paymentType: $this->paymentType,
+                    idNumber: $this->id_number,
+                    comments: $this->comments,
+                    directDebitOwnerName: $this->directDebitOwnerName,
+                    directDebitBankName: $this->directDebitBankName,
+                    directDebitIban: $this->directDebitIban,
+                ),
+            );
+
+            return [$user, $cart];
+        });
 
         if ($isGuest) {
-            $user = new RegisterUser()->execute(new RegisterUserData(
-                first_name: $this->first_name,
-                last_name: $this->last_name,
-                email: $this->email,
-                password: $this->password,
-            ));
-            Auth::login($user);
+            Auth::login($donationUser);
         }
-
-        $cart = new PlaceDonation()->execute(
-            Auth::user(),
-            $this->product,
-            new DonationData(
-                selectedQuantity: $this->selectedQuantity,
-                freeQuantityValue: $this->freeQuantityValue ?? null,
-                paymentType: $this->paymentType,
-                idNumber: $this->id_number,
-                comments: $this->comments,
-            ),
-        );
 
         return redirect()
             ->route(

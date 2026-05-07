@@ -38,7 +38,7 @@ return [
         ],
         'direct-debit' => [
             'title' => 'Domiciliación bancaria',
-            'description' => 'Texto descriptivo',
+            'description' => 'Autoriza el cargo en tu cuenta bancaria. Necesitarás proporcionar tu IBAN y los datos del titular.',
         ],
     ],
 ];

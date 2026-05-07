@@ -27,6 +27,10 @@ class ContactSettings extends Settings
 
     public function getPrimaryAddress(): ?array
     {
+        if (empty($this->address)) {
+            return null;
+        }
+
         foreach ($this->address as $address) {
             if ($address['is_primary'] === true) {
                 return $address;

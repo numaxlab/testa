@@ -10,5 +10,8 @@ final readonly class DonationData
         public string $paymentType,
         public string $idNumber,
         public string $comments,
+        public string $directDebitOwnerName = '',
+        public string $directDebitBankName = '',
+        public string $directDebitIban = '',
     ) {}
 }

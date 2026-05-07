@@ -31,7 +31,7 @@ final class PlaceDonation
 
         if ($data->selectedQuantity === 'free') {
             $variant = $product->variants->firstWhere('sku', GetDonationProduct::DONATION_SKU);
-            $unitPriceInCents = (int) ($data->freeQuantityValue * 100);
+            $unitPriceInCents = (int)($data->freeQuantityValue * 100);
             $cart->add($variant, 1, ['unit_price' => $unitPriceInCents]);
         } else {
             $variant = $product->variants->find($data->selectedQuantity);
@@ -40,6 +40,10 @@ final class PlaceDonation
 
         $contactSettings = app(ContactSettings::class);
         $primaryAddress = $contactSettings->getPrimaryAddress();
+
+        if ($primaryAddress === null) {
+            throw new \RuntimeException('No primary address configured in admin settings. Please add an address before accepting donations.');
+        }
 
         $billing = new CartAddress();
         $billing->first_name = $user->latestCustomer()->first_name;

@@ -34,7 +34,7 @@
                                 <input type="radio" name="qty" id="qty-free" wire:model.live="selectedQuantity"
                                        value="free">
                                 <label class="text-xl" for="qty-free">
-                                    {{ __('Yo eligo') }}
+                                    {{ __('Yo elijo') }}
                                 </label>
                             </div>
                             @if ($selectedQuantity === 'free')
@@ -42,9 +42,10 @@
                                     <x-numaxlab-atomic::atoms.input
                                             wire:model="freeQuantityValue"
                                             type="number"
+                                            min="1"
+                                            step="1"
                                             name="free-qty-value"
                                             id="free-qty-value"
-                                            min="1"
                                     >
                                         {{ __('Mi aportación') }}
                                     </x-numaxlab-atomic::atoms.input>

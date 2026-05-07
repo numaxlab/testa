@@ -8,21 +8,24 @@ use Lunar\Models\Order;
 final readonly class PaymentContext
 {
     public function __construct(
-        public string $paymentType,
-        public Order $order,
-        public Cart $cart,
-        public string $successRoute,
-        public string $failureRoute,
+        public string  $paymentType,
+        public Order   $order,
+        public Cart    $cart,
+        public string  $successRoute,
+        public string  $failureRoute,
         public ?string $orderType = null,
-    ) {}
+    )
+    {
+    }
 
     public static function fromOrderAndCart(
         string $paymentType,
-        Order $order,
-        Cart $cart,
-        array $successRouteMapping,
-        array $failureRouteMapping,
-    ): self {
+        Order  $order,
+        Cart   $cart,
+        array  $successRouteMapping,
+        array  $failureRouteMapping,
+    ): self
+    {
         $orderType = $order->meta['Tipo de pedido'] ?? null;
 
         $successRoute = $successRouteMapping[$orderType] ?? $successRouteMapping['default'];
@@ -32,7 +35,7 @@ final readonly class PaymentContext
             paymentType: $paymentType,
             order: $order,
             cart: $cart,
-            successRoute: route($successRoute, $order->fingerprint),
+            successRoute: route($successRoute, ['id' => $order->id, 'fingerprint' => $order->fingerprint]),
             failureRoute: route($failureRoute),
             orderType: $orderType,
         );

@@ -143,6 +143,8 @@ class CourseResource extends BaseResource
                             ]),
                         Forms\Components\Textarea::make('alert')
                             ->label(__('testa::event.form.alert.label')),
+                        Forms\Components\Textarea::make('main_embed')
+                            ->label(__('testa::course.form.main_embed.label')),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('testa::course.form.is_published.label')),
                     ]),

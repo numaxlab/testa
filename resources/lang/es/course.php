@@ -61,6 +61,9 @@ return [
         'topic_id' => [
             'label' => 'Tema',
         ],
+        'main_embed' => [
+            'label' => 'Embed principal',
+        ],
         'is_published' => [
             'label' => 'Público',
         ],

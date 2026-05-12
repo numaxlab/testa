@@ -47,6 +47,7 @@ class VideoResource extends BaseResource
         return [
             VideoResource\Pages\EditVideo::class,
             VideoResource\Pages\ManageVideoUrls::class,
+            VideoResource\Pages\ManageVideoAttachments::class,
         ];
     }
 
@@ -126,6 +127,7 @@ class VideoResource extends BaseResource
             'create' => VideoResource\Pages\CreateVideo::route('/create'),
             'edit' => VideoResource\Pages\EditVideo::route('/{record}/edit'),
             'urls' => VideoResource\Pages\ManageVideoUrls::route('/{record}/urls'),
+            'attachments' => VideoResource\Pages\ManageVideoAttachments::route('/{record}/attachments'),
         ];
     }
 }

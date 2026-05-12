@@ -47,6 +47,7 @@ class DocumentResource extends BaseResource
         return [
             DocumentResource\Pages\EditDocument::class,
             DocumentResource\Pages\ManageDocumentUrls::class,
+            DocumentResource\Pages\ManageDocumentAttachments::class,
         ];
     }
 
@@ -113,6 +114,7 @@ class DocumentResource extends BaseResource
             'create' => DocumentResource\Pages\CreateDocument::route('/create'),
             'edit' => DocumentResource\Pages\EditDocument::route('/{record}/edit'),
             'urls' => DocumentResource\Pages\ManageDocumentUrls::route('/{record}/urls'),
+            'attachments' => DocumentResource\Pages\ManageDocumentAttachments::route('/{record}/attachments'),
         ];
     }
 }

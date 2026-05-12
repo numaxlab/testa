@@ -7,6 +7,9 @@ return [
         'edit' => [
             'title' => 'Información básica',
         ],
+        'attachments' => [
+            'label' => 'Elementos relacionados',
+        ],
     ],
     'table' => [
         'name' => [

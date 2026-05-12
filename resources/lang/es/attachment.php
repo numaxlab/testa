@@ -3,6 +3,17 @@
 return [
     'label' => 'Recursos multimedia',
     'actions' => [
+        'attach_to' => [
+            'label' => 'Asociar a...',
+            'form' => [
+                'attachable' => [
+                    'label' => 'Elemento',
+                ],
+            ],
+            'notification' => [
+                'success' => 'Recurso multimedia asociado correctamente',
+            ],
+        ],
         'attach' => [
             'label' => 'Asociar',
             'form' => [
@@ -21,6 +32,12 @@ return [
         ],
     ],
     'table' => [
+        'attachable' => [
+            'label' => 'Elemento',
+        ],
+        'attachable_type' => [
+            'label' => 'Tipo',
+        ],
         'type' => [
             'label' => 'Tipo',
             'options' => [

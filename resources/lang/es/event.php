@@ -48,7 +48,7 @@ return [
             'label' => 'Etiqueta inscripción',
         ],
         'alert' => [
-            'label' => 'Info',
+            'label' => 'Información adicional',
         ],
         'organiser' => [
             'label' => 'Organizador',

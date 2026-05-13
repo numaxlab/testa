@@ -14,6 +14,11 @@ class ProductItineraries extends Component
 
     public Collection $itineraries;
 
+    public function placeholder(): View
+    {
+        return view('testa::storefront.livewire.components.placeholder.empty');
+    }
+
     public function mount(): void
     {
         $this->itineraries = new GetProductItineraries()->execute($this->product);

@@ -90,12 +90,18 @@
                     @endforeach
                 </ul>
 
-                <ul class="flex flex-col divide-y divide-black border-t border-b border-black">
-                    <li class="at-small py-2">
-                        <i class="icon icon-shopping-bag" aria-hidden="true"></i>
-                        {{ __('Subtotal pedido') }}: {{ $this->cart->total->formatted() }}
-                    </li>
-                </ul>
+                <dl class="flex flex-col divide-y divide-black border-t border-b border-black text-sm">
+                    @if ($this->cart->discountTotal?->value > 0)
+                        <div class="flex justify-between py-2">
+                            <dt>{{ __('Descuento') }}</dt>
+                            <dd>-{{ $this->cart->discountTotal->formatted() }}</dd>
+                        </div>
+                    @endif
+                    <div class="flex justify-between py-2 font-bold">
+                        <dt>{{ __('Total pedido') }}</dt>
+                        <dd>{{ $this->cart->total->formatted() }}</dd>
+                    </div>
+                </dl>
             @else
                 <p class="py-4 text-sm">
                     {{ __('Tu cesta está vacía') }}

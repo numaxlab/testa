@@ -17,6 +17,11 @@ class ProductAssociations extends Component
 
     public bool $isEditorialProduct = false;
 
+    public function placeholder(): View
+    {
+        return view('testa::storefront.livewire.components.placeholder.empty');
+    }
+
     public function render(): View
     {
         return view('testa::storefront.livewire.components.bookshop.product-associations');

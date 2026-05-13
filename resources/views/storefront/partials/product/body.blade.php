@@ -7,12 +7,12 @@
 
             <livewire:testa.storefront.livewire.components.bookshop.product-availability
                     lazy
-                    :key="$prefix . 'availability-' . $product->id"
+                    :key="'availability-' . $product->id"
                     :purchasable="$product->variant"/>
         @endif
 
         <livewire:testa.storefront.livewire.components.bookshop.add-to-cart
-                :key="$prefix . 'add-to-cart-' . $product->id"
+                :key="'add-to-cart-' . $product->id"
                 :purchasable="$product->variant"/>
 
         @if ($product->translateAttribute('digital-book'))

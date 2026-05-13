@@ -14,6 +14,11 @@ class ProductReviews extends Component
 
     public Collection $reviews;
 
+    public function placeholder(): View
+    {
+        return view('testa::storefront.livewire.components.placeholder.empty');
+    }
+
     public function mount(): void
     {
         $this->reviews = new GetProductReviews()->execute($this->product);

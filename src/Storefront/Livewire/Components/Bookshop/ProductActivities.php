@@ -14,6 +14,11 @@ class ProductActivities extends Component
 
     public Collection $activities;
 
+    public function placeholder(): View
+    {
+        return view('testa::storefront.livewire.components.placeholder.empty');
+    }
+
     public function mount(): void
     {
         $this->activities = new GetProductActivities()->execute($this->product);

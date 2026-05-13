@@ -55,11 +55,13 @@
                 @endif
             </x-numaxlab-atomic::molecules.breadcrumb>
 
-            <h1 class="at-heading is-1">
-                {{ $product->recordTitle }}
+            <div class="flex items-center gap-2">
+                <h1 class="at-heading is-1">
+                    {{ $product->recordTitle }}
+                </h1>
 
                 <button
-                        class="text-primary"
+                        class="text-primary shrink-0"
                         aria-label="{{ __('Añadir a favoritos') }}"
                         wire:click="addToFavorites"
                         wire:key="fav-{{ $product->id }}"
@@ -81,7 +83,7 @@
                         <span class="sr-only">{{ __('Cargando...') }}</span>
                     </div>
                 </button>
-            </h1>
+            </div>
 
             @if ($product->translateAttribute('subtitle'))
                 <h2 class="at-heading is-3 mt-1">{{ $product->translateAttribute('subtitle') }}</h2>
@@ -95,8 +97,8 @@
                 </p>
             @endif
 
-            <div class="hidden lg:block mt-8">
-                @include('testa::storefront.partials.product.body', ['prefix' => 'desktop'])
+            <div class="mt-8">
+                @include('testa::storefront.partials.product.body')
             </div>
         </header>
 
@@ -109,10 +111,6 @@
         </div>
 
         <div class="mt-1 lg:w-8/12 lg:ml-[25%] lg:pl-10">
-            <div class="lg:hidden mb-10">
-                @include('testa::storefront.partials.product.body', ['prefix' => 'mobile'])
-            </div>
-
             <livewire:testa.storefront.livewire.components.bookshop.product-reviews
                     :key="$product->id . '-reviews'"
                     :product="$product"

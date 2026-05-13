@@ -14,6 +14,11 @@ class ProductMedia extends Component
 
     public Collection $attachments;
 
+    public function placeholder(): View
+    {
+        return view('testa::storefront.livewire.components.placeholder.empty');
+    }
+
     public function mount(): void
     {
         $this->attachments = new GetProductAttachments()->execute($this->product);

@@ -10,17 +10,13 @@
                 <x-testa::logo/>
             </a>
 
-            <div class="lg:hidden">
-                <x-testa::header.actions/>
-            </div>
-
             <nav
                     id="site-header-nav"
                     class="site-header-nav lg:flex lg:flex-col-reverse lg:grow"
                     :class="{ 'block': menuExpanded }"
             >
                 <div
-                        class="lg:flex lg:w-full lg:justify-between relative"
+                        class="lg:flex lg:w-full relative"
                 >
                     <ul class="site-header-main-menu">
                         @foreach ($menuItems as $menuItem)
@@ -81,10 +77,6 @@
                             </li>
                         @endforeach
                     </ul>
-
-                    <div class="hidden lg:block lg:relative">
-                        <x-testa::header.actions/>
-                    </div>
                 </div>
 
                 <div class="flex mb-5 text-sm">
@@ -184,6 +176,8 @@
                     </ul>
                 </div>
             </nav>
+
+            <x-testa::header.actions/>
         </header>
     </div>
 

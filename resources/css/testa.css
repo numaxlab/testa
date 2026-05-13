@@ -117,4 +117,10 @@
         border-color: var(--color-primary);
         box-shadow: var(--color-primary);
     }
+
+    label:has(+ input[required])::after,
+    label:has(+ select[required])::after {
+        content: ' *';
+        color: var(--color-accent);
+    }
 }

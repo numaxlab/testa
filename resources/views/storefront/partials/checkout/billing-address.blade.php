@@ -80,6 +80,7 @@
                     type="email"
                     name="billing.contact_email"
                     id="billing.contact_email"
+                    required
                     placeholder="{{ __('Email de contacto') }}"
             >
                 {{ __('Email de contacto') }}
@@ -93,6 +94,7 @@
                     wire:model.live="billing.country_id"
                     name="billing.country_id"
                     id="billing.country_id"
+                    required
                     label="{{ __('País') }}"
             >
                 <option value="">{{ __('Selecciona un país') }}</option>
@@ -107,6 +109,7 @@
                     wire:model="billing.state"
                     name="billing.state"
                     id="billing.state"
+                    required
                     label="{{ __('Provincia') }}"
             >
                 <option value="">{{ __('Selecciona una provincia') }}</option>

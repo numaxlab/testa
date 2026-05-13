@@ -25,6 +25,7 @@
                                     type="text"
                                     name="directDebitOwnerName"
                                     id="directDebitOwnerName"
+                                    required
                                     placeholder="{{ __('Nombre completo') }}"
                             >
                                 {{ __('Titular de la cuenta') }}
@@ -35,6 +36,7 @@
                                     type="text"
                                     name="directDebitBankName"
                                     id="directDebitBankName"
+                                    required
                                     placeholder="{{ __('Entidad bancaria') }}"
                             >
                                 {{ __('Entidad bancaria') }}
@@ -45,6 +47,7 @@
                                     type="text"
                                     name="directDebitIban"
                                     id="directDebitIban"
+                                    required
                                     placeholder="{{ __('ES00 0000 0000 00 0000000000') }}"
                             >
                                 {{ __('IBAN') }}

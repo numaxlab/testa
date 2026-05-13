@@ -110,6 +110,7 @@
                             type="email"
                             name="{{ $type }}.contact_email"
                             id="{{ $type }}.contact_email"
+                            required
                             placeholder="{{ __('Email de contacto') }}"
                     >
                         {{ __('Email de contacto') }}
@@ -119,6 +120,7 @@
                             wire:model.live="{{ $type }}.country_id"
                             name="{{ $type }}.country_id"
                             id="{{ $type }}.country_id"
+                            required
                             label="{{ __('País') }}"
                     >
                         <option value="">{{ __('Selecciona un país') }}</option>
@@ -134,6 +136,7 @@
                                 wire:model="{{ $type }}.state"
                                 name="{{ $type }}.state"
                                 id="{{ $type }}.state"
+                                required
                                 label="{{ __('Provincia') }}"
                         >
                             <option value="">{{ __('Selecciona una provincia') }}</option>

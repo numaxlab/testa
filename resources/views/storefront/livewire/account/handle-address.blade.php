@@ -71,6 +71,7 @@
                         wire:model.live="form.country_id"
                         name="form.country_id"
                         id="form.country_id"
+                        required
                         label="{{ __('País') }}"
                 >
                     <option value="">{{ __('Selecciona un país') }}</option>
@@ -85,6 +86,7 @@
                         wire:model="form.state"
                         name="form.state"
                         id="form.state"
+                        required
                         label="{{ __('Provincia') }}"
                 >
                     <option value="">{{ __('Selecciona una provincia') }}</option>

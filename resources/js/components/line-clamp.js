@@ -1,11 +1,10 @@
 export default () => ({
-    showMore: false,
+    expanded: false,
+    clamped: false,
 
     init () {
         this.$nextTick(() => {
-            if (this.$refs.description.scrollHeight === this.$refs.description.clientHeight) {
-                this.showMore = true;
-            }
+            this.clamped = this.$refs.description.scrollHeight > this.$refs.description.clientHeight;
         });
     },
 });

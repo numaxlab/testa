@@ -74,12 +74,18 @@
                 </div>
                 @if ($course->description)
                     <div x-data="lineClamp" class="my-10 lg:w-8/12 lg:mt-0">
-                        <div x-ref="description" :class="{ 'line-clamp-14': !showMore }">
+                        <div x-ref="description" :class="{ 'line-clamp-14': !expanded }" id="course-description">
                             {!! $course->description !!}
                         </div>
 
-                        <button x-show="!showMore" @click.prevent="showMore = true" class="text-primary">
-                            {{ __('Leer más') }}
+                        <button
+                                x-show="clamped"
+                                :aria-expanded="expanded"
+                                aria-controls="course-description"
+                                @click.prevent="expanded = !expanded"
+                                class="text-primary"
+                        >
+                            <span x-text="expanded ? '{{ __('Leer menos') }}' : '{{ __('Leer más') }}'"></span>
                         </button>
                     </div>
                 @endif

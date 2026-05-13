@@ -8,9 +8,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
+use Lunar\DataTypes\Price;
 use Lunar\DataTypes\ShippingOption;
 use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
+use Lunar\Facades\Taxes;
 use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
@@ -224,7 +226,8 @@ class ShippingAndPaymentPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.checkout.shipping-and-payment');
+        return view('testa::storefront.livewire.checkout.shipping-and-payment')
+            ->title(__('Tramitar pedido'));
     }
 
     public function saveAddress(string $type): void
@@ -285,6 +288,25 @@ class ShippingAndPaymentPage extends Page
     public function getShippingOptionsProperty(): Collection
     {
         return ShippingManifest::getOptions($this->cart);
+    }
+
+    public function getShippingOptionPricesProperty(): Collection
+    {
+        if (!$this->cart->shippingAddress) {
+            return collect();
+        }
+
+        return $this->shippingOptions->mapWithKeys(function (ShippingOption $option) {
+            $subTotal = $option->price->value;
+            $tax = Taxes::setShippingAddress($this->cart->shippingAddress)
+                ->setCurrency($this->cart->currency)
+                ->setPurchasable($option)
+                ->getBreakdown($subTotal);
+            $taxTotal = $tax->amounts->sum('price.value');
+            $total = prices_inc_tax() ? $subTotal : $subTotal + $taxTotal;
+
+            return [$option->getIdentifier() => new Price($total, $this->cart->currency, 1)];
+        });
     }
 
     public function getShippingOptionProperty(): ?ShippingOption

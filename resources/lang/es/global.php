@@ -14,27 +14,27 @@ return [
     'payment_types' => [
         'card' => [
             'title' => 'Tarjeta',
-            'description' => 'Texto descriptivo',
+            'description' => 'Paga con tu tarjeta de crédito o débito de forma segura a través de nuestra plataforma de pago.',
         ],
         'bizum' => [
             'title' => 'Bizum',
-            'description' => 'Texto descriptivo',
+            'description' => 'Paga al instante desde tu móvil con Bizum. Recibirás un SMS de confirmación.',
         ],
         'paypal' => [
             'title' => 'PayPal',
-            'description' => 'Texto descriptivo',
+            'description' => 'Paga de forma segura a través de tu cuenta de PayPal.',
         ],
         'cash-on-delivery' => [
             'title' => 'Contra Reembolso',
-            'description' => 'Texto descriptivo',
+            'description' => 'Paga en efectivo al recibir tu pedido. Disponible solo para envíos dentro de España.',
         ],
         'credit' => [
             'title' => 'A crédito',
-            'description' => 'Texto descriptivo',
+            'description' => 'Pago aplazado para cuentas habilitadas. Recibirás la factura en tu correo electrónico.',
         ],
         'transfer' => [
             'title' => 'Transferencia bancaria',
-            'description' => 'Texto descriptivo',
+            'description' => 'Realiza una transferencia bancaria tras confirmar el pedido. Te enviaremos los datos de nuestra cuenta.',
         ],
         'direct-debit' => [
             'title' => 'Domiciliación bancaria',

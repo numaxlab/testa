@@ -24,6 +24,7 @@ class OrderPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.account.order');
+        return view('testa::storefront.livewire.account.order')
+            ->title(__('Pedido :reference', ['reference' => $this->order->reference]));
     }
 }

@@ -34,18 +34,70 @@
                 {{ $order->created_at->format('d/m/Y') }}
             </div>
             <div class="border-b border-black py-2">
+                <span class="font-semibold">{{ __('Estado') }}:</span>
+                {{ $order->statusLabel }}
+            </div>
+            <div class="border-b border-black py-2">
                 <i class="icon icon-shipping mr-2" aria-hidden="true"></i>
                 {{ $order->shipping_breakdown->items->pluck('name')->implode(', ') }}
                 {{ $order->shipping_total->formatted() }}
             </div>
-            <div class="border-b border-black py-2">
-                <i class="icon icon-shopping-bag mr-2" aria-hidden="true"></i>
-                {{ __('Total') }} {{ $order->total->formatted() }}
+            @if(filled($order->meta['Método de pago'] ?? null))
+                <div class="border-b border-black py-2">
+                    <i class="icon icon-shopping-bag mr-2" aria-hidden="true"></i>
+                    {{ $order->meta['Método de pago'] }}
+                </div>
+            @endif
+            <div class="border-b border-black py-2 flex justify-between font-bold">
+                <span>{{ __('Total') }}</span>
+                <span>{{ $order->total->formatted() }}</span>
             </div>
             @if(($order->meta['Es un regalo'] ?? null) === 'Sí')
                 <div class="border-b border-black py-2">
                     <i class="icon icon-heart mr-2" aria-hidden="true"></i>
                     {{ __('Es un regalo') }}
+                </div>
+            @endif
+
+            @if($order->shippingAddress)
+                <div class="mt-6">
+                    <p class="font-semibold mb-1">{{ __('Dirección de envío') }}</p>
+                    <address class="not-italic text-sm leading-relaxed">
+                        {{ $order->shippingAddress->first_name }} {{ $order->shippingAddress->last_name }}<br>
+                        @if(filled($order->shippingAddress->company_name))
+                            {{ $order->shippingAddress->company_name }}<br>
+                        @endif
+                        {{ $order->shippingAddress->line_one }}<br>
+                        @if(filled($order->shippingAddress->line_two))
+                            {{ $order->shippingAddress->line_two }}<br>
+                        @endif
+                        {{ $order->shippingAddress->postcode }} {{ $order->shippingAddress->city }}<br>
+                        @if(filled($order->shippingAddress->state))
+                            {{ $order->shippingAddress->state }}<br>
+                        @endif
+                        {{ $order->shippingAddress->country?->name }}
+                    </address>
+                </div>
+            @endif
+
+            @if($order->billingAddress && $order->billingAddress->id !== $order->shippingAddress?->id)
+                <div class="mt-6">
+                    <p class="font-semibold mb-1">{{ __('Dirección de facturación') }}</p>
+                    <address class="not-italic text-sm leading-relaxed">
+                        {{ $order->billingAddress->first_name }} {{ $order->billingAddress->last_name }}<br>
+                        @if(filled($order->billingAddress->company_name))
+                            {{ $order->billingAddress->company_name }}<br>
+                        @endif
+                        {{ $order->billingAddress->line_one }}<br>
+                        @if(filled($order->billingAddress->line_two))
+                            {{ $order->billingAddress->line_two }}<br>
+                        @endif
+                        {{ $order->billingAddress->postcode }} {{ $order->billingAddress->city }}<br>
+                        @if(filled($order->billingAddress->state))
+                            {{ $order->billingAddress->state }}<br>
+                        @endif
+                        {{ $order->billingAddress->country?->name }}
+                    </address>
                 </div>
             @endif
 

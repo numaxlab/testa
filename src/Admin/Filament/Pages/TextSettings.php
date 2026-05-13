@@ -69,6 +69,19 @@ class TextSettings extends SettingsPage
                             )->toArray(),
                             )->columnSpanFull(),
                     ]),
+                Forms\Components\Section::make(__('Envío'))
+                    ->schema([
+                        Forms\Components\Tabs::make()
+                            ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
+                                ->schema([
+                                    Forms\Components\RichEditor::make("shipping_home_description.{$locale}")
+                                        ->label(__('Descripción envío a domicilio'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                ]),
+                            )->toArray(),
+                            )->columnSpanFull(),
+                    ]),
                 Forms\Components\Section::make(__('Política de privacidad'))
                     ->schema([
                         Forms\Components\Tabs::make()

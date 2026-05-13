@@ -16,6 +16,8 @@ class TextSettings extends Settings
 
     public array $donate_intro;
 
+    public array $shipping_home_description;
+
     public static function group(): string
     {
         return 'text';
@@ -53,6 +55,13 @@ class TextSettings extends Settings
     {
         return $this->donate_intro[app()->getLocale()]
             ?? $this->donate_intro[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getShippingHomeDescription(): string
+    {
+        return $this->shipping_home_description[app()->getLocale()]
+            ?? $this->shipping_home_description[config('app.fallback_locale')]
             ?? '';
     }
 }

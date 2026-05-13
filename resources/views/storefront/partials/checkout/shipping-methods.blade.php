@@ -15,7 +15,7 @@
             </x-numaxlab-atomic::atoms.forms.radio>
 
             <p class="at-small mt-2">
-                {{ __('Descripción envío a domicilio') }}
+                {{ app(\Testa\Settings\TextSettings::class)->getShippingHomeDescription() }}
             </p>
         </li>
         @foreach ($this->pickupOptions as $shippingMethod)

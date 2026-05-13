@@ -76,6 +76,18 @@
                     </dd>
                 </div>
 
+                @if ($cart->discountTotal?->value > 0)
+                    <div class="flex flex-wrap py-2">
+                        <dt class="w-1/2 font-medium">
+                            {{ __('Descuento') }}
+                        </dt>
+
+                        <dd class="w-1/2 text-right">
+                            -{{ $cart->discountTotal->formatted() }}
+                        </dd>
+                    </div>
+                @endif
+
                 @if ($this->shippingOption)
                     <div class="flex flex-wrap py-2">
                         <dt class="w-1/2 font-medium">
@@ -83,7 +95,7 @@
                         </dt>
 
                         <dd class="w-1/2 text-right">
-                            {{ $this->shippingOption->getPrice()->formatted() }}
+                            {{ $cart->shippingTotal?->formatted() ?? $this->shippingOption->getPrice()->formatted() }}
                         </dd>
                     </div>
                 @endif

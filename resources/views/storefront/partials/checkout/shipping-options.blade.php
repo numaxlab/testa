@@ -25,7 +25,7 @@
                                     wire:model.live="chosenShipping"
                                     name="chosenShipping"
                                     value="{{ $option->getIdentifier() }}">
-                                {{ $option->getName() }} {{ $option->getPrice()->formatted() }}
+                                {{ $option->getName() }} {{ ($this->shippingOptionPrices[$option->getIdentifier()] ?? $option->getPrice())->formatted() }}
                             </x-numaxlab-atomic::atoms.forms.radio>
                         </div>
                     @endif
@@ -47,7 +47,7 @@
                     </dt>
 
                     <dd class="w-1/2 text-right">
-                        {{ $this->shippingOption->getPrice()->formatted() }}
+                        {{ $cart->shippingTotal?->formatted() ?? $this->shippingOption->getPrice()->formatted() }}
                     </dd>
                 </dl>
             @endif

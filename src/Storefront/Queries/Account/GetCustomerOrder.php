@@ -13,6 +13,7 @@ final class GetCustomerOrder
             ->orders()
             ->where('reference', $reference)
             ->whereNotIn('status', ['awaiting-payment', 'cancelled'])
+            ->with(['shippingAddress', 'billingAddress'])
             ->firstOrFail();
     }
 }

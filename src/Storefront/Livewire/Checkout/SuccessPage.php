@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\ContactSettings;
 use Testa\Storefront\Queries\Checkout\GetOrderById;
 use Testa\Storefront\Queries\Checkout\GetShippingMethodDescription;
 
@@ -31,7 +32,8 @@ class SuccessPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.checkout.success')
-            ->title(__('Pedido finalizado'));
+        return view('testa::storefront.livewire.checkout.success', [
+            'contactEmail' => app(ContactSettings::class)->email_address,
+        ])->title(__('Pedido finalizado'));
     }
 }

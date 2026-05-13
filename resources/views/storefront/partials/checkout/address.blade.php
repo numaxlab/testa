@@ -1,10 +1,17 @@
+@php
+    // Billing is auto-completed when shippingIsBilling is true and the shipping
+    // address has already been saved (currentStep advanced past shipping_address).
+    $autoCompleted = $type === 'billing'
+        && $shippingIsBilling
+        && $currentStep >= $steps['shipping_option'];
+@endphp
 <x-numaxlab-atomic::organisms.tier class="mt-7">
     <x-numaxlab-atomic::organisms.tier.header>
         <h2 class="at-heading is-2">
             {{ $type == 'shipping' ? __('Datos de envío') : __('Datos de facturación') }}
         </h2>
 
-        @if ($currentStep > $step)
+        @if ($currentStep > $step || $autoCompleted)
             <x-numaxlab-atomic::atoms.button
                     type="button"
                     class="is-secondary at-small"
@@ -20,8 +27,8 @@
             </x-numaxlab-atomic::atoms.forms.checkbox>
         @endif
 
-        @if ($currentStep >= $step)
-            @if ($step == $currentStep)
+        @if ($currentStep >= $step || $autoCompleted)
+            @if ($step == $currentStep && !$autoCompleted)
                 <div class="flex flex-col gap-6 mt-6">
                     @if ($$type->customerAddresses->isNotEmpty())
                         <x-numaxlab-atomic::atoms.select
@@ -206,7 +213,7 @@
                         {{ __('Continuar') }}
                     </x-testa::loading-button>
                 </div>
-            @elseif($currentStep > $step)
+            @elseif($currentStep > $step || $autoCompleted)
                 <dl class="grid grid-cols-1 gap-8 text-sm sm:grid-cols-2">
                     <div>
                         <div class="space-y-4">

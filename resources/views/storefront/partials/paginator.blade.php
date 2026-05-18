@@ -87,7 +87,7 @@
                             @foreach ($element as $page => $url)
                                 @if ($page == $paginator->currentPage())
                                     <span aria-current="page">
-                                        <span class="inline-flex items-center px-3 -ml-px text-sm font-medium cursor-default leading-5">{{ $page }}</span>
+                                        <span class="inline-flex items-center px-3 -ml-px text-sm font-medium cursor-default leading-5 text-accent">{{ $page }}</span>
                                     </span>
                                 @else
                                     <button

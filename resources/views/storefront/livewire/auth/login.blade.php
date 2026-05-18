@@ -26,25 +26,23 @@
             {{ __('Correo electrónico') }}
         </x-numaxlab-atomic::atoms.input>
 
-        <div class="relative">
-            <x-numaxlab-atomic::atoms.forms.label for="password">
-                {{ __('Contraseña') }}
-            </x-numaxlab-atomic::atoms.forms.label>
-            <x-numaxlab-atomic::atoms.forms.input
-                    wire:model="password"
-                    type="password"
-                    id="password"
-                    required
-                    autocomplete="current-password"
-                    :placeholder="__('Contraseña')"
-            />
-
+        <x-testa::password-input
+                wire:model="password"
+                name="password"
+                id="password"
+                required
+                autocomplete="current-password"
+                :placeholder="__('Contraseña')"
+        >
+            {{ __('Contraseña') }}
             @if (Route::has('password.request'))
-                <a class="at-small absolute end-0 top-0" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Olvidé mi contraseña') }}
-                </a>
+                <x-slot name="link">
+                    <a class="at-small" href="{{ route('password.request') }}" wire:navigate>
+                        {{ __('Olvidé mi contraseña') }}
+                    </a>
+                </x-slot>
             @endif
-        </div>
+        </x-testa::password-input>
 
         <div>
             <x-numaxlab-atomic::atoms.forms.checkbox

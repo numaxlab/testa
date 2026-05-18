@@ -5,9 +5,8 @@
     <x-testa::auth.session-status class="text-center" :status="session('status')"/>
 
     <form wire:submit="confirmPassword" class="flex flex-col gap-6">
-        <x-numaxlab-atomic::atoms.input
+        <x-testa::password-input
                 wire:model="password"
-                type="password"
                 name="password"
                 id="password"
                 placeholder="{{ __('Password') }}"
@@ -15,7 +14,7 @@
                 autocomplete="new-password"
         >
             {{ __('Password') }}
-        </x-numaxlab-atomic::atoms.input>
+        </x-testa::password-input>
 
         <x-testa::loading-button target="confirmPassword" class="is-primary w-full">
             {{ __('Confirm') }}

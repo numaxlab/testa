@@ -38,9 +38,8 @@
     </x-numaxlab-atomic::atoms.input>
 </div>
 
-<x-numaxlab-atomic::atoms.input
+<x-testa::password-input
         wire:model="password"
-        type="password"
         name="password"
         id="password"
         placeholder="{{ __('Contraseña') }}"
@@ -48,11 +47,10 @@
         autocomplete="new-password"
 >
     {{ __('Contraseña') }}
-</x-numaxlab-atomic::atoms.input>
+</x-testa::password-input>
 
-<x-numaxlab-atomic::atoms.input
+<x-testa::password-input
         wire:model="password_confirmation"
-        type="password"
         name="password_confirmation"
         id="password-confirmation"
         placeholder="{{ __('Confirmar contraseña') }}"
@@ -60,4 +58,4 @@
         autocomplete="new-password"
 >
     {{ __('Confirmar contraseña') }}
-</x-numaxlab-atomic::atoms.input>
+</x-testa::password-input>

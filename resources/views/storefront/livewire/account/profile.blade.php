@@ -102,16 +102,15 @@
 
         <p>{{ __('Si eliminas tu cuenta todos los recursos y datos que tienes guardados serán eliminados de forma permanente. Por favor, introduce tu contraseña para confirmar que quieres borrar tus datos de forma permanente.') }}</p>
 
-        <x-numaxlab-atomic::atoms.input
+        <x-testa::password-input
                 wire:model="password"
-                type="password"
                 name="password"
                 id="password"
                 placeholder="{{ __('Contraseña') }}"
                 required
         >
             {{ __('Contraseña') }}
-        </x-numaxlab-atomic::atoms.input>
+        </x-testa::password-input>
 
         <div class="flex justify-end space-x-2 rtl:space-x-reverse">
             <x-testa::loading-button target="deleteUser" class="bg-danger text-white">

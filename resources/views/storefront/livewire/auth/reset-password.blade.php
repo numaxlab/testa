@@ -17,9 +17,8 @@
             {{ __('Email address') }}
         </x-numaxlab-atomic::atoms.input>
 
-        <x-numaxlab-atomic::atoms.input
+        <x-testa::password-input
                 wire:model="password"
-                type="password"
                 name="password"
                 id="password"
                 placeholder="{{ __('Password') }}"
@@ -27,11 +26,10 @@
                 autocomplete="new-password"
         >
             {{ __('Password') }}
-        </x-numaxlab-atomic::atoms.input>
+        </x-testa::password-input>
 
-        <x-numaxlab-atomic::atoms.input
+        <x-testa::password-input
                 wire:model="password_confirmation"
-                type="password"
                 name="password_confirmation"
                 id="password-confirmation"
                 placeholder="{{ __('Confirm password') }}"
@@ -39,7 +37,7 @@
                 autocomplete="new-password"
         >
             {{ __('Confirm password') }}
-        </x-numaxlab-atomic::atoms.input>
+        </x-testa::password-input>
 
         <x-testa::loading-button target="resetPassword" class="is-primary w-full">
             {{ __('Reset password') }}

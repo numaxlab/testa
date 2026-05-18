@@ -1,7 +1,7 @@
 export default () => ({
     scrollInterval: null,
 
-    startScroll (direction) {
+    startScroll(direction) {
         this.stopScroll();
         this.scrollInterval = setInterval(() => {
             this.$refs.scrollContainer.scrollBy({
@@ -11,7 +11,7 @@ export default () => ({
         }, 100);
     },
 
-    stopScroll () {
+    stopScroll() {
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;

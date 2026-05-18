@@ -7,10 +7,10 @@
         <ul class="flex gap-4">
             <li>
                 <button
-                        @mousedown.prevent="startScroll(-50)"
+                        @mousedown.prevent="startScroll(-200)"
                         @mouseup.prevent="stopScroll()"
                         @mouseleave.prevent="stopScroll()"
-                        @touchstart.prevent="startScroll(-50)"
+                        @touchstart.prevent="startScroll(-200)"
                         @touchend.prevent="stopScroll()"
                         aria-label="{{ __('Mover hacia la izquierda') }}"
                         class="text-accent text-lg"
@@ -20,10 +20,10 @@
             </li>
             <li>
                 <button
-                        @mousedown.prevent="startScroll(50)"
+                        @mousedown.prevent="startScroll(250)"
                         @mouseup.prevent="stopScroll()"
                         @mouseleave.prevent="stopScroll()"
-                        @touchstart.prevent="startScroll(50)"
+                        @touchstart.prevent="startScroll(200)"
                         @touchend.prevent="stopScroll()"
                         aria-label="{{ __('Mover hacia la derecha') }}"
                         class="text-accent text-lg"

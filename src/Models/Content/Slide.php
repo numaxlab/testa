@@ -45,6 +45,7 @@ class Slide extends Model implements SpatieHasMedia
     {
         return [
             'section' => Section::class,
+            'variant' => Variant::class,
         ];
     }
 }

@@ -1,13 +1,7 @@
 <x-slot name="description">{{ Str::limit(strip_tags($slides->first()?->description), 160) }}</x-slot>
 
 <div>
-    @if ($slides->isNotEmpty())
-        <div class="-mt-10">
-            @foreach ($slides as $slide)
-                <x-testa::slides.full-width :slide="$slide"/>
-            @endforeach
-        </div>
-    @endif
+    <x-testa::slides.carousel :slides="$slides"/>
 
     @foreach ($tiers as $tier)
         <livewire:dynamic-component

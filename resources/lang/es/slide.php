@@ -18,6 +18,9 @@ return [
         'is_published' => [
             'label' => 'Pública',
         ],
+        'variant' => [
+            'label' => 'Variante',
+        ],
     ],
     'form' => [
         'name' => [
@@ -30,6 +33,14 @@ return [
                 'bookshop' => 'Librería',
                 'editorial' => 'Editorial',
                 'education' => 'Formación',
+            ],
+        ],
+        'variant' => [
+            'label' => 'Variante',
+            'options' => [
+                'contained' => 'Contenida',
+                'full-width' => 'Ancho completo',
+                'book' => 'Libro',
             ],
         ],
         'style' => [

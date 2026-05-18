@@ -40,29 +40,30 @@ class TestaServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'testa');
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'testa');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/settings');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'testa');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'testa');
 
         $this->publishes([
-            __DIR__.'/../config/testa.php' => config_path('testa.php'),
-            __DIR__.'/../resources/views' => resource_path('views/vendor/testa'),
+            __DIR__ . '/../config/testa.php' => config_path('testa.php'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/testa'),
         ], ['testa']);
 
         Route::middleware('web')
-            ->group(fn() => $this->loadRoutesFrom(__DIR__.'/../routes/storefront.php'));
+            ->group(fn() => $this->loadRoutesFrom(__DIR__ . '/../routes/storefront.php'));
 
         Blade::componentNamespace('Testa\\Storefront\\Views\\Components', 'testa');
-        Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'testa');
+        Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'testa');
 
-        View::prependNamespace('numaxlab-atomic', __DIR__.'/../resources/views/vendor/numaxlab-atomic');
+        View::prependNamespace('numaxlab-atomic', __DIR__ . '/../resources/views/vendor/numaxlab-atomic');
 
         $namespace = 'Testa\Storefront\Livewire\\';
 
-        $path = __DIR__.'/Storefront/Livewire';
+        $path = __DIR__ . '/Storefront/Livewire';
 
         foreach ((new Finder)->in($path)->files() as $file) {
-            $component = $namespace.str_replace(['/', '.php'], ['\\', ''], $file->getRelativePathname());
+            $component = $namespace . str_replace(['/', '.php'], ['\\', ''], $file->getRelativePathname());
 
             if (is_subclass_of($component, Component::class)) {
                 $alias = str_replace('.-', '.', Str::kebab(str_replace('\\', '.', $component)));
@@ -79,13 +80,12 @@ class TestaServiceProvider extends ServiceProvider
         Livewire::component($componentName, CourseMediaRelationManager::class);
 
         $modelClasses = collect(
-            Discover::in(__DIR__.'/Models')
+            Discover::in(__DIR__ . '/Models')
                 ->classes()
                 ->extending(Model::class)
                 ->get(),
         )->mapWithKeys(
-            fn($class)
-                => [
+            fn($class) => [
                 Str::snake(str_replace('\\', '_', Str::after($class, 'Testa\\Models\\'))) => $class,
             ],
         );
@@ -106,7 +106,7 @@ class TestaServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/testa.php', 'testa');
+        $this->mergeConfigFrom(__DIR__ . '/../config/testa.php', 'testa');
 
         $this->registerPaymentGatewayRegistry();
 
@@ -138,11 +138,11 @@ class TestaServiceProvider extends ServiceProvider
             $registry = new PaymentGatewayRegistry();
 
             foreach (config('testa.payment_gateways', []) as $adapterClass => $options) {
-                if (! class_exists($adapterClass)) {
+                if (!class_exists($adapterClass)) {
                     continue;
                 }
 
-                if (! is_subclass_of($adapterClass, PaymentGatewayAdapter::class)) {
+                if (!is_subclass_of($adapterClass, PaymentGatewayAdapter::class)) {
                     continue;
                 }
 

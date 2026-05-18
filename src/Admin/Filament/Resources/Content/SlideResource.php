@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Content\Section;
 use Testa\Models\Content\Slide;
+use Testa\Models\Content\Variant;
 
 class SlideResource extends BaseResource
 {
@@ -67,6 +68,9 @@ class SlideResource extends BaseResource
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('testa::slide.table.name.label'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('variant')
+                    ->label(__('testa::slide.table.variant.label'))
+                    ->formatStateUsing(fn($state) => __("testa::slide.form.variant.options.{$state->value}")),
                 Tables\Columns\ToggleColumn::make('is_published')
                     ->label(__('testa::slide.table.is_published.label')),
             ])
@@ -93,6 +97,15 @@ class SlideResource extends BaseResource
                                 Section::EDITORIAL->value => __('testa::slide.form.section.options.editorial'),
                                 Section::EDUCATION->value => __('testa::slide.form.section.options.education'),
                             ])
+                            ->required(),
+                        Forms\Components\Select::make('variant')
+                            ->label(__('testa::slide.form.variant.label'))
+                            ->options([
+                                Variant::CONTAINED->value => __('testa::slide.form.variant.options.contained'),
+                                Variant::FULL_WIDTH->value => __('testa::slide.form.variant.options.full-width'),
+                                Variant::BOOK->value => __('testa::slide.form.variant.options.book'),
+                            ])
+                            ->default(Variant::CONTAINED->value)
                             ->required(),
                         Forms\Components\Select::make('style')
                             ->label(__('testa::slide.form.style.label'))

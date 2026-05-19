@@ -2,6 +2,7 @@
 
 namespace Testa\Models\Education;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,7 +53,7 @@ class CourseModule extends Model
     public function instructors(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Author::class, 'course_module_'.config('lunar.database.table_prefix').'geslib_author')
+            ->belongsToMany(Author::class, 'course_module_' . config('lunar.database.table_prefix') . 'geslib_author')
             ->withPivot(['position'])
             ->orderByPivot('position');
     }
@@ -61,13 +62,23 @@ class CourseModule extends Model
     {
         return $this->belongsToMany(
             Product::modelClass(),
-            'course_module_'.config('lunar.database.table_prefix').'product',
+            'course_module_' . config('lunar.database.table_prefix') . 'product',
         )->withPivot(['position'])->orderByPivot('position');
     }
 
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    protected function number(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => '#' . (CourseModule::where('course_id', $this->course_id)
+                        ->orderBy('starts_at')
+                        ->pluck('id')
+                        ->search($this->id) + 1),
+        );
     }
 
     protected function casts(): array

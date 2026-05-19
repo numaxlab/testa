@@ -2,7 +2,7 @@
         href="{{ route('testa.storefront.education.courses.modules.show', [$module->course->defaultUrl->slug, $module->defaultUrl->slug]) }}"
 >
     <h2 class="at-heading is-3">
-        {{ $module->name }}
+        {{ $module->number }} {{ $module->name }}
     </h2>
     @if ($module->subtitle)
         <h3 class="at-heading is-4 text-black font-normal">

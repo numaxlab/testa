@@ -1,4 +1,4 @@
-@props(['author', 'editorial' => false])
+@props(['author', 'editorial' => false, 'showImage' => true])
 
 @php
     $hasProfilePage = ($author->defaultUrl?->slug && $author->translateAttribute('has-profile-page'));
@@ -11,14 +11,16 @@
             @endif
             class="flex gap-4"
     >
-        <div class="summary-image">
-            <img
-                    src="{{ $author->getFirstMediaUrl(config('lunar.media.collection'), 'small') }}"
-                    alt=""
-                    loading="lazy"
-                    class="size-30 min-w-30 max-h-30 rounded-full object-cover object-center"
-            >
-        </div>
+        @if ($showImage)
+            <div class="summary-image">
+                <img
+                        src="{{ $author->getFirstMediaUrl(config('lunar.media.collection'), 'small') }}"
+                        alt=""
+                        loading="lazy"
+                        class="size-30 min-w-30 max-h-30 rounded-full object-cover object-center"
+                >
+            </div>
+        @endif
         <div class="summary-content">
             <h2 class="at-heading {{ ! $hasProfilePage ? 'text-black' : '' }}">
                 {{ $author->name }}

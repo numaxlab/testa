@@ -24,7 +24,7 @@
                     </li>
                 </x-numaxlab-atomic::molecules.breadcrumb>
 
-                <h1 class="at-heading is-1 mt-4">{{ $module->name }}</h1>
+                <h1 class="at-heading is-1 mt-4">{{ $module->number }} {{ $module->name }}</h1>
 
                 @if ($module->subtitle)
                     <h2 class="at-heading is-3 font-normal mt-2">{{ $module->subtitle }}</h2>
@@ -103,10 +103,10 @@
                         </h2>
                     </x-numaxlab-atomic::organisms.tier.header>
 
-                    <ul class="grid gap-6 mb-10 md:grid-cols-2">
+                    <ul class="grid gap-10 mb-10 md:grid-cols-2">
                         @foreach ($module->instructors as $instructor)
                             <li>
-                                <x-testa::authors.summary :author="$instructor"/>
+                                <x-testa::authors.summary :author="$instructor" :show-image="false"/>
                             </li>
                         @endforeach
                     </ul>

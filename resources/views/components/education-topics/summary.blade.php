@@ -7,7 +7,9 @@
 
     @if ($topic->description)
         <x-slot:content>
-            <p>{{ \Illuminate\Support\Str::limit(strip_tags($topic->description), 120) }}</p>
+            @if ($topic->description)
+                <p>{{ \Illuminate\Support\Str::limit(strip_tags($topic->description), 250) }}</p>
+            @endif
         </x-slot:content>
     @endif
 </x-numaxlab-atomic::molecules.banner>

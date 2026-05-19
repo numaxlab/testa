@@ -20,6 +20,10 @@
 
                 <h1 class="at-heading is-1">{{ $topic->name }}</h1>
 
+                @if ($topic->subtitle)
+                    <p class="at-heading is-subtitle">{{ $topic->subtitle }}</p>
+                @endif
+
                 @if ($topic->description)
                     <div class="mt-5">
                         {!! $topic->description !!}

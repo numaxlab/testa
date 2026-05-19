@@ -1,5 +1,5 @@
-<div class="lg:flex lg:flex-row-reverse lg:gap-6">
-    <div class="mt-10 lg:w-1/3 lg:mt-0">
+<div class="lg:flex lg:flex-row-reverse lg:gap-10">
+    <div class="mt-10 lg:w-1/3 lg:mt-0 xl:w-1/4">
         @if ($pricing)
             <div class="at-heading is-3 mb-1 font-titles">
                 {{ $pricing->priceIncTax()->formatted() }}
@@ -34,7 +34,7 @@
         @endif
     </div>
 
-    <div class="mt-10 lg:mt-0 lg:w-2/3">
+    <div class="mt-10 lg:mt-0 lg:w-2/3 xl:w-3/4">
         @if ($taxonomies->isNotEmpty())
             <ul class="flex flex-wrap gap-2">
                 @foreach ($taxonomies as $taxonomy)

@@ -19,8 +19,8 @@
     @endif
 
     <x-slot name="content">
-        <ul class="font-sans text-sm border-y border-black divide-x divide-black flex gap-2 py-2">
-            <li class="pr-2">
+        <ul class="font-sans text-sm border-y border-black divide-x divide-black flex items-center gap-2 py-2">
+            <li class="pr-2 flex items-center">
                 <i class="icon icon-calendar text-2xl mr-2" aria-hidden="true"></i>
                 <time datetime="{{ $module->starts_at->format('Y-m-d H:i:s') }}">
                     {{ $module->starts_at->format('d/m/Y H:i') }}

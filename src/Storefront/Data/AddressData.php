@@ -7,19 +7,39 @@ use Testa\Storefront\Livewire\Account\Forms\AddressForm;
 final readonly class AddressData
 {
     public function __construct(
-        public string $first_name,
-        public string $last_name,
+        public string  $first_name,
+        public string  $last_name,
         public ?string $company_name,
         public ?string $tax_identifier,
-        public int $country_id,
+        public int     $country_id,
         public ?string $state,
-        public string $postcode,
-        public string $city,
-        public string $line_one,
+        public string  $postcode,
+        public string  $city,
+        public string  $line_one,
         public ?string $line_two,
-        public bool $shipping_default,
-        public bool $billing_default,
-    ) {}
+        public bool    $shipping_default,
+        public bool    $billing_default,
+    )
+    {
+    }
+
+    public static function fromCheckoutData(CheckoutAddressData $data): self
+    {
+        return new self(
+            first_name: $data->first_name,
+            last_name: $data->last_name,
+            company_name: $data->company_name,
+            tax_identifier: $data->tax_identifier,
+            country_id: $data->country_id,
+            state: $data->state,
+            postcode: $data->postcode,
+            city: $data->city,
+            line_one: $data->line_one,
+            line_two: $data->line_two,
+            shipping_default: false,
+            billing_default: false,
+        );
+    }
 
     public static function fromForm(AddressForm $form): self
     {

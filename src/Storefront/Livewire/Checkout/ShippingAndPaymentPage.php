@@ -18,6 +18,7 @@ use Lunar\Models\Contracts\Cart;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use RuntimeException;
 use Testa\Settings\PaymentSettings;
+use Testa\Storefront\Data\AddressData;
 use Testa\Storefront\Data\CartCheckoutData;
 use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
@@ -230,6 +231,19 @@ class ShippingAndPaymentPage extends Page
             ->title(__('Tramitar pedido'));
     }
 
+    public function editAddress(string $type): void
+    {
+        $this->currentStep = $this->steps[match ($type) {
+            'shipping' => 'shipping_address',
+            'billing' => 'billing_address',
+            default => throw new RuntimeException("Unknown address type: $type"),
+        }];
+
+        if ($type === 'billing') {
+            $this->shippingIsBilling = false;
+        }
+    }
+
     public function saveAddress(string $type): void
     {
         $rules = collect($this->{$type}->getRules())
@@ -271,10 +285,10 @@ class ShippingAndPaymentPage extends Page
         $customer = Auth::user()?->latestCustomer();
 
         if ($customer && $type === 'shipping' && $this->shipping->saveToUser) {
-            new CreateCustomerAddress()->execute($customer, CheckoutAddressData::fromForm($this->shipping));
+            new CreateCustomerAddress()->execute($customer, AddressData::fromCheckoutData(CheckoutAddressData::fromForm($this->shipping)));
         }
         if ($customer && $type === 'billing' && $this->billing->saveToUser) {
-            new CreateCustomerAddress()->execute($customer, CheckoutAddressData::fromForm($this->billing));
+            new CreateCustomerAddress()->execute($customer, AddressData::fromCheckoutData(CheckoutAddressData::fromForm($this->billing)));
         }
 
         $this->determineCheckoutStep();

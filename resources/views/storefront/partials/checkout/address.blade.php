@@ -15,7 +15,7 @@
             <x-numaxlab-atomic::atoms.button
                     type="button"
                     class="is-secondary at-small"
-                    wire:click.prevent="$set('currentStep', {{ $step }})">
+                    wire:click.prevent="editAddress('{{ $type }}')">
                 {{ __('Modificar') }}
             </x-numaxlab-atomic::atoms.button>
         @endif

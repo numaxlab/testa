@@ -67,5 +67,8 @@ return [
         'is_published' => [
             'label' => 'Público',
         ],
+        'payment_types' => [
+            'label' => 'Métodos de pago',
+        ],
     ],
 ];

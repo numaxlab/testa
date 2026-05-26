@@ -10,7 +10,6 @@ use Illuminate\View\View;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Models\Content\Location;
 use Testa\Models\Education\Course;
-use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Data\CourseRegistrationData;
 use Testa\Storefront\Data\RegisterUserData;
@@ -67,7 +66,7 @@ class CourseRegisterPage extends Page
             $this->billing->contact_email = Auth::user()->email;
         }
 
-        $this->paymentTypes = app(PaymentSettings::class)->education;
+        $this->paymentTypes = $this->course->payment_types ?? [];
     }
 
     public function updated($field, $value): void

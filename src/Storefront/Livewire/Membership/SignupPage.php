@@ -11,7 +11,6 @@ use Illuminate\View\View;
 use Intervention\Validation\Rules\Iban;
 use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
-use Testa\Settings\PaymentSettings;
 use Testa\Settings\TextSettings;
 use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Data\MembershipSignupData;
@@ -81,7 +80,7 @@ class SignupPage extends Page
             }
         }
 
-        $this->paymentTypes = app(PaymentSettings::class)->membership;
+        $this->retrievePlanPaymentTypes();
     }
 
     private function retrieveTierPlans(): void
@@ -95,12 +94,30 @@ class SignupPage extends Page
         $this->plans = new GetMembershipPlansByTier()->execute($this->selectedTier);
     }
 
+    private function retrievePlanPaymentTypes(): void
+    {
+        if ($this->selectedPlan === null) {
+            $this->paymentTypes = [];
+
+            return;
+        }
+
+        $plan = $this->plans->firstWhere('id', $this->selectedPlan);
+        $this->paymentTypes = $plan?->payment_types ?? [];
+    }
+
     public function updated($field, $value): void
     {
         if ($field === 'selectedTier') {
             $this->retrieveTierPlans();
 
             $this->selectedPlan = null;
+            $this->paymentTypes = [];
+        }
+
+        if ($field === 'selectedPlan') {
+            $this->retrievePlanPaymentTypes();
+            $this->paymentType = null;
         }
         if ($field === 'billing.customer_address_id') {
             $this->billing->loadAddress($value);

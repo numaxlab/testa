@@ -41,14 +41,6 @@ class PaymentSettings extends SettingsPage
                             ->label(__('Tienda'))
                             ->options($options)
                             ->columns(2),
-                        Forms\Components\CheckboxList::make('education')
-                            ->label(__('Formación'))
-                            ->options($options)
-                            ->columns(2),
-                        Forms\Components\CheckboxList::make('membership')
-                            ->label(__('Membresía'))
-                            ->options($options)
-                            ->columns(2),
                         Forms\Components\CheckboxList::make('donation')
                             ->label(__('Donación'))
                             ->options($options)

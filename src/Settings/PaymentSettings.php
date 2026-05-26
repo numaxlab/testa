@@ -8,10 +8,6 @@ class PaymentSettings extends Settings
 {
     public array $store;
 
-    public array $education;
-
-    public array $membership;
-
     public array $donation;
 
     public static function group(): string

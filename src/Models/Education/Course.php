@@ -76,7 +76,7 @@ class Course extends Model implements SpatieHasMedia
     {
         return $this->belongsToMany(
             Product::modelClass(),
-            'course_'.config('lunar.database.table_prefix').'product',
+            'course_' . config('lunar.database.table_prefix') . 'product',
         )->withPivot(['position'])->orderByPivot('position');
     }
 
@@ -98,7 +98,7 @@ class Course extends Model implements SpatieHasMedia
             $media = $this->verticalImage;
         }
 
-        if (! $media) {
+        if (!$media) {
             return null;
         }
 
@@ -112,7 +112,7 @@ class Course extends Model implements SpatieHasMedia
                 $fullTitle = $this->name;
 
                 if ($this->subtitle) {
-                    $fullTitle .= ' - '.$this->subtitle;
+                    $fullTitle .= ' - ' . $this->subtitle;
                 }
 
                 return $fullTitle;
@@ -126,6 +126,7 @@ class Course extends Model implements SpatieHasMedia
             'starts_at' => 'date',
             'ends_at' => 'date',
             'delivery_method' => EventDeliveryMethod::class,
+            'payment_types' => 'array',
         ];
     }
 }

@@ -14,6 +14,7 @@ use FilamentTiptapEditor\TiptapEditor;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Education\Course;
 use Testa\Models\EventDeliveryMethod;
+use Testa\Settings\PaymentSettings;
 
 class CourseResource extends BaseResource
 {
@@ -147,6 +148,10 @@ class CourseResource extends BaseResource
                             ->label(__('testa::course.form.main_embed.label')),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('testa::course.form.is_published.label')),
+                        Forms\Components\CheckboxList::make('payment_types')
+                            ->label(__('testa::course.form.payment_types.label'))
+                            ->options(PaymentSettings::getAvailablePaymentTypes())
+                            ->columns(2),
                     ]),
             ])
             ->columns(1);

@@ -66,6 +66,13 @@ class MembershipPlan extends Model
 
     public function getFullNameAttribute(): string
     {
-        return $this->tier->name.' - '.$this->name;
+        return $this->tier->name . ' - ' . $this->name;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'payment_types' => 'array',
+        ];
     }
 }

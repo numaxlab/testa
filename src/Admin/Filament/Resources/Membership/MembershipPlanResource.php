@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Lunar\Admin\Support\Resources\BaseResource;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
+use Testa\Settings\PaymentSettings;
 
 class MembershipPlanResource extends BaseResource
 {
@@ -100,6 +101,10 @@ class MembershipPlanResource extends BaseResource
                             ->label(__('testa::membership-plan.form.benefits.label')),
                         Forms\Components\Toggle::make('is_published')
                             ->label(__('testa::membership-plan.form.is_published.label')),
+                        Forms\Components\CheckboxList::make('payment_types')
+                            ->label(__('testa::membership-plan.form.payment_types.label'))
+                            ->options(PaymentSettings::getAvailablePaymentTypes())
+                            ->columns(2),
                     ]),
             ])
             ->columns(1);

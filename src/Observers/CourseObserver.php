@@ -24,43 +24,32 @@ class CourseObserver
 
     private function createProduct(Course $course): void
     {
-        $taxClass = TaxClass::where('default', true)->firstOrFail();
-        $currency = Currency::where('default', true)->firstOrFail();
+        $taxClass = $this->defaultTaxClass();
+        $currency = $this->defaultCurrency();
 
         DB::transaction(function () use ($course, $taxClass, $currency) {
             $product = self::createProductFromCourse($course);
 
             $productOption = ProductOption::where('handle', self::RATE_PRODUCT_OPTION_HANDLE)
                 ->with('values')
-                ->firstOrFail();
+                ->first();
 
-            $product->productOptions()->attach($productOption, ['position' => 1]);
-
-            foreach ($productOption->values as $optionValue) {
-                $variant = ProductVariant::create([
-                    'product_id' => $product->id,
-                    'tax_class_id' => $taxClass->id,
-                    'sku' => 'course-' . $course->id . '-' . $optionValue->id,
-                    'shippable' => false,
-                    'stock' => 0,
-                    'unit_quantity' => 1,
-                    'min_quantity' => 1,
-                    'quantity_increment' => 1,
-                    'backorder' => 0,
-                    'purchasable' => 'always',
-                ]);
-
-                $variant->values()->attach($optionValue);
-
-                $variant->prices()->create([
-                    'price' => 0,
-                    'compare_price' => 0,
-                    'currency_id' => $currency->id,
-                    'min_quantity' => 1,
-                    'customer_group_id' => null,
-                ]);
+            if (!$productOption) {
+                return;
             }
+
+            $this->createVariants($product, $productOption, $taxClass, $currency, $course);
         });
+    }
+
+    private function defaultTaxClass(): TaxClass
+    {
+        return TaxClass::where('default', true)->firstOrFail();
+    }
+
+    private function defaultCurrency(): Currency
+    {
+        return Currency::where('default', true)->firstOrFail();
     }
 
     public static function createProductFromCourse(Course $course): Product
@@ -79,6 +68,36 @@ class CourseObserver
         return $product;
     }
 
+    private function createVariants(Product $product, ProductOption $productOption, TaxClass $taxClass, Currency $currency, Course $course): void
+    {
+        $product->productOptions()->attach($productOption, ['position' => 1]);
+
+        foreach ($productOption->values as $optionValue) {
+            $variant = ProductVariant::create([
+                'product_id' => $product->id,
+                'tax_class_id' => $taxClass->id,
+                'sku' => 'course-' . $course->id . '-' . $optionValue->id,
+                'shippable' => false,
+                'stock' => 0,
+                'unit_quantity' => 1,
+                'min_quantity' => 1,
+                'quantity_increment' => 1,
+                'backorder' => 0,
+                'purchasable' => 'always',
+            ]);
+
+            $variant->values()->attach($optionValue);
+
+            $variant->prices()->create([
+                'price' => 0,
+                'compare_price' => 0,
+                'currency_id' => $currency->id,
+                'min_quantity' => 1,
+                'customer_group_id' => null,
+            ]);
+        }
+    }
+
     public function updated(Course $course): void
     {
         $product = $course->purchasable;
@@ -86,6 +105,16 @@ class CourseObserver
         if (!$product) {
             $this->createProduct($course);
             return;
+        }
+
+        if ($product->variants()->doesntExist()) {
+            $productOption = ProductOption::where('handle', self::RATE_PRODUCT_OPTION_HANDLE)
+                ->with('values')
+                ->first();
+
+            if ($productOption) {
+                $this->createVariants($product, $productOption, $this->defaultTaxClass(), $this->defaultCurrency(), $course);
+            }
         }
 
         if ($product->name !== $course->name) {

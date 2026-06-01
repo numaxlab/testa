@@ -7,6 +7,8 @@ use Testa\Models\Education\Course;
 use Testa\Models\Education\CourseModule;
 use Testa\Models\Media\Media;
 use Testa\Models\Media\Visibility;
+use Testa\Models\Membership\Benefit;
+use Testa\Storefront\Queries\Membership\CustomerHasActiveBenefit;
 
 class MediaPolicy
 {
@@ -20,6 +22,17 @@ class MediaPolicy
             return false;
         }
 
+        if ($media->visibility === Visibility::MEMBERS_ONLY) {
+            $customer = $user->latestCustomer();
+
+            if (! $customer) {
+                return false;
+            }
+
+            return new CustomerHasActiveBenefit()->execute($customer, Benefit::PRIVATE_MEDIA_ACCESS);
+        }
+
+        // PRIVATE: access only if customer purchased related course
         $customer = $user->latestCustomer();
 
         foreach ($media->attachments as $attachment) {

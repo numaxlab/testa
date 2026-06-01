@@ -14,7 +14,7 @@
             <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($documents as $document)
                     <li>
-                        <x-testa::documents.summary :media="$document" :href="Storage::url($document->path)"/>
+                        <x-testa::documents.summary :media="$document" :href="route('testa.storefront.media.documents.download', $document)"/>
                     </li>
                 @endforeach
             </ul>

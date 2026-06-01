@@ -56,4 +56,31 @@ return [
         'course_id' => env('TESTA_COURSE_PRODUCT_TYPE_ID', 3),
         'membership_tier_id' => env('TESTA_MEMBERSHIP_TIER_PRODUCT_TYPE_ID', 4),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redsys Recurring (MIT) Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Server-to-server recurring charge configuration for Merchant-Initiated
+    | Transactions (MIT). This section is intentionally DISABLED by default.
+    |
+    | DO NOT enable until the bank confirms:
+    |  - The terminal supports COF/MIT transactions
+    |  - The transactiontype (0 or 9) is accepted
+    |  - Production credentials are available
+    |
+    | The 'endpoint' key switches between test and production environments.
+    |
+    */
+    'redsys_recurring' => [
+        'enabled' => env('TESTA_REDSYS_RECURRING_ENABLED', false),
+        'merchant_code' => env('TESTA_REDSYS_RECURRING_MERCHANT_CODE'),
+        'terminal' => env('TESTA_REDSYS_RECURRING_TERMINAL', '001'),
+        'secret_key' => env('TESTA_REDSYS_RECURRING_SECRET_KEY'),
+        'endpoint' => env(
+            'TESTA_REDSYS_RECURRING_ENDPOINT',
+            'https://sis-t.redsys.es:25443/sis/operaciones' // test by default
+        ),
+    ],
 ];

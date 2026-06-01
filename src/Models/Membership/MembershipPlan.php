@@ -75,4 +75,35 @@ class MembershipPlan extends Model
             'payment_types' => 'array',
         ];
     }
+
+    /**
+     * Return the base price for this plan in cents (integer), sourced from the
+     * linked ProductVariant's base price. Returns 0 if no variant or price is
+     * configured — the caller is responsible for treating 0 as a config error.
+     *
+     * Uses getRawOriginal() to bypass Lunar's CastsPrice cast, which is not
+     * compatible with PHP 8.4 when the DB returns an integer (preg_replace
+     * deprecation on non-string subjects).
+     */
+    /**
+     * Return the Carbon date at which the next billing period ends,
+     * calculated from now() according to the plan's billing_interval.
+     */
+    public function nextExpiresAt(): \Illuminate\Support\Carbon
+    {
+        return match ($this->billing_interval) {
+            self::BILLING_INTERVAL_MONTHLY    => now()->addMonth(),
+            self::BILLING_INTERVAL_BIMONTHLY  => now()->addMonths(2),
+            self::BILLING_INTERVAL_QUARTERLY  => now()->addMonths(3),
+            self::BILLING_INTERVAL_YEARLY     => now()->addYear(),
+            default                           => now()->addMonth(),
+        };
+    }
+
+    public function priceCents(): int
+    {
+        $price = $this->variant?->basePrices()->first();
+
+        return $price !== null ? (int) $price->getRawOriginal('price') : 0;
+    }
 }

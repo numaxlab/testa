@@ -6,6 +6,7 @@ use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,8 +27,10 @@ use Testa\Admin\Filament\Extension\ProductResourceExtension;
 use Testa\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Testa\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
 use Testa\Console\Commands\Install;
+use Testa\Console\Commands\ProcessMembershipRenewals;
 use Testa\Console\Commands\SyncMembershipBenefits;
 use Testa\Contracts\Payment\PaymentGatewayAdapter;
+use Testa\Listeners\PersistRedsysMerchantIdentifier;
 use Testa\Models\Collection;
 use Testa\Models\Customer;
 use Testa\Models\Education\Course;
@@ -96,6 +99,15 @@ class TestaServiceProvider extends ServiceProvider
 
         Relation::morphMap($modelClasses->toArray());
 
+        // Register Redsys payment-identifier listener only when the lunar-redsys
+        // package is present (it is a host-app dependency, not a package hard dep).
+        if (class_exists(\NumaxLab\Lunar\Redsys\Events\RedsysMerchantIdentifierReceived::class)) {
+            Event::listen(
+                \NumaxLab\Lunar\Redsys\Events\RedsysMerchantIdentifierReceived::class,
+                PersistRedsysMerchantIdentifier::class,
+            );
+        }
+
         Order::observe(OrderObserver::class);
         Course::observe(CourseObserver::class);
         MembershipTier::observe(MembershipTierObserver::class);
@@ -105,6 +117,7 @@ class TestaServiceProvider extends ServiceProvider
             $this->commands([
                 Install::class,
                 SyncMembershipBenefits::class,
+                ProcessMembershipRenewals::class,
             ]);
         }
     }
@@ -112,6 +125,18 @@ class TestaServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/testa.php', 'testa');
+
+        // Bridge: if the host app configures services.redsys.recurring.*, let it
+        // take precedence over the package-level testa.redsys_recurring.* defaults.
+        // This makes services.redsys.recurring the single source of truth while
+        // keeping testa.redsys_recurring.* as the fallback for standalone/dev use.
+        $hostConfig = config('services.redsys.recurring');
+        if (is_array($hostConfig) && ! empty($hostConfig)) {
+            config(['testa.redsys_recurring' => array_merge(
+                config('testa.redsys_recurring', []),
+                array_filter($hostConfig, fn ($v) => $v !== null),
+            )]);
+        }
 
         $this->registerPaymentGatewayRegistry();
 

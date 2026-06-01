@@ -34,7 +34,8 @@ it('has order relationship', function () {
 
 it('has status constants', function () {
     expect(Subscription::STATUS_ACTIVE)->toBe('active')
-        ->and(Subscription::STATUS_CANCELLED)->toBe('cancelled');
+        ->and(Subscription::STATUS_CANCELLED)->toBe('cancelled')
+        ->and(Subscription::STATUS_PENDING_PAYMENT)->toBe('pending_payment');
 });
 
 it('casts started_at to date', function () {
@@ -67,4 +68,31 @@ it('can create cancelled subscription with factory', function () {
 it('can create expired subscription with factory', function () {
     $subscription = Subscription::factory()->expired()->create();
     expect($subscription->expires_at->isPast())->toBeTrue();
+});
+
+it('has nullable payment_identifier by default', function () {
+    $subscription = Subscription::factory()->create();
+    expect($subscription->payment_identifier)->toBeNull();
+});
+
+it('can persist a payment identifier token', function () {
+    $subscription = Subscription::factory()->create();
+
+    $subscription->setPaymentIdentifier('OPAQUE_TOKEN_ABC123');
+
+    $subscription->refresh();
+
+    expect($subscription->payment_identifier)->toBe('OPAQUE_TOKEN_ABC123');
+});
+
+it('reports hasPaymentIdentifier as false when no token stored', function () {
+    $subscription = Subscription::factory()->create();
+    expect($subscription->hasPaymentIdentifier())->toBeFalse();
+});
+
+it('reports hasPaymentIdentifier as true once token is stored', function () {
+    $subscription = Subscription::factory()->create();
+    $subscription->setPaymentIdentifier('OPAQUE_TOKEN_XYZ789');
+
+    expect($subscription->hasPaymentIdentifier())->toBeTrue();
 });

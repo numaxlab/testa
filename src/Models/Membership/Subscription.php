@@ -22,6 +22,7 @@ class Subscription extends Model
 
     public const string STATUS_ACTIVE = 'active';
     public const string STATUS_CANCELLED = 'cancelled';
+    public const string STATUS_PENDING_PAYMENT = 'pending_payment';
 
     protected $guarded = [];
 
@@ -46,5 +47,19 @@ class Subscription extends Model
             'started_at' => 'date',
             'expires_at' => 'date',
         ];
+    }
+
+    /**
+     * Store only the opaque Redsys recurring token. Never store PAN or CVV.
+     */
+    public function setPaymentIdentifier(string $identifier): void
+    {
+        $this->payment_identifier = $identifier;
+        $this->save();
+    }
+
+    public function hasPaymentIdentifier(): bool
+    {
+        return $this->payment_identifier !== null;
     }
 }

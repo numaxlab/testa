@@ -100,3 +100,8 @@ it('can create yearly plan with factory', function () {
     $plan = MembershipPlan::factory()->yearly()->create();
     expect($plan->billing_interval)->toBe(MembershipPlan::BILLING_INTERVAL_YEARLY);
 });
+
+it('priceCents returns 0 when no variant is linked', function () {
+    $plan = MembershipPlan::factory()->create(['variant_id' => null]);
+    expect($plan->priceCents())->toBe(0);
+});

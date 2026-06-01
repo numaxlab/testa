@@ -2,35 +2,23 @@
 
 namespace Testa\Storefront\Livewire\Media;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Livewire\Attributes\Url;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use Testa\Livewire\Features\WithPagination;
-use Testa\Storefront\Queries\Media\GetPublishedDocuments;
+use Testa\Storefront\Queries\Media\GetAccessibleDocuments;
 
 class DocumentsListPage extends Page
 {
     use WithPagination;
 
-    #[Url]
-    public string $q = '';
-
-    #[Url]
-    public string $c = '';
-
-    #[Url]
-    public string $t = '';
-
     public function render(): View
     {
-        $documents = new GetPublishedDocuments()->execute();
+        $customer = Auth::check() ? Auth::user()->latestCustomer() : null;
+
+        $documents = new GetAccessibleDocuments()->execute(customer: $customer);
 
         return view('testa::storefront.livewire.media.documents-list', compact('documents'))
             ->title(__('Documentos'));
-    }
-
-    public function search(): void
-    {
-        $this->resetPage();
     }
 }

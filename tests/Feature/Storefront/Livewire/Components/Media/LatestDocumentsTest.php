@@ -10,6 +10,11 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
+use Testa\Models\Media\Document;
+use Testa\Models\Media\Visibility;
+use Testa\Storefront\Livewire\Components\Media\LatestDocuments;
+
+use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     $this->language = Language::factory()->create(['default' => true]);
@@ -33,37 +38,49 @@ beforeEach(function () {
 });
 
 describe('LatestDocuments component', function () {
-    it('returns correct view name', function () {
-        $viewPath = 'testa::storefront.livewire.components.media.latest-documents';
+    it('renders public published documents as article cards', function () {
+        Document::factory()->count(2)->create([
+            'visibility' => Visibility::PUBLIC->value,
+            'is_published' => true,
+        ]);
 
-        expect(view()->exists($viewPath))->toBeTrue();
+        livewire(LatestDocuments::class)
+            ->assertSeeHtml('<article')
+            ->assertOk();
     });
 
-    it('filters by published documents only', function () {
-        // The component uses where('is_published', true)
-        $filtersByPublished = true;
+    it('does not render any articles when only members_only documents exist', function () {
+        Document::factory()->count(2)->create([
+            'visibility' => Visibility::MEMBERS_ONLY->value,
+            'is_published' => true,
+        ]);
 
-        expect($filtersByPublished)->toBeTrue();
+        livewire(LatestDocuments::class)
+            ->assertDontSeeHtml('<article')
+            ->assertOk();
     });
 
-    it('filters by public visibility', function () {
-        // The component uses where('visibility', Visibility::PUBLIC->value)
-        $filtersByPublicVisibility = true;
+    it('does not render any articles when only unpublished public documents exist', function () {
+        Document::factory()->count(2)->create([
+            'visibility' => Visibility::PUBLIC->value,
+            'is_published' => false,
+        ]);
 
-        expect($filtersByPublicVisibility)->toBeTrue();
+        livewire(LatestDocuments::class)
+            ->assertDontSeeHtml('<article')
+            ->assertOk();
     });
 
-    it('limits results to 6 documents', function () {
-        // The component uses take(6)
-        $limit = 6;
+    it('limits rendered article cards to 6 even when more exist', function () {
+        Document::factory()->count(8)->create([
+            'visibility' => Visibility::PUBLIC->value,
+            'is_published' => true,
+        ]);
 
-        expect($limit)->toBe(6);
-    });
+        $html = livewire(LatestDocuments::class)->html();
 
-    it('orders by latest first', function () {
-        // The component uses latest() which orders by created_at desc
-        $ordersLatest = true;
+        $count = substr_count($html, '<article');
 
-        expect($ordersLatest)->toBeTrue();
+        expect($count)->toBe(6);
     });
 });

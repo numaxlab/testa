@@ -23,11 +23,15 @@ class Benefit extends Model
     }
 
     public const string CREDIT_PAYMENT_TYPE = 'credit_payment_type';
+
     public const string CUSTOMER_GROUP = 'customer_group';
+
+    public const string PRIVATE_MEDIA_ACCESS = 'private_media_access';
 
     public $translatable = [
         'name',
     ];
+
     protected $guarded = [];
 
     public function membershipPlans(): BelongsToMany

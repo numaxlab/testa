@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Lunar\Models\Customer;
 use Lunar\Models\Order;
+use Testa\Console\Commands\SyncMembershipBenefits;
 use Testa\Mail\AdminOrderNotificationMail;
 use Testa\Mail\OrderConfirmationMail;
 use Testa\Models\Education\Course;
@@ -19,7 +20,7 @@ class OrderObserver
     {
         $validStatuses = ['payment-received', 'dispatched'];
 
-        if (!$order->was_redeemed && $order->isDirty('status') && in_array($order->status, $validStatuses)) {
+        if (! $order->was_redeemed && $order->isDirty('status') && in_array($order->status, $validStatuses)) {
             DB::transaction(function () use ($order) {
                 $this->activateSubscriptionFor($order);
                 $this->activateCourseFor($order);
@@ -48,7 +49,7 @@ class OrderObserver
 
             $membershipPlan = MembershipPlan::where('variant_id', $line->purchasable_id)->first();
 
-            if (!$membershipPlan) {
+            if (! $membershipPlan) {
                 continue;
             }
 
@@ -77,6 +78,7 @@ class OrderObserver
             $wasRedeemed = true;
 
             $this->applyBenefits($customer, $membershipPlan);
+            new SyncMembershipBenefits()->sync($customer);
             $this->calculateRecurringPayment($membershipPlan);
 
             break;
@@ -114,7 +116,7 @@ class OrderObserver
                 if ($line->purchasable->product->product_type_id === config('testa.product_types.course_id')) {
                     $course = Course::where('purchasable_id', $line->purchasable->product_id)->first();
 
-                    if ($course && !$customer->courses->keyBy('id')->has($course->id)) {
+                    if ($course && ! $customer->courses->keyBy('id')->has($course->id)) {
                         $customer->courses()->attach($course);
                         $wasRedeemed = true;
                     }
@@ -131,7 +133,7 @@ class OrderObserver
 
     protected function sendOrderEmails(Order $order): void
     {
-        if (!config('testa.notifications.order_emails_enabled', true)) {
+        if (! config('testa.notifications.order_emails_enabled', true)) {
             return;
         }
 

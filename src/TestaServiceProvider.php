@@ -26,10 +26,14 @@ use Testa\Admin\Filament\Extension\ProductResourceExtension;
 use Testa\Admin\Filament\Resources\Extension\CustomerResourceExtension;
 use Testa\Admin\Filament\Support\RelationManagers\CourseMediaRelationManager;
 use Testa\Console\Commands\Install;
+use Testa\Console\Commands\SyncMembershipBenefits;
 use Testa\Contracts\Payment\PaymentGatewayAdapter;
+use Testa\Models\Collection;
+use Testa\Models\Customer;
 use Testa\Models\Education\Course;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
+use Testa\Models\Product;
 use Testa\Observers\CourseObserver;
 use Testa\Observers\MembershipPlanObserver;
 use Testa\Observers\MembershipTierObserver;
@@ -100,6 +104,7 @@ class TestaServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Install::class,
+                SyncMembershipBenefits::class,
             ]);
         }
     }
@@ -112,17 +117,17 @@ class TestaServiceProvider extends ServiceProvider
 
         ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
-            \Testa\Models\Product::class,
+            Product::class,
         );
 
         ModelManifest::replace(
             \Lunar\Models\Contracts\Collection::class,
-            \Testa\Models\Collection::class,
+            Collection::class,
         );
 
         ModelManifest::replace(
             \Lunar\Models\Contracts\Customer::class,
-            \Testa\Models\Customer::class,
+            Customer::class,
         );
 
         LunarPanel::extensions([
@@ -135,7 +140,7 @@ class TestaServiceProvider extends ServiceProvider
     private function registerPaymentGatewayRegistry(): void
     {
         $this->app->singleton(PaymentGatewayRegistry::class, function ($app) {
-            $registry = new PaymentGatewayRegistry();
+            $registry = new PaymentGatewayRegistry;
 
             foreach (config('testa.payment_gateways', []) as $adapterClass => $options) {
                 if (!class_exists($adapterClass)) {

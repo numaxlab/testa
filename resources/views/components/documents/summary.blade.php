@@ -1,5 +1,8 @@
+@php
+    $downloadUrl = route('testa.storefront.media.documents.download', $media);
+@endphp
 <article {{ $attributes->merge(['class' => 'ml-summary flex gap-3 border-b'])->filter(fn ($value, $key) => ! in_array($key, ['href'])) }}>
-    <a href="{{ Storage::url($media->path) }}" class="w-1/3 aspect-[2/3] shrink-0 self-start mb-4">
+    <a href="{{ $downloadUrl }}" class="w-1/3 aspect-[2/3] shrink-0 self-start mb-4">
         <span class="sr-only">{{ __('Descargar') }} {{ $media->name }}</span>
         <div class="summary-media-wrapper flex items-center justify-center bg-neutral-100 w-full h-full">
             <div class="flex flex-col items-center gap-2 text-neutral-400">
@@ -13,7 +16,7 @@
         </div>
     </a>
     <div class="w-2/3 pr-5">
-        <a href="{{ Storage::url($media->path) }}" target="_blank">
+        <a href="{{ $downloadUrl }}" target="_blank">
             <h3 class="at-heading is-3">
                 {{ $media->name }}
             </h3>

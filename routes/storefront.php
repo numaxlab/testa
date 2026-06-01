@@ -44,6 +44,7 @@ use Testa\Storefront\Livewire\Education\TopicsListPage;
 use Testa\Storefront\Livewire\HomePage;
 use Testa\Storefront\Livewire\KitchenSinkPage;
 use Testa\Storefront\Livewire\Media\AudioPage;
+use Testa\Storefront\Http\Controllers\DocumentDownloadController;
 use Testa\Storefront\Livewire\Media\DocumentsListPage;
 use Testa\Storefront\Livewire\Media\HomePage as MediaHomePage;
 use Testa\Storefront\Livewire\Media\SearchPage as MediaSearchPage;
@@ -156,6 +157,9 @@ Route::prefix('/mediateca')->group(function () {
 
     Route::get('/documentos', DocumentsListPage::class)
         ->name('testa.storefront.media.documents.index');
+
+    Route::get('/documentos/{document}/descargar', DocumentDownloadController::class)
+        ->name('testa.storefront.media.documents.download');
 });
 
 Route::prefix('/actualidad')->group(function () {

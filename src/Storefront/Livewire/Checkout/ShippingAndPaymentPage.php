@@ -17,6 +17,7 @@ use Lunar\Models\CartAddress;
 use Lunar\Models\Contracts\Cart;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
 use RuntimeException;
+use Testa\Models\Membership\Benefit;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Data\AddressData;
 use Testa\Storefront\Data\CartCheckoutData;
@@ -24,6 +25,7 @@ use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Livewire\Checkout\Forms\AddressForm;
 use Testa\Storefront\Livewire\Concerns\FiltersGeslibProducts;
 use Testa\Storefront\Queries\Checkout\GetPickupShippingMethods;
+use Testa\Storefront\Queries\Membership\CustomerHasActiveBenefit;
 use Testa\Storefront\UseCases\Account\CreateCustomerAddress;
 use Testa\Storefront\UseCases\Checkout\PrepareCartForCheckout;
 use Testa\Storefront\UseCases\Checkout\SaveCouponCode;
@@ -85,7 +87,8 @@ class ShippingAndPaymentPage extends Page
 
         $this->paymentTypes = app(PaymentSettings::class)->store;
 
-        if (!Auth::user()?->latestCustomer()?->canBuyOnCredit()) {
+        $customer = Auth::user()?->latestCustomer();
+        if (!$customer || !(new CustomerHasActiveBenefit())->execute($customer, Benefit::CREDIT_PAYMENT_TYPE)) {
             $this->paymentTypes = array_values(array_filter(
                 $this->paymentTypes,
                 fn($type) => $type !== 'credit',

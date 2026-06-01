@@ -19,6 +19,10 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
+use Testa\Models\Customer as TestaCustomer;
+use Testa\Models\Membership\Benefit;
+use Testa\Models\Membership\MembershipPlan;
+use Testa\Models\Membership\Subscription;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Checkout\ShippingAndPaymentPage;
 
@@ -186,19 +190,20 @@ describe('mount', function () {
         expect($component->get('paymentTypes'))->not->toContain('credit');
     });
 
-    it('keeps credit in payment types when customer can buy on credit', function () {
+    it('keeps credit in payment types when customer has an active subscription with credit benefit', function () {
         $user = createUser();
 
-        // Give customer a subscription with credit benefit
-        $customer = $user->latestCustomer();
-        $creditMock = Mockery::mock($customer);
-        $creditMock->shouldReceive('canBuyOnCredit')->andReturn(true);
+        // Retrieve the Testa customer bound by the service provider and give it a credit benefit
+        $customer = TestaCustomer::find($user->latestCustomer()->id);
+        $benefit = Benefit::factory()->creditPaymentType()->create();
+        $plan = MembershipPlan::factory()->hasAttached($benefit)->create();
+        Subscription::factory()->active()->create([
+            'customer_id' => $customer->id,
+            'membership_plan_id' => $plan->id,
+        ]);
 
-        // Re-mock: bind a custom customer that returns true
-        // We test this indirectly via the mock approach below
         $this->actingAs($user);
 
-        // Override PaymentSettings to include credit
         $mockSettings = Mockery::mock(PaymentSettings::class);
         $mockSettings->store = ['card', 'credit'];
         app()->instance(PaymentSettings::class, $mockSettings);
@@ -206,9 +211,8 @@ describe('mount', function () {
         $cart = createGeslibCart($user);
         CartSession::use($cart);
 
-        // Without a subscription, credit IS filtered. This verifies the filter runs.
         $component = livewire(ShippingAndPaymentPage::class);
-        expect($component->get('paymentTypes'))->not->toContain('credit');
+        expect($component->get('paymentTypes'))->toContain('credit');
     });
 
     it('pre-fills shipping form from cart shipping address', function () {

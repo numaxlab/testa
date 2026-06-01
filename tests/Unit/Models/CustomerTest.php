@@ -11,6 +11,7 @@ use Testa\Models\Customer;
 use Testa\Models\Membership\Benefit;
 use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\Subscription;
+use Testa\Storefront\Queries\Membership\CustomerHasActiveBenefit;
 use Testa\Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
@@ -41,75 +42,69 @@ it('has courses relationship', function () {
     expect($customer->courses())->toBeInstanceOf(BelongsToMany::class);
 });
 
-it('cannot buy on credit when no subscriptions', function () {
-    $customer = LunarCustomer::factory()->create();
-    $testaCustomer = Customer::find($customer->id);
+it('credit eligibility is false when customer has no subscriptions', function () {
+    $customer = Customer::find(LunarCustomer::factory()->create()->id);
 
-    expect($testaCustomer->canBuyOnCredit())->toBeFalse();
+    $result = new CustomerHasActiveBenefit()->execute($customer, Benefit::CREDIT_PAYMENT_TYPE);
+
+    expect($result)->toBeFalse();
 });
 
-it('cannot buy on credit when subscription has no credit benefit', function () {
-    $customer = LunarCustomer::factory()->create();
+it('credit eligibility is false when subscription has no credit benefit', function () {
+    $customer = Customer::find(LunarCustomer::factory()->create()->id);
     $plan = MembershipPlan::factory()->create();
 
-    Subscription::factory()->create([
+    Subscription::factory()->active()->create([
         'customer_id' => $customer->id,
         'membership_plan_id' => $plan->id,
-        'status' => Subscription::STATUS_ACTIVE,
-        'expires_at' => now()->addYear(),
     ]);
 
-    $testaCustomer = Customer::find($customer->id);
-    expect($testaCustomer->canBuyOnCredit())->toBeFalse();
+    $result = new CustomerHasActiveBenefit()->execute($customer, Benefit::CREDIT_PAYMENT_TYPE);
+
+    expect($result)->toBeFalse();
 });
 
-it('cannot buy on credit when subscription is expired', function () {
-    $customer = LunarCustomer::factory()->create();
+it('credit eligibility is false when subscription with credit benefit is expired', function () {
+    $customer = Customer::find(LunarCustomer::factory()->create()->id);
     $benefit = Benefit::factory()->creditPaymentType()->create();
-    $plan = MembershipPlan::factory()->create();
-    $plan->benefits()->attach($benefit);
+    $plan = MembershipPlan::factory()->hasAttached($benefit)->create();
 
-    Subscription::factory()->create([
+    Subscription::factory()->expired()->create([
         'customer_id' => $customer->id,
         'membership_plan_id' => $plan->id,
-        'status' => Subscription::STATUS_ACTIVE,
-        'expires_at' => now()->subDay(),
     ]);
 
-    $testaCustomer = Customer::find($customer->id);
-    expect($testaCustomer->canBuyOnCredit())->toBeFalse();
+    $result = new CustomerHasActiveBenefit()->execute($customer, Benefit::CREDIT_PAYMENT_TYPE);
+
+    expect($result)->toBeFalse();
 });
 
-it('cannot buy on credit when subscription is cancelled', function () {
-    $customer = LunarCustomer::factory()->create();
+it('credit eligibility is false when subscription with credit benefit is cancelled', function () {
+    $customer = Customer::find(LunarCustomer::factory()->create()->id);
     $benefit = Benefit::factory()->creditPaymentType()->create();
-    $plan = MembershipPlan::factory()->create();
-    $plan->benefits()->attach($benefit);
+    $plan = MembershipPlan::factory()->hasAttached($benefit)->create();
 
-    Subscription::factory()->create([
+    Subscription::factory()->cancelled()->create([
         'customer_id' => $customer->id,
         'membership_plan_id' => $plan->id,
-        'status' => Subscription::STATUS_CANCELLED,
-        'expires_at' => now()->addYear(),
     ]);
 
-    $testaCustomer = Customer::find($customer->id);
-    expect($testaCustomer->canBuyOnCredit())->toBeFalse();
+    $result = new CustomerHasActiveBenefit()->execute($customer, Benefit::CREDIT_PAYMENT_TYPE);
+
+    expect($result)->toBeFalse();
 });
 
-it('can buy on credit when active subscription has credit benefit', function () {
-    $customer = LunarCustomer::factory()->create();
+it('credit eligibility is true when active subscription includes credit benefit', function () {
+    $customer = Customer::find(LunarCustomer::factory()->create()->id);
     $benefit = Benefit::factory()->creditPaymentType()->create();
-    $plan = MembershipPlan::factory()->create();
-    $plan->benefits()->attach($benefit);
+    $plan = MembershipPlan::factory()->hasAttached($benefit)->create();
 
-    Subscription::factory()->create([
+    Subscription::factory()->active()->create([
         'customer_id' => $customer->id,
         'membership_plan_id' => $plan->id,
-        'status' => Subscription::STATUS_ACTIVE,
-        'expires_at' => now()->addYear(),
     ]);
 
-    $testaCustomer = Customer::find($customer->id);
-    expect($testaCustomer->canBuyOnCredit())->toBeTrue();
+    $result = new CustomerHasActiveBenefit()->execute($customer, Benefit::CREDIT_PAYMENT_TYPE);
+
+    expect($result)->toBeTrue();
 });

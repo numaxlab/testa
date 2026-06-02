@@ -9,9 +9,8 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Lunar\Models\Order;
-use Testa\Settings\EmailSettings;
 
-class OrderConfirmationMail extends Mailable implements ShouldQueue
+class AdminPendingOrderNotificationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -22,20 +21,14 @@ class OrderConfirmationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('testa::mail.order_confirmation.subject', ['reference' => $this->order->reference]),
+            subject: __('testa::mail.admin_pending_order_notification.subject', ['reference' => $this->order->reference]),
         );
     }
 
     public function content(): Content
     {
-        $settings = app(EmailSettings::class);
-
         return new Content(
-            markdown: 'testa::emails.order-confirmation',
-            with: [
-                'greeting' => $settings->getOrderConfirmationGreeting(),
-                'intro' => $settings->getOrderConfirmationIntro(),
-            ],
+            markdown: 'testa::emails.admin-pending-order-notification',
         );
     }
 }

@@ -42,6 +42,7 @@ final class RegisterForCourse
             $contactSettings = app(ContactSettings::class);
             $primaryAddress = $contactSettings->getPrimaryAddress();
             $billing->first_name = $user->latestCustomer()->first_name;
+            $billing->last_name = $user->latestCustomer()->last_name;
             $billing->country_id = Country::where('iso2', $primaryAddress['country_iso2'])->firstOrFail()->id;
             $billing->city = $primaryAddress['city'];
             $billing->postcode = $primaryAddress['postcode'];

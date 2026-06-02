@@ -8,7 +8,9 @@ use Lunar\Models\Customer;
 use Lunar\Models\Order;
 use Testa\Console\Commands\SyncMembershipBenefits;
 use Testa\Mail\AdminOrderNotificationMail;
+use Testa\Mail\AdminPendingOrderNotificationMail;
 use Testa\Mail\OrderConfirmationMail;
+use Testa\Mail\OrderPendingPaymentMail;
 use Testa\Models\Education\Course;
 use Testa\Models\Membership\Benefit;
 use Testa\Models\Membership\MembershipPlan;
@@ -20,7 +22,7 @@ class OrderObserver
     {
         $validStatuses = ['payment-received', 'dispatched'];
 
-        if (! $order->was_redeemed && $order->isDirty('status') && in_array($order->status, $validStatuses)) {
+        if (!$order->was_redeemed && $order->isDirty('status') && in_array($order->status, $validStatuses)) {
             DB::transaction(function () use ($order) {
                 $this->activateSubscriptionFor($order);
                 $this->activateCourseFor($order);
@@ -29,6 +31,10 @@ class OrderObserver
 
         if ($order->isDirty('status') && $order->status === 'payment-received') {
             $this->sendOrderEmails($order);
+        }
+
+        if ($order->isDirty('status') && $order->status === 'payment-offline') {
+            $this->sendPendingPaymentEmails($order);
         }
     }
 
@@ -49,7 +55,7 @@ class OrderObserver
 
             $membershipPlan = MembershipPlan::where('variant_id', $line->purchasable_id)->first();
 
-            if (! $membershipPlan) {
+            if (!$membershipPlan) {
                 continue;
             }
 
@@ -116,7 +122,7 @@ class OrderObserver
                 if ($line->purchasable->product->product_type_id === config('testa.product_types.course_id')) {
                     $course = Course::where('purchasable_id', $line->purchasable->product_id)->first();
 
-                    if ($course && ! $customer->courses->keyBy('id')->has($course->id)) {
+                    if ($course && !$customer->courses->keyBy('id')->has($course->id)) {
                         $customer->courses()->attach($course);
                         $wasRedeemed = true;
                     }
@@ -133,7 +139,11 @@ class OrderObserver
 
     protected function sendOrderEmails(Order $order): void
     {
-        if (! config('testa.notifications.order_emails_enabled', true)) {
+        if (!config('testa.notifications.order_emails_enabled', true)) {
+            return;
+        }
+
+        if ($order->meta?->confirmation_email_sent) {
             return;
         }
 
@@ -147,6 +157,27 @@ class OrderObserver
 
         if ($adminEmail) {
             Mail::to($adminEmail)->queue(new AdminOrderNotificationMail($order));
+        }
+
+        $order->updateQuietly(['meta->confirmation_email_sent' => true]);
+    }
+
+    protected function sendPendingPaymentEmails(Order $order): void
+    {
+        if (!config('testa.notifications.order_emails_enabled', true)) {
+            return;
+        }
+
+        $customerEmail = $order->billingAddress?->contact_email ?? $order->user?->email;
+
+        if ($customerEmail) {
+            Mail::to($customerEmail)->queue(new OrderPendingPaymentMail($order));
+        }
+
+        $adminEmail = config('testa.notifications.admin_email');
+
+        if ($adminEmail) {
+            Mail::to($adminEmail)->queue(new AdminPendingOrderNotificationMail($order));
         }
     }
 }

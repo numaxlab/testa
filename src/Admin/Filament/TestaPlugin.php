@@ -5,6 +5,7 @@ namespace Testa\Admin\Filament;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Testa\Admin\Filament\Pages\ContactSettings;
+use Testa\Admin\Filament\Pages\EmailSettings;
 use Testa\Admin\Filament\Pages\PaymentSettings;
 use Testa\Admin\Filament\Pages\TextSettings;
 use Testa\Admin\Filament\Resources\Config\MenuItemResource;
@@ -68,10 +69,13 @@ class TestaPlugin implements Plugin
 
         $panel->pages([
             ContactSettings::class,
+            EmailSettings::class,
             PaymentSettings::class,
             TextSettings::class,
         ]);
     }
 
-    public function boot(Panel $panel): void {}
+    public function boot(Panel $panel): void
+    {
+    }
 }

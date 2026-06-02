@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Lunar\Models\Order;
 use Testa\Settings\EmailSettings;
 
-class OrderConfirmationMail extends Mailable implements ShouldQueue
+class OrderPendingPaymentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -22,7 +22,7 @@ class OrderConfirmationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('testa::mail.order_confirmation.subject', ['reference' => $this->order->reference]),
+            subject: __('testa::mail.order_pending_payment.subject', ['reference' => $this->order->reference]),
         );
     }
 
@@ -31,10 +31,10 @@ class OrderConfirmationMail extends Mailable implements ShouldQueue
         $settings = app(EmailSettings::class);
 
         return new Content(
-            markdown: 'testa::emails.order-confirmation',
+            markdown: 'testa::emails.order-pending-payment',
             with: [
-                'greeting' => $settings->getOrderConfirmationGreeting(),
-                'intro' => $settings->getOrderConfirmationIntro(),
+                'greeting' => $settings->getOrderPendingPaymentGreeting(),
+                'intro' => $settings->getOrderPendingPaymentIntro(),
             ],
         );
     }

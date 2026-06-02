@@ -5,6 +5,7 @@ namespace Testa\Storefront\Livewire\Components\Tier;
 use Illuminate\View\View;
 use Livewire\Component;
 use Testa\Models\Content\Tier;
+use Testa\Storefront\Queries\News\GetLatestActivities;
 
 class EventsUpcoming extends Component
 {
@@ -12,6 +13,8 @@ class EventsUpcoming extends Component
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.components.tier.events-upcoming');
+        $activities = new GetLatestActivities()->execute();
+
+        return view('testa::storefront.livewire.components.tier.events-upcoming', compact('activities'));
     }
 }

@@ -15,10 +15,16 @@
             @endif
         </x-numaxlab-atomic::organisms.tier.header>
 
-        <ul class="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-            <li>
-                Eventos
-            </li>
+        <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            @foreach ($activities as $activity)
+                <li>
+                    @if ($activity instanceof \Testa\Models\News\Event)
+                        <x-testa::events.summary :event="$activity"/>
+                    @else
+                        <x-testa::course-modules.activity :module="$activity"/>
+                    @endif
+                </li>
+            @endforeach
         </ul>
     </x-numaxlab-atomic::organisms.tier>
 </div>

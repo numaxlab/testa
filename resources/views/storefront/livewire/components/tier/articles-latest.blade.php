@@ -15,10 +15,12 @@
             @endif
         </x-numaxlab-atomic::organisms.tier.header>
 
-        <ul class="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-            <li>
-                Últimas noticias
-            </li>
+        <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            @foreach ($articles as $article)
+                <li>
+                    <x-testa::articles.summary :article="$article"/>
+                </li>
+            @endforeach
         </ul>
     </x-numaxlab-atomic::organisms.tier>
 </div>

@@ -7,6 +7,7 @@ use Filament\Panel;
 use Testa\Admin\Filament\Pages\ContactSettings;
 use Testa\Admin\Filament\Pages\EmailSettings;
 use Testa\Admin\Filament\Pages\PaymentSettings;
+use Testa\Admin\Filament\Pages\RoutesPage;
 use Testa\Admin\Filament\Pages\TextSettings;
 use Testa\Admin\Filament\Resources\Config\MenuItemResource;
 use Testa\Admin\Filament\Resources\Content\BannerResource;
@@ -72,6 +73,7 @@ class TestaPlugin implements Plugin
             EmailSettings::class,
             PaymentSettings::class,
             TextSettings::class,
+            RoutesPage::class,
         ]);
     }
 

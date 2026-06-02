@@ -11,7 +11,6 @@ return [
             'label' => 'Instructoras',
             'actions' => [
                 'attach' => [
-                    'label' => 'Asociar',
                     'form' => [
                         'record_id' => [
                             'label' => 'Autora',

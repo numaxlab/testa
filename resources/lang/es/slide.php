@@ -12,9 +12,6 @@ return [
         'name' => [
             'label' => 'Nombre',
         ],
-        'section' => [
-            'label' => 'Sección',
-        ],
         'is_published' => [
             'label' => 'Pública',
         ],
@@ -52,15 +49,6 @@ return [
         ],
         'description' => [
             'label' => 'Descripción',
-        ],
-        'link' => [
-            'label' => 'Enlace',
-        ],
-        'button_text' => [
-            'label' => 'Texto del botón',
-        ],
-        'image' => [
-            'label' => 'Imagen',
         ],
         'is_published' => [
             'label' => 'Pública',

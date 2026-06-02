@@ -26,9 +26,6 @@ return [
         'content' => [
             'label' => 'Contenido',
         ],
-        'image' => [
-            'label' => 'Imagen',
-        ],
         'published_at' => [
             'label' => 'Fecha de publicación',
         ],

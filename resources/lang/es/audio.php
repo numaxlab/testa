@@ -9,24 +9,6 @@ return [
         ],
         'attachments' => [
             'label' => 'Elementos relacionados',
-            'actions' => [
-                'attach' => [
-                    'label' => 'Asociar',
-                    'form' => [
-                        'record_id' => [
-                            'label' => 'Producto/curso',
-                        ],
-                    ],
-                    'notificaton' => [
-                        'success' => 'Registro asociado correctamente',
-                    ],
-                ],
-                'detach' => [
-                    'notificaton' => [
-                        'success' => 'Registro desasociado correctamente',
-                    ],
-                ],
-            ],
         ],
     ],
     'table' => [

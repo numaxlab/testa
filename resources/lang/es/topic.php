@@ -16,18 +16,4 @@ return [
             'label' => 'Público',
         ],
     ],
-    'form' => [
-        'name' => [
-            'label' => 'Título',
-        ],
-        'subtitle' => [
-            'label' => 'Subtítulo',
-        ],
-        'description' => [
-            'label' => 'Descripción',
-        ],
-        'is_published' => [
-            'label' => 'Público',
-        ],
-    ],
 ];

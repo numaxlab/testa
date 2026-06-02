@@ -3,16 +3,6 @@
 return [
     'label' => 'Beneficio',
     'plural_label' => 'Beneficios',
-    'pages' => [
-        'edit' => [
-            'title' => 'Información básica',
-        ],
-    ],
-    'table' => [
-        'name' => [
-            'label' => 'Nombre',
-        ],
-    ],
     'form' => [
         'code' => [
             'label' => 'Tipo',

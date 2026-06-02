@@ -53,9 +53,6 @@ return [
         'organiser' => [
             'label' => 'Organizador',
         ],
-        'image' => [
-            'label' => 'Imagen',
-        ],
         'is_published' => [
             'label' => 'Público',
         ],

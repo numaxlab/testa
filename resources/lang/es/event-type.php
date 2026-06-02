@@ -8,14 +8,4 @@ return [
             'title' => 'Información básica',
         ],
     ],
-    'table' => [
-        'name' => [
-            'label' => 'Nombre',
-        ],
-    ],
-    'form' => [
-        'name' => [
-            'label' => 'Nombre',
-        ],
-    ],
 ];

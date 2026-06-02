@@ -29,12 +29,6 @@ return [
     'form' => [
         'section' => [
             'label' => 'Portada',
-            'options' => [
-                'homepage' => 'Portada',
-                'bookshop' => 'Librería',
-                'editorial' => 'Editorial',
-                'education' => 'Formación',
-            ],
         ],
         'name' => [
             'label' => 'Nombre',

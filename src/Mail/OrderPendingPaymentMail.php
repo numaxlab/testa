@@ -15,26 +15,24 @@ class OrderPendingPaymentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Order $order)
+    public function __construct(public Order $order, public EmailSettings $settings)
     {
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('testa::mail.order_pending_payment.subject', ['reference' => $this->order->reference]),
+            subject: $this->settings->getOrderPendingPaymentGreeting(),
         );
     }
 
     public function content(): Content
     {
-        $settings = app(EmailSettings::class);
-
         return new Content(
             markdown: 'testa::emails.order-pending-payment',
             with: [
-                'greeting' => $settings->getOrderPendingPaymentGreeting(),
-                'intro' => $settings->getOrderPendingPaymentIntro(),
+                'greeting' => $this->settings->getOrderPendingPaymentGreeting(),
+                'intro' => $this->settings->getOrderPendingPaymentIntro(),
             ],
         );
     }

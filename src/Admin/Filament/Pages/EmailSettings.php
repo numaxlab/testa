@@ -41,7 +41,7 @@ class EmailSettings extends SettingsPage
                             ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\TextInput::make("order_confirmation_greeting.{$locale}")
-                                        ->label(__('Saludo'))
+                                        ->label(__('Asunto/Título'))
                                         ->columnSpanFull(),
                                     Forms\Components\Textarea::make("order_confirmation_intro.{$locale}")
                                         ->label(__('Introducción'))
@@ -51,13 +51,13 @@ class EmailSettings extends SettingsPage
                             )->toArray(),
                             )->columnSpanFull(),
                     ]),
-                Forms\Components\Section::make(__('Email de pedido pendiente de pago'))
+                Forms\Components\Section::make(__('Email de pedido finalizado pero pendiente de pago'))
                     ->schema([
                         Forms\Components\Tabs::make()
                             ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\TextInput::make("order_pending_payment_greeting.{$locale}")
-                                        ->label(__('Saludo'))
+                                        ->label(__('Asunto/Título'))
                                         ->columnSpanFull(),
                                     Forms\Components\Textarea::make("order_pending_payment_intro.{$locale}")
                                         ->label(__('Introducción'))

@@ -15,26 +15,24 @@ class OrderConfirmationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Order $order)
+    public function __construct(public Order $order, public EmailSettings $settings)
     {
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('testa::mail.order_confirmation.subject', ['reference' => $this->order->reference]),
+            subject: $this->settings->getOrderConfirmationGreeting(),
         );
     }
 
     public function content(): Content
     {
-        $settings = app(EmailSettings::class);
-
         return new Content(
             markdown: 'testa::emails.order-confirmation',
             with: [
-                'greeting' => $settings->getOrderConfirmationGreeting(),
-                'intro' => $settings->getOrderConfirmationIntro(),
+                'greeting' => $this->settings->getOrderConfirmationGreeting(),
+                'intro' => $this->settings->getOrderConfirmationIntro(),
             ],
         );
     }

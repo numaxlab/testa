@@ -5,7 +5,9 @@
 
     <div class="grid gap-15 md:grid-cols-2 mt-10">
         <div class="at-lead">
-            <p>{{ __('Muchas gracias por tu pedido :reference. En breves momentos recibirás un correo electrónico con todos los datos. También puedes revisarlo en tu cuenta. Si tienes cualquier duda, puedes contactar con nosotros en :email', ['reference' => $order->reference, 'email' => $contactEmail]) }}</p>
+            @if(filled($successText))
+                {!! $successText !!}
+            @endif
         </div>
         <div class="border-t border-primary">
             <div class="border-b border-black py-2">

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\TextSettings;
 use Testa\Storefront\Queries\Checkout\GetPlacedOrderById;
 
 class SignupSuccessPage extends Page
@@ -23,7 +24,8 @@ class SignupSuccessPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.membership.signup-success')
-            ->title(__('Ya eres socix'));
+        return view('testa::storefront.livewire.membership.signup-success', [
+            'successText' => app(TextSettings::class)->getSignupSuccessText(),
+        ])->title(__('Ya eres socix'));
     }
 }

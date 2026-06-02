@@ -4,8 +4,9 @@
     <h1 class="at-heading is-1">{{ __('Inscripción completada') }}</h1>
 
     <div class="at-lead mt-10 lg:max-w-2/3">
-        <p>Muchas gracias por inscribirte. En breves momentos recibirás un correo electrónico con todos los datos. Si
-            tienes cualquier duda, puedes contactar con nosotros.</p>
+        @if(filled($successText))
+            {!! $successText !!}
+        @endif
     </div>
 
     <ul class="flex gap-10 mt-10">

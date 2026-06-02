@@ -69,13 +69,29 @@ class TextSettings extends SettingsPage
                             )->toArray(),
                             )->columnSpanFull(),
                     ]),
-                Forms\Components\Section::make(__('Envío'))
+                Forms\Components\Section::make(__('Procesos de compra'))
                     ->schema([
                         Forms\Components\Tabs::make()
                             ->tabs(collect($locales)->map(fn($locale) => Forms\Components\Tabs\Tab::make(strtoupper($locale))
                                 ->schema([
                                     Forms\Components\RichEditor::make("shipping_home_description.{$locale}")
                                         ->label(__('Descripción envío a domicilio'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                    Forms\Components\RichEditor::make("checkout_success_text.{$locale}")
+                                        ->label(__('Texto de confirmación de pedido'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                    Forms\Components\RichEditor::make("signup_success_text.{$locale}")
+                                        ->label(__('Texto de confirmación de alta como socix'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                    Forms\Components\RichEditor::make("donate_success_text.{$locale}")
+                                        ->label(__('Texto de confirmación de donación'))
+                                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+                                        ->columnSpanFull(),
+                                    Forms\Components\RichEditor::make("course_register_success_text.{$locale}")
+                                        ->label(__('Texto de confirmación de inscripción en curso'))
                                         ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
                                         ->columnSpanFull(),
                                 ]),

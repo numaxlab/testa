@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\TextSettings;
 use Testa\Storefront\Queries\Checkout\GetPlacedOrderById;
 
 class DonateSuccessPage extends Page
@@ -23,7 +24,8 @@ class DonateSuccessPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.membership.donate-success')
-            ->title(__('Gracias por tu donación'));
+        return view('testa::storefront.livewire.membership.donate-success', [
+            'successText' => app(TextSettings::class)->getDonateSuccessText(),
+        ])->title(__('Gracias por tu donación'));
     }
 }

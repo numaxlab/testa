@@ -5,6 +5,7 @@ namespace Testa\Storefront\Livewire\Education;
 use Illuminate\View\View;
 use Lunar\Models\Order;
 use NumaxLab\Lunar\Geslib\Storefront\Livewire\Page;
+use Testa\Settings\TextSettings;
 
 class CourseRegisterSuccessPage extends Page
 {
@@ -20,7 +21,8 @@ class CourseRegisterSuccessPage extends Page
 
     public function render(): View
     {
-        return view('testa::storefront.livewire.education.course-register-success')
-            ->title(__('Inscripción en curso completada'));
+        return view('testa::storefront.livewire.education.course-register-success', [
+            'successText' => app(TextSettings::class)->getCourseRegisterSuccessText(),
+        ])->title(__('Inscripción en curso completada'));
     }
 }

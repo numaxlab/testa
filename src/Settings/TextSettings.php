@@ -18,6 +18,14 @@ class TextSettings extends Settings
 
     public array $shipping_home_description;
 
+    public array $checkout_success_text;
+
+    public array $course_register_success_text;
+
+    public array $donate_success_text;
+
+    public array $signup_success_text;
+
     public static function group(): string
     {
         return 'text';
@@ -62,6 +70,34 @@ class TextSettings extends Settings
     {
         return $this->shipping_home_description[app()->getLocale()]
             ?? $this->shipping_home_description[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getSignupSuccessText(): string
+    {
+        return $this->signup_success_text[app()->getLocale()]
+            ?? $this->signup_success_text[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getDonateSuccessText(): string
+    {
+        return $this->donate_success_text[app()->getLocale()]
+            ?? $this->donate_success_text[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getCourseRegisterSuccessText(): string
+    {
+        return $this->course_register_success_text[app()->getLocale()]
+            ?? $this->course_register_success_text[config('app.fallback_locale')]
+            ?? '';
+    }
+
+    public function getCheckoutSuccessText(): string
+    {
+        return $this->checkout_success_text[app()->getLocale()]
+            ?? $this->checkout_success_text[config('app.fallback_locale')]
             ?? '';
     }
 }

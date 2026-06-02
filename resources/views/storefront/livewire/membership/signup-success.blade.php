@@ -4,8 +4,9 @@
     <h1 class="at-heading is-1">{{ __('Ya eres socix') }}</h1>
 
     <div class="at-lead mt-10 lg:max-w-2/3">
-        <p>Muchas gracias por asociarte. En breves momentos recibirás un correo electrónico con todos los datos. También
-            puedes revisarlo en tu cuenta. Si tienes cualquier duda, puedes contactar con nosotros.</p>
+        @if(filled($successText))
+            {!! $successText !!}
+        @endif
     </div>
 
     <ul class="flex gap-10 mt-10">

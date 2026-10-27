@@ -14,8 +14,6 @@ use Filament\Notifications\NotificationsServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Kalnoy\Nestedset\NestedSetServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Lunar\Admin\LunarPanelProvider;
@@ -27,6 +25,8 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Spatie\LaravelBlink\BlinkServiceProvider;
+use Spatie\LaravelSettings\LaravelSettingsServiceProvider;
+use Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository;
 use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
 use Technikermathe\LucideIcons\BladeLucideIconsServiceProvider;
@@ -40,25 +40,11 @@ class TestCase extends OrchestraTestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
+    }
 
-        Schema::create('settings', function ($table) {
-            $table->id();
-            $table->string('group');
-            $table->string('name');
-            $table->boolean('locked')->default(false);
-            $table->json('payload');
-            $table->timestamps();
-            $table->unique(['group', 'name']);
-        });
-
-        foreach (['membership_intro', 'membership_options_description', 'privacy_policy_text'] as $name) {
-            DB::table('settings')->insert([
-                'group' => 'text',
-                'name' => $name,
-                'locked' => false,
-                'payload' => json_encode(['en' => '']),
-            ]);
-        }
+    protected function defineDatabaseMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__.'/Fixtures/migrations');
     }
 
     protected function getPackageProviders($app)
@@ -90,6 +76,7 @@ class TestCase extends OrchestraTestCase
             ConverterServiceProvider::class,
             NestedSetServiceProvider::class,
             BlinkServiceProvider::class,
+            LaravelSettingsServiceProvider::class,
 
             LunarGeslibServiceProvider::class,
             AtomicServiceProvider::class,
@@ -124,7 +111,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('settings.default_repository', 'database');
         $app['config']->set('settings.repositories', [
             'database' => [
-                'type' => \Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository::class,
+                'type' => DatabaseSettingsRepository::class,
                 'model' => null,
                 'table' => 'settings',
                 'connection' => null,

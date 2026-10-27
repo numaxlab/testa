@@ -23,48 +23,67 @@ trait ConfiguresLunarSearch
 
         $content = file_get_contents($configPath);
 
-        if (str_contains($content, 'Testa\\Models\\Page::class')) {
+        $testaModels = [
+            'NumaxLab\\Lunar\\Geslib\\Models\\Author::class',
+            'Testa\\Models\\Education\\Course::class',
+            'Testa\\Models\\Education\\CourseModule::class',
+            'Testa\\Models\\News\\Event::class',
+            'Testa\\Models\\Media\\Audio::class',
+            'Testa\\Models\\Media\\Video::class',
+        ];
+
+        $missingModels = array_values(array_filter(
+            $testaModels,
+            fn (string $model): bool => ! str_contains($content, $model),
+        ));
+
+        $productIndexer = 'Lunar\\Models\\Product::class => NumaxLab\\Lunar\\Geslib\\Search\\ProductIndexer::class,';
+        $authorIndexer = 'NumaxLab\\Lunar\\Geslib\\Models\\Author::class => NumaxLab\\Lunar\\Geslib\\Search\\AuthorIndexer::class,';
+
+        $missingIndexers = array_values(array_filter(
+            [$productIndexer, $authorIndexer],
+            fn (string $indexer): bool => ! str_contains($content, $indexer),
+        ));
+
+        if ($missingModels === [] && $missingIndexers === []) {
             $this->components->info('Lunar search already configured with Testa models.');
 
             return;
         }
 
-        if (! confirm('Configure Lunar search with Testa models and indexers?', true)) {
+        if (! $this->option('force') && ! confirm('Configure Lunar search with Testa models and indexers?', true)) {
             return;
         }
 
-        // Add Testa models to the models array
-        $testaModels = <<<'PHP'
-            NumaxLab\Lunar\Geslib\Models\Author::class,
-            Testa\Models\Education\Course::class,
-            Testa\Models\Education\CourseModule::class,
-            Testa\Models\News\Event::class,
-            Testa\Models\Media\Audio::class,
-            Testa\Models\Media\Video::class,
-            PHP;
+        if ($missingModels !== []) {
+            $modelLines = array_map(
+                static fn (string $model): string => $model.',',
+                $missingModels,
+            );
 
-        // Find the models array and add Testa models
-        $content = preg_replace(
-            "/('models'\s*=>\s*\[)([^\]]*?)(\s*\])/s",
-            "$1$2\n        ".$testaModels."\n    $3",
-            $content,
-        );
+            $content = preg_replace_callback(
+                "/('models'\s*=>\s*\[)([^\]]*?)(\s*\])/s",
+                static fn (array $matches): string => $matches[1].$matches[2]."\n        ".implode("\n        ", $modelLines)."\n    ]",
+                $content,
+                1,
+            );
+        }
 
-        // Add/replace indexers
-        $indexerComment = "// Lunar\\Search\\ProductIndexer replaced with Geslib ProductIndexer";
-        $productIndexer = 'Lunar\\Models\\Product::class => NumaxLab\\Lunar\\Geslib\\Search\\ProductIndexer::class,';
-        $authorIndexer = 'NumaxLab\\Lunar\\Geslib\\Models\\Author::class => NumaxLab\\Lunar\\Geslib\\Search\\AuthorIndexer::class,';
+        if ($missingIndexers !== []) {
+            $indexerLines = [];
 
-        // Check if indexers array exists
-        if (preg_match("/['\"]indexers['\"]\s*=>\s*\[/", $content)) {
-            // Add to existing indexers array
-            if (! str_contains($content, 'ProductIndexer::class')) {
-                $content = preg_replace(
-                    "/(['\"]indexers['\"]\s*=>\s*\[)([^\]]*?)(\s*\])/s",
-                    "$1$2\n        ".$indexerComment."\n        ".$productIndexer."\n        ".$authorIndexer."\n    $3",
-                    $content,
-                );
+            if (in_array($productIndexer, $missingIndexers, true)) {
+                $indexerLines[] = '// Lunar\\Search\\ProductIndexer replaced with Geslib ProductIndexer';
             }
+
+            $indexerLines = [...$indexerLines, ...$missingIndexers];
+
+            $content = preg_replace_callback(
+                "/(['\"]indexers['\"]\s*=>\s*\[)([^\]]*?)(\s*\])/s",
+                static fn (array $matches): string => $matches[1].$matches[2]."\n        ".implode("\n        ", $indexerLines)."\n    ]",
+                $content,
+                1,
+            );
         }
 
         file_put_contents($configPath, $content);

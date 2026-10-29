@@ -20,7 +20,7 @@ beforeEach(function () {
     Currency::factory()->create(['default' => true]);
 
     $this->customer = Customer::find(LunarCustomer::factory()->create()->id);
-    $this->benefit = Benefit::factory()->create(['code' => Benefit::CEMA_COURSE_ACCESS]);
+    $this->benefit = Benefit::factory()->create(['code' => Benefit::CREDIT_PAYMENT_TYPE]);
     $this->plan = MembershipPlan::factory()
         ->hasAttached($this->benefit)
         ->create();
@@ -32,7 +32,7 @@ it('returns true for a customer with an active subscription that has the benefit
         'membership_plan_id' => $this->plan->id,
     ]);
 
-    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CEMA_COURSE_ACCESS);
+    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CREDIT_PAYMENT_TYPE);
 
     expect($result)->toBeTrue();
 });
@@ -43,29 +43,29 @@ it('returns false for a customer with an expired subscription', function () {
         'membership_plan_id' => $this->plan->id,
     ]);
 
-    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CEMA_COURSE_ACCESS);
+    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CREDIT_PAYMENT_TYPE);
 
     expect($result)->toBeFalse();
 });
 
 it('returns false for a customer with no subscription', function () {
-    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CEMA_COURSE_ACCESS);
+    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CREDIT_PAYMENT_TYPE);
 
     expect($result)->toBeFalse();
 });
 
 it('returns false when the active subscription does not have the requested benefit', function () {
     $otherBenefit = Benefit::factory()->create(['code' => 'some_other_benefit']);
-    $planWithoutCema = MembershipPlan::factory()
+    $planWithoutBenefit = MembershipPlan::factory()
         ->hasAttached($otherBenefit)
         ->create();
 
     Subscription::factory()->active()->create([
         'customer_id' => $this->customer->id,
-        'membership_plan_id' => $planWithoutCema->id,
+        'membership_plan_id' => $planWithoutBenefit->id,
     ]);
 
-    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CEMA_COURSE_ACCESS);
+    $result = new CustomerHasActiveBenefit()->execute($this->customer, Benefit::CREDIT_PAYMENT_TYPE);
 
     expect($result)->toBeFalse();
 });

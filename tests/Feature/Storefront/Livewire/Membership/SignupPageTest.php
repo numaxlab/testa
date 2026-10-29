@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Lunar\Models\Channel;
 use Lunar\Models\Country;
 use Lunar\Models\Currency;
+use Lunar\Models\Customer;
 use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
 use Lunar\Models\Price;
@@ -19,6 +20,7 @@ use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\MembershipTier;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Membership\SignupPage;
+use Testa\Tests\Stubs\User;
 
 use function Pest\Livewire\livewire;
 
@@ -31,7 +33,7 @@ beforeEach(function () {
     });
 
     // Configure auth to use our test User model with LunarUser trait
-    config(['auth.providers.users.model' => \Testa\Tests\Stubs\User::class]);
+    config(['auth.providers.users.model' => User::class]);
 
     $this->language = Language::factory()->create(['default' => true]);
     $this->currency = Currency::factory()->create(['default' => true, 'decimal_places' => 2]);
@@ -76,15 +78,12 @@ beforeEach(function () {
         'variant_id' => $this->variant->id,
     ]);
 
-    // Mock PaymentSettings
-    $mockPaymentSettings = Mockery::mock(PaymentSettings::class);
-    $mockPaymentSettings->membership = ['direct-debit'];
-    app()->instance(PaymentSettings::class, $mockPaymentSettings);
+    PaymentSettings::fake(['membership' => ['direct-debit']]);
 });
 
 describe('SignupPage for guests', function () {
     it('has registration properties defined', function () {
-        $component = new SignupPage();
+        $component = new SignupPage;
 
         expect(property_exists($component, 'first_name'))->toBeTrue();
         expect(property_exists($component, 'last_name'))->toBeTrue();
@@ -218,7 +217,7 @@ describe('SignupPage for authenticated users', function () {
         $userModel::reguard();
 
         // Create customer for the user
-        $customer = \Lunar\Models\Customer::create([
+        $customer = Customer::create([
             'first_name' => 'Test',
             'last_name' => 'User',
         ]);
@@ -259,7 +258,7 @@ describe('SignupPage for authenticated users', function () {
         $userModel::reguard();
 
         // Create customer for the user
-        $customer = \Lunar\Models\Customer::create([
+        $customer = Customer::create([
             'first_name' => 'Auth',
             'last_name' => 'User',
         ]);

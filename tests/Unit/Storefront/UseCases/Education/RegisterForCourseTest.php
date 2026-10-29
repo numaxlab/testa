@@ -17,6 +17,7 @@ use Testa\Models\Education\Course;
 use Testa\Storefront\Data\CheckoutAddressData;
 use Testa\Storefront\Data\CourseRegistrationData;
 use Testa\Storefront\UseCases\Education\RegisterForCourse;
+use Testa\Tests\Stubs\User;
 use Testa\Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
@@ -28,7 +29,7 @@ beforeEach(function () {
         $table->string('last_name')->after('first_name');
     });
 
-    config(['auth.providers.users.model' => \Testa\Tests\Stubs\User::class]);
+    config(['auth.providers.users.model' => User::class]);
 
     Language::factory()->create();
     TaxClass::factory()->create(['default' => true]);
@@ -64,7 +65,7 @@ beforeEach(function () {
     ]);
 
     $this->course = Course::withoutEvents(
-        fn() => Course::factory()->create(['purchasable_id' => $product->id]),
+        fn () => Course::factory()->create(['purchasable_id' => $product->id]),
     );
 
     $contactSettings = [
@@ -72,14 +73,14 @@ beforeEach(function () {
         ['name' => 'phone_number', 'payload' => json_encode('+34 900 000 000')],
         [
             'name' => 'address', 'payload' => json_encode([
-            [
-                'is_primary' => true,
-                'country_iso2' => 'ES',
-                'city' => 'Madrid',
-                'postcode' => '28001',
-                'line_one' => 'Calle Mayor 1',
-            ],
-        ]),
+                [
+                    'is_primary' => true,
+                    'country_iso2' => 'ES',
+                    'city' => 'Madrid',
+                    'postcode' => '28001',
+                    'line_one' => 'Calle Mayor 1',
+                ],
+            ]),
         ],
         ['name' => 'instagram_url', 'payload' => json_encode(null)],
         ['name' => 'facebook_url', 'payload' => json_encode(null)],
@@ -93,7 +94,10 @@ beforeEach(function () {
         ['name' => 'whatsapp_url', 'payload' => json_encode(null)],
     ];
     foreach ($contactSettings as $setting) {
-        \DB::table('settings')->insert(['group' => 'contact', 'locked' => false] + $setting);
+        DB::table('settings')->updateOrInsert(
+            ['group' => 'contact', 'name' => $setting['name']],
+            ['locked' => false, 'payload' => $setting['payload']],
+        );
     }
 
     $this->data = new CourseRegistrationData(

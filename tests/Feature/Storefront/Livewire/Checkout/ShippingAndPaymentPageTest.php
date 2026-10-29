@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Schema;
+use Lunar\Base\ShippingManifestInterface;
+use Lunar\DataTypes\ShippingOption;
 use Lunar\Facades\CartSession;
 use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
@@ -8,6 +10,7 @@ use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
 use Lunar\Models\Country;
 use Lunar\Models\Currency;
+use Lunar\Models\Customer;
 use Lunar\Models\CustomerGroup;
 use Lunar\Models\Language;
 use Lunar\Models\Price;
@@ -25,6 +28,7 @@ use Testa\Models\Membership\MembershipPlan;
 use Testa\Models\Membership\Subscription;
 use Testa\Settings\PaymentSettings;
 use Testa\Storefront\Livewire\Checkout\ShippingAndPaymentPage;
+use Testa\Tests\Stubs\User;
 
 use function Pest\Livewire\livewire;
 
@@ -49,7 +53,7 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    config(['auth.providers.users.model' => \Testa\Tests\Stubs\User::class]);
+    config(['auth.providers.users.model' => User::class]);
 
     $this->language = Language::factory()->create(['default' => true]);
     $this->currency = Currency::factory()->create(['default' => true, 'decimal_places' => 2, 'exchange_rate' => 1]);
@@ -79,10 +83,10 @@ beforeEach(function () {
     app()->instance(PaymentSettings::class, $mockPaymentSettings);
 
     // Mock ShippingManifest to return empty options (avoids DB dependency)
-    $manifestMock = Mockery::mock(\Lunar\Base\ShippingManifestInterface::class)->shouldIgnoreMissing();
+    $manifestMock = Mockery::mock(ShippingManifestInterface::class)->shouldIgnoreMissing();
     $manifestMock->allows('getOptions')->andReturn(collect([]));
     $manifestMock->allows('getShippingOption')->andReturn(null);
-    app()->instance(\Lunar\Base\ShippingManifestInterface::class, $manifestMock);
+    app()->instance(ShippingManifestInterface::class, $manifestMock);
 });
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -99,7 +103,7 @@ function createUser(): mixed
     ]);
     $userModel::reguard();
 
-    $customer = \Lunar\Models\Customer::create([
+    $customer = Customer::create([
         'first_name' => 'Test',
         'last_name' => 'User',
     ]);
@@ -715,18 +719,17 @@ describe('saveShippingOption', function () {
 
         CartSession::use($cart->fresh());
 
-        $mockPrice = Mockery::mock(\Lunar\DataTypes\Price::class)->shouldIgnoreMissing();
-        $mockPrice->allows('formatted')->andReturn('5,00 €');
+        $shippingOption = new ShippingOption(
+            name: 'Standard Delivery',
+            description: null,
+            identifier: 'standard_delivery',
+            price: new Lunar\DataTypes\Price(500, $this->currency),
+            taxClass: $this->taxClass,
+        );
 
-        $shippingOption = Mockery::mock(\Lunar\DataTypes\ShippingOption::class)->shouldIgnoreMissing();
-        $shippingOption->allows('getIdentifier')->andReturn('standard_delivery');
-        $shippingOption->allows('getName')->andReturn('Standard Delivery');
-        $shippingOption->allows('getPrice')->andReturn($mockPrice);
-        $shippingOption->collect = false;
-
-        $manifestMock = Mockery::mock(\Lunar\Base\ShippingManifestInterface::class)->shouldIgnoreMissing();
+        $manifestMock = Mockery::mock(ShippingManifestInterface::class)->shouldIgnoreMissing();
         $manifestMock->allows('getOptions')->andReturn(collect([$shippingOption]));
-        app()->instance(\Lunar\Base\ShippingManifestInterface::class, $manifestMock);
+        app()->instance(ShippingManifestInterface::class, $manifestMock);
 
         livewire(ShippingAndPaymentPage::class)
             ->set('chosenShipping', 'standard_delivery')

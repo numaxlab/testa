@@ -10,6 +10,7 @@ use Lunar\Models\TaxRate;
 use Lunar\Models\TaxRateAmount;
 use Lunar\Models\TaxZone;
 use Lunar\Models\TaxZoneCountry;
+use NumaxLab\Lunar\Geslib\Services\CegalAvailability;
 use Testa\Storefront\Livewire\Components\Bookshop\ProductAvailability;
 
 beforeEach(function () {
@@ -156,5 +157,93 @@ describe('ProductAvailability stock by center', function () {
         $info = $method->invoke($component, []);
 
         expect($info)->toBe('');
+    });
+});
+
+describe('ProductAvailability centre stock', function () {
+    it('shows the shop and shipping lines when centre 10 has stock', function () {
+        config(['lunar.geslib.stock_centers' => [
+            10 => ['name' => 'Duque de Alba', 'ships' => true],
+            12 => ['name' => 'Ateneo La Maliciosa', 'ships' => false],
+        ]]);
+
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant(['10' => 1, '12' => 0]);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->status)->toBe(__('Disponible'))
+            ->and($component->moreInfo)->toContain('Disponible en Duque de Alba')
+            ->and($component->moreInfo)->toContain(__('Disponible para envío'))
+            ->and($component->moreInfo)->not->toContain('Ateneo La Maliciosa');
+    });
+
+    it('shows only the shop line for centre 12', function () {
+        config(['lunar.geslib.stock_centers' => [
+            10 => ['name' => 'Duque de Alba', 'ships' => true],
+            12 => ['name' => 'Ateneo La Maliciosa', 'ships' => false],
+        ]]);
+
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant(['10' => 0, '12' => 2]);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->status)->toBe(__('Disponible'))
+            ->and($component->moreInfo)->toContain('Disponible en Ateneo La Maliciosa')
+            ->and($component->moreInfo)->not->toContain(__('Disponible para envío'))
+            ->and($component->moreInfo)->not->toContain('Duque de Alba');
+    });
+
+    it('shows Disponible bajo pedido when both centres are empty', function () {
+        config(['lunar.geslib.stock_centers' => [
+            10 => ['name' => 'Duque de Alba', 'ships' => true],
+            12 => ['name' => 'Ateneo La Maliciosa', 'ships' => false],
+        ]]);
+
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant(['10' => 0, '12' => 0], stock: 5);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->status)->toBe(__('Disponible bajo pedido'))
+            ->and($component->moreInfo)->toBe('');
+    });
+
+    it('falls back to the raw centre id when the centre is not configured', function () {
+        config(['lunar.geslib.stock_centers' => []]);
+
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant(['99' => 1]);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->moreInfo)->toContain('99');
+    });
+
+    it('keeps the purchasable mode when the product has no centre data', function () {
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant([], mode: 'in_stock', stock: 0);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->status)->toBe(__('No disponible'));
+    });
+
+    it('shows the Geslib status name when the product cannot be purchased', function () {
+        $status = Mockery::mock(\Lunar\Models\Collection::class);
+        $status->shouldReceive('translateAttribute')->with('name')->andReturn('Descatalogado');
+
+        $product = new class($status) extends \NumaxLab\Lunar\Geslib\Models\Product
+        {
+            public function __construct(private readonly \Lunar\Models\Collection $blockedStatus) {}
+
+            public function notPurchasableStatus(): ?\Lunar\Models\Collection
+            {
+                return $this->blockedStatus;
+            }
+        };
+
+        $component = new ProductAvailability();
+        $component->purchasable = makeAvailabilityVariant(['10' => 3], product: $product);
+        $component->mount(mockCegalAvailability());
+
+        expect($component->status)->toBe('Descatalogado')
+            ->and($component->moreInfo)->toBe('');
     });
 });

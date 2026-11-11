@@ -64,3 +64,32 @@ describe('AddToCart component', function () {
         expect(method_exists($component, 'addToCart'))->toBeTrue();
     });
 });
+
+describe('AddToCart purchasability', function () {
+    it('keeps the buy button for a buyable article', function () {
+        $component = new AddToCart();
+        $component->purchasable = makeCartPurchasable(true);
+        $component->mount();
+
+        expect($component->canBeBought)->toBeTrue();
+    });
+
+    it('hides the buy button for an agotado article', function () {
+        $component = new AddToCart();
+        $component->purchasable = makeCartPurchasable(false);
+        $component->mount();
+
+        expect($component->canBeBought)->toBeFalse();
+    });
+
+    it('does not render the buy button when the article cannot be bought', function () {
+        $html = view('testa::storefront.livewire.components.bookshop.add-to-cart', [
+            'canBeBought' => false,
+            'displayPrice' => false,
+            'pricing' => null,
+            'errors' => new \Illuminate\Support\ViewErrorBag(),
+        ])->render();
+
+        expect($html)->not->toContain(__('Comprar'));
+    });
+});

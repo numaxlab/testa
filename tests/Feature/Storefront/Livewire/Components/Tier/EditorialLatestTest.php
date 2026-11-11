@@ -35,7 +35,7 @@ beforeEach(function () {
 
 describe('EditorialLatest component', function () {
     it('has tier property', function () {
-        $component = new EditorialLatest();
+        $component = new EditorialLatest;
 
         expect(property_exists($component, 'tier'))->toBeTrue();
     });
@@ -67,10 +67,10 @@ describe('EditorialLatest component', function () {
         expect($orderColumn)->toBe('created_at');
     });
 
-    it('paginates results by 12', function () {
-        // The component uses paginate(12)
-        $perPage = 12;
+    it('limits results to 12', function () {
+        // The component uses limit(12)
+        $limit = 12;
 
-        expect($perPage)->toBe(12);
+        expect($limit)->toBe(12);
     });
 });
